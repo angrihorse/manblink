@@ -14,7 +14,7 @@
 	<div class="relative aspect-3/4">
 		<img src={sourceImg} alt={name} class="h-full w-full rounded-lg object-cover" />
 		<span
-			class="absolute top-4 left-4 rounded-lg bg-stone-700 px-4 py-2 text-lg font-bold text-white"
+			class="absolute top-4 left-4 rounded-lg bg-stone-200 px-4 py-2 text-lg font-bold select-none"
 		>
 			SELFIE
 		</span>
@@ -24,7 +24,7 @@
 		<div class="relative aspect-3/4">
 			<img src={photo.src} alt={photo.alt} class="h-full w-full rounded-xl object-cover" />
 			<div
-				class="absolute top-4 left-4 rounded-lg bg-rose-500 px-4 py-2 text-lg font-bold text-white"
+				class="absolute top-4 left-4 rounded-lg bg-rose-500 px-4 py-2 text-lg font-bold text-white select-none"
 			>
 				AI
 			</div>
