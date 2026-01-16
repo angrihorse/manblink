@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 import { PRIVATE_WEBHOOK_SECRET } from '$env/static/private';
 import { stripe } from '$lib/server/stripe';
-import { adminDb, getUserFromDb, updateUserInDb } from '$lib/server/firebase'; // Import your admin database
+import { adminAuth, adminDb, getUserFromDb, updateOrCreateUserByEmail, updateUserInDb } from '$lib/server/firebase'; // Import your admin database
 
 export const POST: RequestHandler = async ({ request }) => {
     const rawBody = await request.text();
@@ -27,14 +27,21 @@ export const POST: RequestHandler = async ({ request }) => {
 
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.client_reference_id;
-
+        const firebaseUserId = session.client_reference_id;
+        const email = session.customer_email;
         const stripeCustomerId = session.customer as string;
-        if (stripeCustomerId) {
-            await updateUserInDb(userId!, {
-                stripeCustomerId: stripeCustomerId,
+
+
+        if (firebaseUserId) {
+            // User in db.
+            await updateUserInDb(firebaseUserId!, {
+
             });
+        } else {
+            // User not in db.
+            updateOrCreateUserByEmail(email!, {})
         }
+
     } else {
         console.log(`Unhandled Stripe event: ${event.type}`);
     }

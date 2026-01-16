@@ -28,3 +28,13 @@ export const updateUserInDb = async (userId: string, data: object) => {
 };
 
 export const getUserDataByEmail = async (email: string) => (await adminDb.collection('users').where('email', '==', email).limit(1).get()).docs.map(d => ({ id: d.id, ...d.data() }))[0];
+
+export const updateOrCreateUserByEmail = async (email: string, data: object): Promise<void> => {
+    const existingUser = await getUserDataByEmail(email);
+
+    if (existingUser) {
+        await adminDb.collection('users').doc(existingUser.id).update(data);
+    } else {
+        await adminDb.collection('users').add({ email, ...data });
+    }
+};
