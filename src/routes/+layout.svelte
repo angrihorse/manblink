@@ -1,8 +1,15 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { page } from '$app/state';
+	import { onMount } from 'svelte';
+	import { handleEmailLinkSignIn } from '$lib/client/firebase';
 
 	let { children } = $props();
+
+	onMount(async () => {
+		await handleEmailLinkSignIn();
+	});
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>

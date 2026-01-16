@@ -3,25 +3,38 @@ import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 import { PRICE_ID, PRIVATE_STRIPE_KEY } from '$env/static/private';
 import { stripe } from '$lib/server/stripe';
-import { adminAuth, adminDb } from '$lib/server/firebase';
+import { adminAuth, adminDb, getUserDataByEmail, getUserFromDb } from '$lib/server/firebase';
 
+// Create a checkout session for existing Firebase user.
+export const POST: RequestHandler = async ({ request, url, locals }) => {
+    const { email, nextUrl } = await request.json();
+    const userData = await getUserDataByEmail(email);
 
-export const POST: RequestHandler = async ({ request, url, cookies, locals }) => {
-    const { email } = await request.json();
+    const userHasToPay = userData !== null;
+    if (!userHasToPay) {
+        return json({ url: nextUrl });
+    }
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionOptions: any = {
         payment_method_types: ['card'],
-        customer_email: email,
-        line_items: [
-            {
-                price: PRICE_ID,
-                quantity: 1,
-            },
-        ],
+        line_items: [{ price: PRICE_ID, quantity: 1 }],
         mode: 'subscription',
-        success_url: `${url.origin}/success`,
+        success_url: `${url.origin}/app`,
         cancel_url: `${url.origin}`,
-    });
+        client_reference_id: userData?.id // Will be null if there's no Firebase user
+    };
 
-    return json(session);
+    let customerId = userData?.stripeCustomerId;
+    if (customerId) {
+        // Reference existing Stripe customer.
+        sessionOptions.customer = customerId;
+    } else {
+        // Create new Stripe customer by email.
+        sessionOptions.customer_email = email;
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionOptions);
+    return json({
+        url: session.url
+    });
 };

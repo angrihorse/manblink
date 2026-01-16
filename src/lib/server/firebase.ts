@@ -22,3 +22,9 @@ export const adminAuth = getAuth();
 
 export const getUserFromDb = async (userId: string) =>
     (await adminDb.collection('users').doc(userId).get()).data();
+
+export const updateUserInDb = async (userId: string, data: object) => {
+    await adminDb.collection('users').doc(userId).update(data);
+};
+
+export const getUserDataByEmail = async (email: string) => (await adminDb.collection('users').where('email', '==', email).limit(1).get()).docs.map(d => ({ id: d.id, ...d.data() }))[0];

@@ -5,6 +5,7 @@ import { PRIVATE_STRIPE_KEY } from '$env/static/private';
 import { adminDb, getUserFromDb } from '$lib/server/firebase';
 import { stripe } from '$lib/server/stripe';
 
+// Create a billing portal for existing Firebase user.
 export const POST: RequestHandler = async ({ request, url, cookies, locals }) => {
     const userId = locals.user?.id;
     if (!userId) {
@@ -17,13 +18,11 @@ export const POST: RequestHandler = async ({ request, url, cookies, locals }) =>
         throw error(402, 'Payment Required');
     }
 
-    const portalSession = await stripe.billingPortal.sessions.create({
+    const session = await stripe.billingPortal.sessions.create({
         customer: customerId,
         return_url: `${url.origin}`,
     });
-
     return json({
-        id: portalSession.id,
-        url: portalSession.url
+        url: session.url
     });
 };

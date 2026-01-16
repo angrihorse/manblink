@@ -11,9 +11,9 @@
 	</div>
 
 	<a
-		href="/start"
+		href="/app"
 		class="flex h-16 max-w-48 items-center justify-center rounded-lg bg-rose-500 px-4 text-lg font-bold text-white select-none hover:bg-rose-600"
 	>
-		Start
+		Open the App
 	</a>
 </div>

@@ -1,10 +1,10 @@
-export async function initiateCheckout(email: string) {
+export async function initiateCheckout(email: string, nextUrl: string) {
     const response = await fetch('/api/stripe', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, nextUrl }),
     });
 
     if (!response.ok) {
@@ -16,7 +16,7 @@ export async function initiateCheckout(email: string) {
 }
 
 export async function manageSubscription() {
-    const response = await fetch('/api/stripe/billing-portal', {
+    const response = await fetch('/api/stripe/manage-billing', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

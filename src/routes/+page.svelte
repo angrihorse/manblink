@@ -1,5 +1,6 @@
 <script lang="ts">
 	import AuthForm from '$lib/components/AuthForm.svelte';
+	import Balls from '$lib/components/Balls.svelte';
 	import PhotoRow from '$lib/components/PhotoRow.svelte';
 	import PhotoUpload from '$lib/components/PhotoUpload.svelte';
 	import { Send } from '@lucide/svelte';
@@ -35,9 +36,7 @@
 
 		<PhotoUpload bind:uploadedImage />
 
-		<div class=" flex-col items-center">
-			<AuthForm />
-		</div>
+		<AuthForm />
 	</div>
 </div>
 
@@ -59,19 +58,19 @@
 		</a>
 	</div>
 
-	<div class="flex flex-col justify-center space-y-1 rounded-lg border-4 border-stone-200 p-8">
-		<div>
-			<span class="text-5xl font-bold text-rose-500">$20</span>
-			<span class="text-lg font-bold">/month</span>
+	<div>
+		<div class=" space-y-1 rounded-lg border-4 border-stone-200 p-8">
+			<div>
+				<span class="text-5xl font-bold text-rose-500">$20</span>
+				<span class="text-lg font-bold">/month</span>
+			</div>
+			<ul class="list-disc pl-5">
+				<li>100 AI photos</li>
+				<li>42 dating presets</li>
+				<li>Write your own prompts</li>
+			</ul>
 		</div>
-		<ul class="list-disc pl-5">
-			<li>100 AI photos</li>
-			<li>42 dating presets</li>
-			<li>Write your own prompts</li>
-		</ul>
 	</div>
 
-	<div class="flex-col items-center">
-		<AuthForm />
-	</div>
+	<AuthForm />
 </div>

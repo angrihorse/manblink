@@ -3,8 +3,7 @@ import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 import { PRIVATE_WEBHOOK_SECRET } from '$env/static/private';
 import { stripe } from '$lib/server/stripe';
-
-// stripe listen --events checkout.session.completed --forward-to http://localhost:5173/api/stripe/webhook
+import { adminDb, getUserFromDb, updateUserInDb } from '$lib/server/firebase'; // Import your admin database
 
 export const POST: RequestHandler = async ({ request }) => {
     const rawBody = await request.text();
@@ -26,20 +25,18 @@ export const POST: RequestHandler = async ({ request }) => {
         throw error(400, err.message);
     }
 
-    switch (event.type) {
-        case 'checkout.session.completed':
-            const session: Stripe.Checkout.Session = event.data.object;
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const userId = session.client_reference_id;
 
-            // await userDoc.update({
-            //     stripeCustomerId: session.customer,
-            //     paidTimestamp: Date.now()
-            // });
-
-            console.log('Order fulfilled for user');
-            break;
-
-        default:
-            console.log(`Unhandled Stripe event: ${event.type}`);
+        const stripeCustomerId = session.customer as string;
+        if (stripeCustomerId) {
+            await updateUserInDb(userId!, {
+                stripeCustomerId: stripeCustomerId,
+            });
+        }
+    } else {
+        console.log(`Unhandled Stripe event: ${event.type}`);
     }
 
     return json({ received: true });
