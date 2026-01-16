@@ -69,9 +69,9 @@
 	{#if uploadedImage}
 		<img src={uploadedImage} alt="Uploaded selfie" class="h-full w-full object-cover" />
 	{:else}
-		<div class="flex select-none flex-col items-center space-y-2">
+		<div class="flex flex-col items-center space-y-2 select-none">
 			<User class="size-8" />
-			<span class="text-xl font-bold">Upload Selfie</span>
+			<span class="font-bold">Upload Selfie</span>
 		</div>
 	{/if}
 </button>
