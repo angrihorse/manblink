@@ -54,7 +54,7 @@
 	ondrop={handleDrop}
 	ondragover={handleDragOver}
 	ondragleave={handleDragLeave}
-	class="flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-4 border-stone-700 bg-stone-200 hover:bg-stone-300 lg:aspect-square"
+	class="flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-4 border-stone-700 bg-stone-200 hover:bg-stone-300"
 	class:border-dotted={!uploadedImage}
 	class:p-8={!uploadedImage}
 	class:bg-stone-300={isDragging}

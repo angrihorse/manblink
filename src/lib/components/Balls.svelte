@@ -21,7 +21,7 @@
 	});
 </script>
 
-<div class="relative flex h-full min-h-64 w-full items-center justify-center">
+<div class="relative flex h-full w-full items-center justify-center">
 	{#each balls as ball, i}
 		<div
 			class="absolute top-1/2 left-1/2 size-8 rounded-full bg-rose-500"

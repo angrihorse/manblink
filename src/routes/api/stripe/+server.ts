@@ -3,16 +3,24 @@ import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 import { PRICE_ID, PRIVATE_STRIPE_KEY } from '$env/static/private';
 import { stripe } from '$lib/server/stripe';
-import { adminAuth, adminDb, getUserDataByEmail, getUserFromDb } from '$lib/server/firebase';
+import { adminAuth, adminDb, getUserDataByEmail, getUserFromDb, updateUserInDb } from '$lib/server/firebase';
 
 // Create a checkout session for existing Firebase user.
 export const POST: RequestHandler = async ({ request, url, locals }) => {
-    const { email, nextUrl } = await request.json();
-    const userData = await getUserDataByEmail(email);
+    const userId = locals.user?.id;
+    if (!userId) {
+        throw error(401, 'Unauthenticated');
+    }
 
-    const userHasToPay = userData !== null;
-    if (!userHasToPay) {
-        return json({ url: nextUrl });
+    const userData = await getUserFromDb(userId);
+    let stripeCustomerId = userData?.stripeCustomerId
+    if (!stripeCustomerId) {
+        const customer = await stripe.customers.create({
+            email: locals.user!.email,
+            metadata: { firebaseUserId: userId }
+        });
+        stripeCustomerId = customer.id;
+        updateUserInDb(userId, { stripeCustomerId });
     }
 
     const sessionOptions: any = {
@@ -21,17 +29,9 @@ export const POST: RequestHandler = async ({ request, url, locals }) => {
         mode: 'subscription',
         success_url: `${url.origin}/app`,
         cancel_url: `${url.origin}`,
-        client_reference_id: userData?.id // Will be null if there's no Firebase user
+        client_reference_id: userId,
+        customer: stripeCustomerId,
     };
-
-    let customerId = userData?.stripeCustomerId;
-    if (customerId) {
-        // Reference existing Stripe customer.
-        sessionOptions.customer = customerId;
-    } else {
-        // Create new Stripe customer by email.
-        sessionOptions.customer_email = email;
-    }
 
     const session = await stripe.checkout.sessions.create(sessionOptions);
     return json({

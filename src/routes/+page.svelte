@@ -20,7 +20,7 @@
 </script>
 
 <svelte:head>
-	<title>APE CONTROL - Better Photos, More Matches</title>
+	<title>Manblink</title>
 </svelte:head>
 
 <div class="space-y-8">

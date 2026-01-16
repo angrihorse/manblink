@@ -31,16 +31,13 @@ export const POST: RequestHandler = async ({ request }) => {
         const email = session.customer_email;
         const stripeCustomerId = session.customer as string;
 
+        // Option 2: Email - first auth(recommended)
+        // Yes, you can redirect to Stripe checkout after email confirmation:
+        // User enters email → Firebase sends verification email
+        // Verification link redirects to your app with auth token
+        // Your app immediately redirects to Stripe checkout with the authenticated user's ID
+        // Webhook can now use the proper Firebase user ID
 
-        if (firebaseUserId) {
-            // User in db.
-            await updateUserInDb(firebaseUserId!, {
-
-            });
-        } else {
-            // User not in db.
-            updateOrCreateUserByEmail(email!, {})
-        }
 
     } else {
         console.log(`Unhandled Stripe event: ${event.type}`);

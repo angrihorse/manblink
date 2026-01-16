@@ -4,7 +4,6 @@ export async function initiateCheckout(email: string, nextUrl: string) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, nextUrl }),
     });
 
     if (!response.ok) {

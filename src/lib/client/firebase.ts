@@ -2,8 +2,10 @@ import { initializeApp } from "firebase/app";
 import { collection, doc, DocumentReference, getDoc, getDocs, getFirestore, limit, onSnapshot, query, setDoc, where } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInWithEmailLink, signInWithPopup, signOut, type User } from "firebase/auth";
 import { browser } from "$app/environment";
-import { invalidateAll } from "$app/navigation";
+import { goto, invalidateAll } from "$app/navigation";
 import { writable } from "svelte/store";
+import { page } from "$app/state";
+import { initiateCheckout } from "./stripe";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFPXvqefQ5fYRdjEKlKLuws74FdC5tQmk",
@@ -20,28 +22,32 @@ export const db = getFirestore()
 
 export const getUserData = async (uid: string) => (await getDoc(doc(db, 'users', uid))).data();
 
-
 export const authLoading = writable(false);
 
-export interface UserData {
-    id: string;
-    email: string;
-    displayName: string;
+async function routeToPayment(user: User) {
+    if (user) {
+        const userData = await getUserData(user.uid)
+        const userHasToPay = true;
+        if (userHasToPay) {
+            await initiateCheckout(user.email!, '/app');
+        } else {
+            goto('/app')
+        }
+    }
 }
 
-export async function signInWithGoogle(deferAuthLoading: boolean = false) {
-    if (!browser) return null;
-
+export async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     const credential = await signInWithPopup(auth, provider);
+
     authLoading.set(true);
+
     const user = credential.user;
     const idToken = await user.getIdToken();
+
     await serverSignIn(idToken);
     await invalidateAll();
-    if (!deferAuthLoading)
-        authLoading.set(false);
-
+    await routeToPayment(user)
     return user;
 }
 
@@ -56,20 +62,18 @@ async function serverSignIn(idToken: string) {
 }
 
 export async function serverSignOut() {
-    if (!browser) return null;
-
     authLoading.set(true);
+
     await fetch("/api/auth", { method: "DELETE" });
     await signOut(auth);
     await invalidateAll();
+
     authLoading.set(false);
 }
 
-export async function signInWithEmail(email: string, url: string) {
-    if (!browser) return null;
-
+export async function signInWithEmail(email: string) {
     const actionCodeSettings = {
-        url: url,
+        url: page.url.href,
         handleCodeInApp: true,
     };
 
@@ -78,7 +82,6 @@ export async function signInWithEmail(email: string, url: string) {
 }
 
 export async function handleEmailLinkSignIn() {
-    if (!browser) return null;
     if (!isSignInWithEmailLink(auth, window.location.href)) {
         return null;
     }
@@ -91,19 +94,17 @@ export async function handleEmailLinkSignIn() {
     }
 
     authLoading.set(true);
+
     const credential = await signInWithEmailLink(auth, email, window.location.href);
     const user = credential.user;
-
     const idToken = await user.getIdToken();
     await serverSignIn(idToken);
-
     window.localStorage.removeItem('emailForSignIn');
-
     const cleanUrl = new URL(window.location.href);
     cleanUrl.searchParams.delete('email');
     window.history.replaceState({}, '', cleanUrl.toString());
-
     await invalidateAll();
+    await routeToPayment(user);
     authLoading.set(false);
 
     return user;
