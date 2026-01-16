@@ -73,7 +73,7 @@ export async function serverSignOut() {
 
 export async function signInWithEmail(email: string) {
     const actionCodeSettings = {
-        url: page.url.href,
+        url: `${page.url.origin}/app`,
         handleCodeInApp: true,
     };
 
@@ -105,8 +105,6 @@ export async function handleEmailLinkSignIn() {
     window.history.replaceState({}, '', cleanUrl.toString());
     await invalidateAll();
     await routeToPayment(user);
-    authLoading.set(false);
-
     return user;
 }
 

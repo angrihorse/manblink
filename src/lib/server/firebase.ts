@@ -38,3 +38,9 @@ export const updateOrCreateUserByEmail = async (email: string, data: object): Pr
         await adminDb.collection('users').add({ email, ...data });
     }
 };
+
+export const updateUserByField = async (field: string, value: any, data: object) => {
+    const snapshot = await adminDb.collection('users').where(field, '==', value).limit(1).get();
+    const userDoc = snapshot.docs[0];
+    await userDoc.ref.update(data);
+};

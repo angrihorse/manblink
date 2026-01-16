@@ -76,14 +76,15 @@
 			</button>
 
 			<div class="relative flex items-center py-2 select-none">
-				<div class="flex-grow border-t-4 border-stone-200"></div>
-				<span class="mx-4 flex-shrink font-bold text-stone-300">OR</span>
-				<div class="flex-grow border-t-4 border-stone-200"></div>
+				<div class="grow border-t-4 border-stone-200"></div>
+				<span class="mx-4 shrink font-bold text-stone-300">OR</span>
+				<div class="grow border-t-4 border-stone-200"></div>
 			</div>
 
 			<form
 				class="flex flex-col gap-3"
-				onsubmit={() => {
+				onsubmit={(e) => {
+					e.preventDefault();
 					emailSent = true;
 					signInWithEmail(email);
 				}}
