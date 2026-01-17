@@ -24,50 +24,43 @@ export const getUserData = async (uid: string) => (await getDoc(doc(db, 'users',
 
 export const authLoading = writable(false);
 
-async function routeToPayment(user: User) {
-    if (user) {
-        const userData = await getUserData(user.uid)
-        const userHasToPay = true;
-        if (userHasToPay) {
-            await initiateCheckout(user.email!, '/app');
-        } else {
-            goto('/app')
-        }
-    }
-}
 
 export async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     const credential = await signInWithPopup(auth, provider);
-
-    authLoading.set(true);
-
     const user = credential.user;
-    const idToken = await user.getIdToken();
-
-    await serverSignIn(idToken);
-    await invalidateAll();
-    await routeToPayment(user)
-    return user;
+    if (user) {
+        authLoading.set(true);
+        const idToken = await user.getIdToken();
+        await serverSignIn(idToken);
+    }
 }
 
 async function serverSignIn(idToken: string) {
-    await fetch("/api/auth", {
+    const response = await fetch("/api/auth", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ idToken }),
     });
+    const { redirectUrl } = await response.json();
+
+    if (redirectUrl.startsWith('http://') || redirectUrl.startsWith('https://')) {
+        window.location.href = redirectUrl;
+    } else {
+        console.log('goto', redirectUrl)
+        await goto(redirectUrl);
+        // await invalidateAll(); if we stay on the same page this needs to be called
+        authLoading.set(false);
+    }
 }
 
 export async function serverSignOut() {
     authLoading.set(true);
-
     await fetch("/api/auth", { method: "DELETE" });
     await signOut(auth);
     await invalidateAll();
-
     authLoading.set(false);
 }
 
@@ -94,18 +87,16 @@ export async function handleEmailLinkSignIn() {
     }
 
     authLoading.set(true);
-
-    const credential = await signInWithEmailLink(auth, email, window.location.href);
+    const credential = await signInWithEmailLink(auth, email);
     const user = credential.user;
-    const idToken = await user.getIdToken();
-    await serverSignIn(idToken);
-    window.localStorage.removeItem('emailForSignIn');
-    const cleanUrl = new URL(window.location.href);
-    cleanUrl.searchParams.delete('email');
-    window.history.replaceState({}, '', cleanUrl.toString());
-    await invalidateAll();
-    await routeToPayment(user);
-    return user;
+    if (user) {
+        window.localStorage.removeItem('emailForSignIn');
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete('email');
+        window.history.replaceState({}, '', cleanUrl.toString());
+        const idToken = await user.getIdToken();
+        await serverSignIn(idToken);
+    }
 }
 
 
