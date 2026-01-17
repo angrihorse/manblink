@@ -51,19 +51,20 @@
 				Open the App
 			</a>
 
-			<button
-				onclick={serverSignOut}
-				class="absolute flex h-12 w-12 cursor-pointer items-center justify-center space-x-2 rounded-lg bg-stone-200 text-lg font-bold select-none hover:bg-stone-300"
-			>
-				<div>Sign Out</div>
-				<LogOut class="absolute right-6 size-6" strokeWidth={3} />
-			</button>
-			<button
-				onclick={manageSubscription}
-				class="relative flex h-16 cursor-pointer items-center justify-center space-x-2 rounded-lg bg-stone-200 text-lg font-bold select-none hover:bg-stone-300"
-			>
-				<div>Manage Billing</div>
-			</button>
+			<div class="flex flex-row space-x-4">
+				<button
+					onclick={serverSignOut}
+					class="relative flex size-16 cursor-pointer items-center justify-center space-x-2 rounded-lg bg-stone-200 text-lg font-bold select-none hover:bg-stone-300"
+				>
+					<LogOut class="size-6" strokeWidth={3} />
+				</button>
+				<button
+					onclick={manageSubscription}
+					class="relative flex h-16 grow cursor-pointer items-center justify-center space-x-2 rounded-lg bg-stone-200 px-4 text-lg font-bold select-none hover:bg-stone-300"
+				>
+					<div>Manage Billing</div>
+				</button>
+			</div>
 		</div>
 	{:else}
 		<div class="flex grow flex-col text-stone-800">

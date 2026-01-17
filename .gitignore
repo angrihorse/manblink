@@ -36,3 +36,4 @@ vite.config.ts.timestamp-*
 
 # Nested project (Firebase functions old structure)
 manblink/
+firebase-debug.log
