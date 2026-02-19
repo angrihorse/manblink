@@ -6,6 +6,7 @@ export interface Photo {
 	action: PhotoAction | null;
 	promptText: string;
 	inputPhotoId: string;
+	inputPhotoUrl: string;
 	url: string;
 	parentId?: string;
 	createdAt: number;

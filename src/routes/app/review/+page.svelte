@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { X, RefreshCw, Download, Pencil } from '@lucide/svelte';
 	import Balls from '$lib/components/Balls.svelte';
+	import TextInputModal from '$lib/components/TextInputModal.svelte';
 	import { Spring } from 'svelte/motion';
 	import { screenTitle, generationStartTime, photosInCount, fullSreen } from '$lib/stores/app';
 
@@ -120,6 +121,34 @@
 		xhr.send();
 	}
 
+	let showEditModal = $state(false);
+	let showRetryModal = $state(false);
+	let retryValue = $state(''); // captured when Retry is tapped, before modal mounts
+
+	async function handleEdit(prompt: string) {
+		if (!currentPhoto) return;
+		const photoUrl = currentPhoto.url;
+		$photosInCount++;
+		animateSwipe('left');
+		await fetch('/api/generate', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ promptTexts: [prompt], selfieUrl: photoUrl })
+		});
+	}
+
+	async function handleRetry(prompt: string) {
+		if (!currentPhoto) return;
+		const selfieUrl = currentPhoto.inputPhotoUrl;
+		$photosInCount++;
+		animateSwipe('left');
+		await fetch('/api/generate', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ promptTexts: [prompt], selfieUrl })
+		});
+	}
+
 	// Swipe with animation - now non-blocking
 	async function animateSwipe(direction: 'left' | 'right') {
 		if (!currentPhoto) return;
@@ -215,6 +244,21 @@
 	}
 </script>
 
+<TextInputModal
+	bind:show={showEditModal}
+	placeholder="What do you want to edit?"
+	submitLabel="Edit"
+	onsubmit={(prompt) => handleEdit(prompt)}
+/>
+
+<TextInputModal
+	bind:show={showRetryModal}
+	bind:value={retryValue}
+	placeholder="Describe the scene"
+	submitLabel="Retry"
+	onsubmit={(prompt) => handleRetry(prompt)}
+/>
+
 <div class="flex justify-center">
 	<div class="flex w-full max-w-md flex-col space-y-8 text-center">
 		{#if currentPhoto}
@@ -300,6 +344,22 @@
 						title="Discard"
 					>
 						<X class="size-6" strokeWidth={3} />
+					</button>
+
+					<button
+						onclick={() => { retryValue = currentPhoto?.promptText ?? ''; showRetryModal = true; }}
+						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
+						title="Retry"
+					>
+						<RefreshCw class="size-6" strokeWidth={3} />
+					</button>
+
+					<button
+						onclick={() => (showEditModal = true)}
+						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
+						title="Edit"
+					>
+						<Pencil class="size-6" strokeWidth={3} />
 					</button>
 
 					<button

@@ -14,13 +14,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'Unauthenticated' }, { status: 401 });
 	}
 
-	const { promptTexts, selfieBase64 } = await request.json();
+	const { promptTexts, selfieBase64, selfieUrl } = await request.json();
 
 	if (!promptTexts || !Array.isArray(promptTexts) || promptTexts.length === 0) {
 		return json({ error: 'Invalid prompts' }, { status: 400 });
 	}
 
-	if (!selfieBase64) {
+	if (!selfieBase64 && !selfieUrl) {
 		return json({ error: 'Missing selfie image' }, { status: 400 });
 	}
 
@@ -40,8 +40,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'Insufficient credits' }, { status: 402 });
 	}
 
-	const base64Data = selfieBase64.split(',')[1] || selfieBase64;
-	const selfieBuffer = Buffer.from(base64Data, 'base64');
+	let selfieBuffer: Buffer;
+	if (selfieBase64) {
+		const base64Data = selfieBase64.split(',')[1] || selfieBase64;
+		selfieBuffer = Buffer.from(base64Data, 'base64');
+	} else {
+		const res = await fetch(selfieUrl);
+		if (!res.ok) return json({ error: 'Failed to fetch selfie image' }, { status: 400 });
+		selfieBuffer = Buffer.from(await res.arrayBuffer());
+	}
 
 	const model = 'gemini-2.0-flash-exp';
 	const bucket = adminStorage.bucket();
@@ -88,7 +95,7 @@ async function generateImages(
 		});
 
 		const generationPromises = promptTexts.map((promptText) => {
-			return generateSingleImage(promptText, selfieBuffer, ai, model, bucket, userId, inputPhotoId);
+			return generateSingleImage(promptText, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl);
 		});
 
 		const results = await Promise.allSettled(generationPromises);
@@ -116,7 +123,8 @@ async function generateSingleImage(
 	model: string,
 	bucket: any,
 	userId: string,
-	inputPhotoId: string
+	inputPhotoId: string,
+	inputPhotoUrl: string
 ) {
 	try {
 		const imageBuffer = selfieBuffer;
@@ -133,6 +141,7 @@ async function generateSingleImage(
 			action: null,
 			promptText,
 			inputPhotoId,
+			inputPhotoUrl,
 			url: outputPhotoUrl,
 			createdAt: Date.now()
 		});
