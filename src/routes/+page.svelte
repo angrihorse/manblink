@@ -39,7 +39,7 @@
 		<div class="aspect-video w-full overflow-hidden rounded-xl bg-black">
 			<iframe
 				class="h-full w-full"
-				src="https://www.youtube.com/embed/HS6rW19GfBE?si=7rsRGARj8uB7eCMQ"
+				src="https://www.youtube.com/embed/NF0xr1sBOQ8?si=Gdw6fM-wOQPo4CpB"
 				title="Tutorial"
 				frameborder="0"
 				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

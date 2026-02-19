@@ -4,6 +4,7 @@
 	import { auth } from '$lib/client/firebase';
 	import { screenTitle, resetAppState } from '$lib/stores/app';
 	import { fly, slide } from 'svelte/transition';
+	import { initiateCheckout } from '$lib/client/stripe';
 
 	async function handleLogout() {
 		await signOut(auth);
@@ -25,20 +26,18 @@
 				Start
 			</button>
 
+			<button
+				onclick={() => initiateCheckout('', '')}
+				class="h-16 cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
+			>
+				Top-up
+			</button>
+
 			<a
 				href="/app/history"
 				class="flex h-16 items-center justify-center rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
 			>
 				History
-			</a>
-
-			<a
-				href="https://billing.stripe.com/p/login/test_00g9By0yT0qVeDCaEE"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="flex h-16 items-center justify-center rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
-			>
-				Billing
 			</a>
 
 			<button

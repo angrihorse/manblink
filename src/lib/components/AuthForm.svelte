@@ -6,7 +6,6 @@
 		serverSignOut,
 		authLoading
 	} from '$lib/client/firebase';
-	import { manageSubscription } from '$lib/client/stripe';
 	import { Landmark, LogOut, Mail } from '@lucide/svelte';
 	import Balls from '$lib/components/Balls.svelte';
 
