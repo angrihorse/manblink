@@ -1,20 +1,24 @@
 <script lang="ts">
 	import { User } from '@lucide/svelte';
+	import type { Writable } from 'svelte/store';
 
+	// Props
 	let {
-		uploadedImage = $bindable<string | null>(null)
+		uploadedSelfieBase64
 	}: {
-		uploadedImage?: string | null;
+		uploadedSelfieBase64: Writable<string | null>;
 	} = $props();
 
 	let isDragging = $state(false);
 	let fileInput: HTMLInputElement;
+	let activeAvatarUrl = $state<string | null>(null);
 
-	function processFile(file: File) {
+	async function processFile(file: File) {
 		if (file && file.type.startsWith('image/')) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
-				uploadedImage = e.target?.result as string;
+				const dataUrl = e.target?.result as string;
+				$uploadedSelfieBase64 = dataUrl;
 			};
 			reader.readAsDataURL(file);
 		}
@@ -54,9 +58,9 @@
 	ondrop={handleDrop}
 	ondragover={handleDragOver}
 	ondragleave={handleDragLeave}
-	class="flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-4 border-stone-700 bg-stone-200 hover:bg-stone-300"
-	class:border-dotted={!uploadedImage}
-	class:p-8={!uploadedImage}
+	class="flex w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl bg-stone-200 outline-8 outline-stone-700 outline-dotted hover:bg-stone-300"
+	class:py-8={!$uploadedSelfieBase64}
+	class:aspect-square={$uploadedSelfieBase64}
 	class:bg-stone-300={isDragging}
 >
 	<input
@@ -66,11 +70,13 @@
 		class="hidden"
 		onchange={handleFileSelect}
 	/>
-	{#if uploadedImage}
-		<img src={uploadedImage} alt="Uploaded selfie" class="h-full w-full object-cover" />
+	{#if $uploadedSelfieBase64}
+		<img src={$uploadedSelfieBase64} alt="Uploaded selfie" class="h-full w-full object-cover" />
+	{:else if activeAvatarUrl}
+		<img src={activeAvatarUrl} alt="Active avatar" class="h-full w-full object-cover" />
 	{:else}
 		<div class="flex flex-col items-center space-y-2 select-none">
-			<User class="size-8" />
+			<User class="size-8" strokeWidth={3} />
 			<span class="font-bold">Upload Selfie</span>
 		</div>
 	{/if}

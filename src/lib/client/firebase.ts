@@ -6,6 +6,7 @@ import { goto, invalidateAll } from "$app/navigation";
 import { writable } from "svelte/store";
 import { page } from "$app/state";
 import { initiateCheckout } from "./stripe";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFPXvqefQ5fYRdjEKlKLuws74FdC5tQmk",
@@ -19,10 +20,13 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore()
+export const storage = getStorage();
+
 
 export const getUserData = async (uid: string) => (await getDoc(doc(db, 'users', uid))).data();
 
 export const authLoading = writable(false);
+export const customRender = writable(false);
 
 
 export async function signInWithGoogle() {

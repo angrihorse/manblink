@@ -1,0 +1,101 @@
+1.
+appState.uploadedSelfieBase64 = dataUrl;
+appState.uploadedSelfiePreview = dataUrl;
+One of these fields is redundant
+
+2. 	{ #if showCustomInput } is ugly 
+two big buttons: cancel, save
+no X
+just white bg
+look at AuthForm for reference
+the state should be in app state
+prompt is saved to db only after successful generation
+
+3. mock genai api call - return the same image that I passed for every call
+
+4. if localStorage.user - PhotoUpload should show activeAvatar
+
+
+5. for the prompt screen show just titles in stone boxes - click - border turns to pink
+export const DEFAULT_PROMPTS: Prompt[] = [
+    { title: 'party', text: 'Night out, subtle colored lights', icon: '🎉' },
+    { title: 'hiking', text: 'Hiking a mountain trail', icon: '🥾' },
+    { title: 'cooking', text: 'Cooking in a clean modern kitchen', icon: '🍳' },
+    { title: 'volleyball', text: 'Beach volleyball game', icon: '🏐' },
+    { title: 'tennis', text: 'Tennis rally, focused', icon: '🎾' },
+    { title: 'football', text: 'Football match on grass field', icon: '⚽' },
+    { title: 'gym', text: 'Training session in a modern gym', icon: '💪' },
+    { title: 'dog', text: 'Walking a dog outdoors', icon: '🐕' },
+    { title: 'cat', text: 'Calm indoor moment with a cat', icon: '🐱' },
+    { title: 'wedding', text: 'Sharp formal look at a wedding', icon: '💒' },
+    { title: 'cafe', text: 'Cafe table, natural daylight', icon: '☕' },
+    { title: 'city', text: 'City street, confident walk', icon: '🏙️' },
+    { title: 'park', text: 'Sunny park, relaxed posture', icon: '🌳' }
+];
+
+
+remove
+    < !--Selected Prompts List-- >
+        { #if appState.selectedPrompts.length > 0 }
+        < div class="space-y-2" >
+			<div class="font-bold text-stone-600">Selected ({appState.selectedPrompts.length})</div>
+			<div class="max-h-48 space-y-2 overflow-y-auto">
+				{#each appState.selectedPrompts as prompt}
+					<div class="flex items-center space-x-2 rounded-xl bg-stone-200 p-3">
+						<span class="flex-1">{prompt.text}</span>
+						<button onclick={() => removePrompt(prompt.id)}>
+							<X strokeWidth={3} class="size-6" />
+						</button>
+					</div>
+				{/each}
+			</div>
+		</div >
+    {/if}
+
+[default1]
+[default2]
+[default3]
+[custom1]
+[Write your own][Continue]
+default are unselected by default
+custom are selected when added
+no icons no labels
+style is bg - stone - 200
+selected - same as in auth form rose outline
+
+get default prompts for db
+default boolean - ADMIN_ID can set a checkbox when adding - this will upload immediately
+
+prompt selector - is not a separate scrollable window
+its a part of the main window
+nothing is fixed to screen - not menu - not bottom buttons
+bottom buttons are always present
+if none selected - show none selected instead of Next
+
+6. remove sessionUsed from ui and schema
+
+===============================================
+Future:
+
+I have to see first
+EditPromptModal
+PhotoCard
+Review gemini api logic - no good
+/app - good but can be better
+*View.svelte
+
+this is no good - get your reference from fireship or older projects
+$effect(() => {
+    // Listen to user data for credits
+    if (page.data.user?.id) {
+        const unsubscribe = onSnapshot(doc(db, 'users', page.data.user.id), (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.data() as UserData;
+                userCredits = data.credits ?? 0;
+                sessionUsed = data.sessionCreditsUsed ?? 0;
+            }
+        });
+
+        return () => unsubscribe();
+    }
+});

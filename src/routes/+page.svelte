@@ -16,7 +16,7 @@
 		{ src: '/pics/gen8.jpeg', alt: 'Generated 8' }
 	];
 
-	let uploadedImage = $state<string | null>(null);
+	let uploadedSelfieBase64 = $state<string | null>(null);
 </script>
 
 <svelte:head>
@@ -24,53 +24,61 @@
 </svelte:head>
 
 <div class="space-y-8">
-	<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
+	<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 		<div class="space-y-2">
 			<div class="text-3xl font-bold">Turn 1 selfie into 100 Tinder photos</div>
 			<ul class="list-disc pl-5">
 				<li>Everybody knows that photos make or break your dating profile</li>
 				<li>But you can't afford a professional photographer following you 24/7</li>
-				<li>Hire AI to get high-quality photos in less than 2 minutes</li>
+				<li>Get your first high-quality AI photos in less than 2 minutes</li>
 			</ul>
 		</div>
 
-		<PhotoUpload bind:uploadedImage />
-
 		<AuthForm />
-	</div>
-</div>
 
-<PhotoRow sourceImg="/pics/src1.jpg" generatedPhotos={heroPhotos} />
-
-<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
-	<div class="flex flex-col space-y-4">
-		<div class="space-y-1">
-			<div class="text-3xl font-bold">Have a question?</div>
-			<div class="">Get a human answer within 10 minutes</div>
+		<div class="aspect-video w-full overflow-hidden rounded-xl bg-black">
+			<iframe
+				class="h-full w-full"
+				src="https://www.youtube.com/embed/HS6rW19GfBE?si=7rsRGARj8uB7eCMQ"
+				title="Tutorial"
+				frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen
+			></iframe>
 		</div>
-		<a
-			href="https://t.me/apecontrolbot"
-			target="_blank"
-			class="relative flex h-16 w-full items-center justify-center rounded-lg bg-stone-200 text-lg font-bold select-none hover:bg-stone-300"
-		>
-			<Send class="absolute right-6 size-6" strokeWidth={3} />
-			<span>Ask on Telegram</span>
-		</a>
 	</div>
 
-	<div>
-		<div class=" space-y-1 rounded-lg border-4 border-stone-200 p-8">
-			<div>
-				<span class="text-5xl font-bold text-rose-500">$20</span>
-				<span class="text-lg font-bold">/month</span>
+	<PhotoRow sourceImg="/pics/src1.jpg" generatedPhotos={heroPhotos} />
+
+	<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
+		<div class=" space-y-1">
+			<div class="font-bold">
+				<span class="text-5xl">$20</span>
+				<span class="">one-time </span>
 			</div>
 			<ul class="list-disc pl-5">
 				<li>100 AI photos</li>
 				<li>42 dating presets</li>
 				<li>Write your own prompts</li>
+				<li>Get Tinder verified</li>
 			</ul>
 		</div>
-	</div>
 
-	<AuthForm />
+		<AuthForm />
+
+		<div class="flex flex-col space-y-4">
+			<div class="space-y-1">
+				<div class="text-3xl font-bold">Have a question?</div>
+				<div class="">Get a human answer within 10 minutes</div>
+			</div>
+			<a
+				href="https://t.me/manblinkbot"
+				target="_blank"
+				class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
+			>
+				<Send class="absolute right-6 size-6" strokeWidth={3} />
+				<span>Ask on Telegram</span>
+			</a>
+		</div>
+	</div>
 </div>

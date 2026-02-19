@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
 import { FB_CLIENT_EMAIL, FB_PRIVATE_KEY, FB_PROJECT_ID } from '$env/static/private';
 
 try {
@@ -10,6 +11,7 @@ try {
             clientEmail: FB_CLIENT_EMAIL,
             privateKey: FB_PRIVATE_KEY
         }),
+        storageBucket: `${FB_PROJECT_ID}.firebasestorage.app`
     });
 } catch (err) {
     if (!/already exists/u.test(err.message)) {
@@ -19,6 +21,7 @@ try {
 
 export const adminDb = getFirestore();
 export const adminAuth = getAuth();
+export const adminStorage = getStorage();
 
 export const getUserFromDb = async (userId: string) =>
     (await adminDb.collection('users').doc(userId).get()).data();
@@ -27,7 +30,7 @@ export const updateUserInDb = async (userId: string, data: object) => {
     await adminDb.collection('users').doc(userId).update(data);
 };
 
-export const getUserDataByEmail = async (email: string) => (await adminDb.collection('users').where('email', '==', email).limit(1).get()).docs.map(d => ({ id: d.id, ...d.data() }))[0];
+export const getUserDataByEmail = async (email: string) => (await adminDb.collection('users').where('email', '==', email).limit(1).get()).docs.map((d: any) => ({ id: d.id, ...d.data() }))[0];
 
 export const updateOrCreateUserByEmail = async (email: string, data: object): Promise<void> => {
     const existingUser = await getUserDataByEmail(email);

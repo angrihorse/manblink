@@ -14,7 +14,7 @@
 
 	<a
 		href="/"
-		class="flex h-16 max-w-48 items-center justify-center rounded-lg bg-stone-200 px-4 text-lg font-bold select-none hover:bg-stone-300"
+		class="flex h-16 max-w-48 items-center justify-center rounded-xl bg-stone-200 px-4 font-bold select-none hover:bg-stone-300"
 	>
 		Home
 	</a>
