@@ -58,16 +58,22 @@
 		$generationStartTime = Date.now();
 		$photosInCount = $selectedPrompts.length;
 
-		await fetch('/api/generate', {
+		const res = await fetch('/api/generate', {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				promptTexts: $selectedPrompts.map((p) => p.text),
 				selfieBase64: $uploadedSelfieBase64
 			})
 		});
+
+		if (!res.ok) {
+			const body = await res.json();
+			const title = `${res.status} ${res.statusText}`;
+			const message = body.error ?? 'Something went wrong. Please try again.';
+			goto(`/error?title=${encodeURIComponent(title)}&message=${encodeURIComponent(message)}`);
+			return;
+		}
 
 		goto('/app/review');
 	}
@@ -112,5 +118,6 @@
 				Launch
 			</button>
 		</div>
+
 	</div>
 </div>

@@ -1,12 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { serverSignOut } from '$lib/client/firebase';
-	import { screenTitle, resetAppState } from '$lib/stores/app';
+	import { screenTitle, resetAppState, userCredits } from '$lib/stores/app';
 	import { fly, slide } from 'svelte/transition';
 	import { initiateCheckout } from '$lib/client/stripe';
 
 	function handleStart() {
-		goto('/app/select');
+		if ($userCredits === 0) {
+			initiateCheckout('', '');
+		} else {
+			goto('/app/select');
+		}
 	}
 </script>
 

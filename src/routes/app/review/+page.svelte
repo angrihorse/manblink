@@ -5,7 +5,7 @@
 	import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import { X, RefreshCw, Download, Pencil, Send } from '@lucide/svelte';
+	import { X, RefreshCw, Download, Pencil } from '@lucide/svelte';
 	import Balls from '$lib/components/Balls.svelte';
 	import TextInputModal from '$lib/components/TextInputModal.svelte';
 	import { Spring } from 'svelte/motion';
@@ -20,7 +20,6 @@
 	let photoQueue = $state<Photo[]>([]);
 	let currentPhoto = $state<Photo | null>(null);
 	let currentImageLoaded = $state(false);
-	let generationError = $state<{ title: string; message: string } | null>(null);
 
 	// Track animating cards separately
 	let animatingCards = $state<
@@ -51,14 +50,14 @@
 	// Icon opacity based on swipe distance (0 to 1)
 	let swipeOpacity = $derived(Math.min(1, Math.abs(coords.current.x) / SWIPE_THRESHOLD));
 
+	function goToError(title: string, message: string) {
+		goto(`/error?title=${encodeURIComponent(title)}&message=${encodeURIComponent(message)}`);
+	}
+
 	onMount(() => {
 		const timeout = setTimeout(() => {
 			if (!currentPhoto) {
-				generationError = {
-					title: 'Timed out',
-					message: 'Generation took too long. Please try again.'
-				};
-				screenTitle.set('Error');
+				goToError('Timed out', 'Generation took too long. Please try again.');
 			}
 		}, 120_000);
 
@@ -72,11 +71,7 @@
 				if (change.type === 'added') {
 					const data = change.doc.data();
 					if (data.createdAt >= $generationStartTime && !currentPhoto) {
-						generationError = {
-							title: data.title ?? 'Generation failed',
-							message: data.message ?? 'Please try again.'
-						};
-						screenTitle.set('Error');
+						goToError(data.title ?? 'Generation failed', data.message ?? 'Please try again.');
 					}
 				}
 			}
@@ -408,23 +403,6 @@
 						<Download class="size-6" strokeWidth={3} />
 					</button>
 				</div>
-			</div>
-		{:else if generationError}
-			<div class="flex flex-col space-y-4 text-left">
-				<div class="space-y-1">
-					<p class="text-3xl font-bold">{generationError.title}</p>
-					<p class="">{generationError.message}</p>
-				</div>
-				<a
-					href="https://t.me/oricoac?text={encodeURIComponent(
-						`${generationError.title}: ${generationError.message}`
-					)}"
-					target="_blank"
-					class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
-				>
-					<Send class="absolute right-6 size-6" strokeWidth={3} />
-					<span>Message developer</span>
-				</a>
 			</div>
 		{:else}
 			<div class="flex h-64 items-center justify-center">

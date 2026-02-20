@@ -261,7 +261,7 @@ async function callGeminiAPI(
 	const config = {
 		responseModalities: ['IMAGE', 'TEXT'],
 		imageConfig: {
-			aspectRatio: '9:16',
+			aspectRatio: '4:5',
 			imageSize: '1K',
 		}
 	};

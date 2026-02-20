@@ -9,11 +9,10 @@
 	import type { UserData } from '$lib/types';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { ArrowLeft } from '@lucide/svelte';
-	import { fixedBar, fullSreen as fullSreen, screenTitle } from '$lib/stores/app';
+	import { fixedBar, fullSreen as fullSreen, screenTitle, userCredits } from '$lib/stores/app';
 	import { fly } from 'svelte/transition';
 
 	let { children } = $props();
-	let userCredits = $state<number | null>(null);
 
 	onMount(async () => {
 		await handleEmailLinkSignIn();
@@ -30,7 +29,7 @@
 			const unsubscribe = onSnapshot(doc(db, 'users', page.data.user.id), (snapshot) => {
 				if (snapshot.exists()) {
 					const data = snapshot.data() as UserData;
-					userCredits = data.credits ?? 0;
+					userCredits.set(data.credits ?? 0);
 				}
 			});
 

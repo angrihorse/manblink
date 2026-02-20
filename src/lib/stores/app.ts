@@ -9,6 +9,7 @@ export const photosInCount = writable<number>(0);
 export const screenTitle = writable<string>('');
 export const fixedBar = writable<boolean>(false)
 export const fullSreen = writable<boolean>(true)
+export const userCredits = writable<number | null>(null)
 
 export function resetAppState() {
 	selectedPrompts.set([]);
