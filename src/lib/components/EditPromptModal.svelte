@@ -67,7 +67,7 @@
 
 			<textarea
 				bind:value={editedPromptText}
-				class="h-48 w-full rounded-xl bg-stone-200 p-4 font-bold outline-none focus:ring-4 focus:ring-rose-500"
+				class="h-40 w-full rounded-xl bg-stone-200 p-4 font-bold outline-none focus:ring-4 focus:ring-rose-500"
 				placeholder="Edit your prompt..."
 			></textarea>
 

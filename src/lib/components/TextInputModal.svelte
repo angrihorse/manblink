@@ -42,12 +42,15 @@
 </script>
 
 {#if show}
-	<div use:lockScroll class="fixed inset-0 z-10 flex h-dvh items-center justify-center bg-white px-4">
+	<div
+		use:lockScroll
+		class="fixed inset-0 z-10 flex h-dvh items-center justify-center bg-white px-4"
+	>
 		<div class="w-full max-w-md space-y-4">
 			<textarea
 				bind:value
 				{placeholder}
-				class="h-32 w-full resize-none rounded-xl bg-stone-200 p-4 font-bold placeholder-stone-700 outline-none focus:ring-4 focus:ring-rose-500"
+				class="h-40 w-full resize-none rounded-xl bg-stone-200 p-4 font-bold placeholder-stone-700 outline-none focus:ring-4 focus:ring-rose-500"
 			></textarea>
 			<div class="flex gap-4">
 				<button

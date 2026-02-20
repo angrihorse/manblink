@@ -21,9 +21,11 @@ const DEFAULT_SPRINKLES = [
 
 	{ group: 'Pose', text: 'side profile looking away' },
 	{ group: 'Pose', text: 'front facing with direct gaze' },
+	{ group: 'Pose', text: 'leaning to the left' },
+	{ group: 'Pose', text: 'leaning to the right' },
 
-	{ group: 'Posture', text: 'shoulders relaxed' },
-	{ group: 'Posture', text: 'open chest posture' },
+	{ group: 'Pose', text: 'open chest posture' },
+	{ group: 'Pose', text: 'slight head tilt' },
 
 	{ group: 'Mood', text: 'focused' },
 	{ group: 'Mood', text: 'laughing' },
@@ -50,7 +52,7 @@ function applySprinkles(promptText: string): string {
 	return [promptText, ...picks, ...ALWAYS_ON_SPRINKLES].join(', ');
 }
 
-const MOCK_GEMINI = true;
+const MOCK_GEMINI = false;
 
 const ai = new GoogleGenAI({
 	apiKey: GEMINI_API_KEY
