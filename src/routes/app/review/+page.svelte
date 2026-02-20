@@ -55,11 +55,19 @@
 	}
 
 	onMount(() => {
+		console.log(
+			'[review] mount — generationStartTime:',
+			$generationStartTime,
+			'photosInCount:',
+			$photosInCount
+		);
+
 		const timeout = setTimeout(() => {
 			if (!currentPhoto) {
-				goToError('Timed out', 'Generation took too long. Please try again.');
+				console.warn('[review] timeout — no photo arrived in 180s');
+				goToError('Timed out', 'Generation took too long. Please try again');
 			}
-		}, 120_000);
+		}, 180_000);
 
 		const errorQ = query(
 			collection(db, 'photos'),
@@ -70,7 +78,9 @@
 			for (const change of snapshot.docChanges()) {
 				if (change.type === 'added') {
 					const data = change.doc.data();
-					if (data.createdAt >= $generationStartTime && !currentPhoto) {
+					const passes = data.createdAt >= $generationStartTime && !currentPhoto;
+					console.log(`[review] error doc — "${data.title}" createdAt:${data.createdAt} startTime:${$generationStartTime} passes:${passes}`);
+					if (passes) {
 						goToError(data.title ?? 'Generation failed', data.message ?? 'Please try again.');
 					}
 				}
@@ -83,18 +93,15 @@
 			where('action', '==', null)
 		);
 		const unsubscribe = onSnapshot(q, async (snapshot) => {
-			const changes = snapshot.docChanges();
-
-			for (const change of changes) {
+			for (const change of snapshot.docChanges()) {
 				if (change.type === 'added') {
 					const photoData = {
 						id: change.doc.id,
 						...change.doc.data()
 					} as Photo;
 
-					if (photoData.createdAt < $generationStartTime) {
-						$photosInCount++;
-					}
+					const isOld = photoData.createdAt < $generationStartTime;
+					if (isOld) $photosInCount++;
 
 					// Preload image
 					const img = new Image();
@@ -106,6 +113,8 @@
 					} else {
 						photoQueue.push(photoData);
 					}
+
+					console.log(`[review] photo ${photoData.id} — ${isOld ? 'old' : 'new'}, queue:${photoQueue.length} pending:${$photosInCount}`);
 					screenTitle.set('Review photos');
 				}
 			}
@@ -125,6 +134,7 @@
 		currentPhoto = photoQueue.pop() ?? null;
 
 		if ($photosInCount <= 0 && currentPhoto === null) {
+			console.log('[review] done — going to /app');
 			goto('/app');
 		}
 	}
@@ -152,8 +162,6 @@
 	}
 
 	let showEditModal = $state(false);
-	let showRetryModal = $state(false);
-	let retryValue = $state(''); // captured when Retry is tapped, before modal mounts
 
 	async function handleEdit(prompt: string) {
 		if (!currentPhoto) return;
@@ -167,9 +175,10 @@
 		});
 	}
 
-	async function handleRetry(prompt: string) {
+	async function handleRetry() {
 		if (!currentPhoto) return;
 		const selfieUrl = currentPhoto.inputPhotoUrl;
+		const prompt = currentPhoto.originalPrompt ?? currentPhoto.promptText;
 		$photosInCount++;
 		animateSwipe('left');
 		await fetch('/api/generate', {
@@ -191,7 +200,9 @@
 		);
 
 		// Add to animating cards array
+		const cardId = Math.random();
 		const animatingCard = {
+			id: cardId,
 			photo: photoToProcess,
 			coords: animatingSpring,
 			direction
@@ -216,7 +227,7 @@
 		await animatingSpring.set({ x: targetX, y: 0 });
 
 		// Remove from animating cards after animation completes
-		animatingCards = animatingCards.filter((card) => card !== animatingCard);
+		animatingCards = animatingCards.filter((card) => card.id !== cardId);
 	}
 
 	// Touch handlers
@@ -281,14 +292,6 @@
 	onsubmit={(prompt) => handleEdit(prompt)}
 />
 
-<TextInputModal
-	bind:show={showRetryModal}
-	bind:value={retryValue}
-	placeholder="Describe the scene"
-	submitLabel="Retry"
-	onsubmit={(prompt) => handleRetry(prompt)}
-/>
-
 <div class="flex justify-center">
 	<div class="flex w-full max-w-md flex-col space-y-8 text-center">
 		{#if currentPhoto}
@@ -308,7 +311,7 @@
 					{/if}
 
 					<!-- Animating cards (flying off screen) -->
-					{#each animatingCards as card (card.photo.id)}
+					{#each animatingCards as card (card.id)}
 						<div
 							class="pointer-events-none absolute inset-0 overflow-hidden rounded-xl bg-stone-100"
 							style="transform: translateX({card.coords.current.x}px) translateY({card.coords
@@ -377,10 +380,7 @@
 					</button>
 
 					<button
-						onclick={() => {
-							retryValue = currentPhoto?.promptText ?? '';
-							showRetryModal = true;
-						}}
+						onclick={handleRetry}
 						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
 						title="Retry"
 					>

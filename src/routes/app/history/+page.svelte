@@ -165,12 +165,21 @@
 		{:else}
 			<div class="space-y-8">
 				{#each displayedPhotos as photo (photo.id)}
-					<button
-						onclick={() => handleDownload(photo)}
-						class="aspect-3/4 w-full cursor-pointer overflow-hidden rounded-xl outline-8 outline-transparent hover:outline-stone-300"
-					>
-						<img src={photo.url} alt="Generated" class="h-full w-full bg-stone-100 object-cover" />
-					</button>
+					<div class="space-y-2">
+						<button
+							onclick={() => handleDownload(photo)}
+							class="aspect-3/4 w-full cursor-pointer overflow-hidden rounded-xl outline-8 outline-transparent hover:outline-stone-300"
+						>
+							<img
+								src={photo.url}
+								alt="Generated"
+								class="h-full w-full bg-stone-100 object-cover"
+							/>
+						</button>
+						{#if photo.promptText}
+							<p class="">{photo.promptText}</p>
+						{/if}
+					</div>
 				{:else}
 					<div class="flex h-64 items-center justify-center text-center">
 						<div class="text-3xl font-bold text-stone-300">Empty</div>

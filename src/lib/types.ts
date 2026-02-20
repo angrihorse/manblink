@@ -4,6 +4,8 @@ export interface Photo {
 	id: string;
 	userId: string;
 	action: PhotoAction | null;
+	originalPrompt: string;
+	sprinkles: string[];
 	promptText: string;
 	inputPhotoId: string;
 	inputPhotoUrl: string;
@@ -35,7 +37,7 @@ export const DEFAULT_PROMPTS: Prompt[] = [
 	{ id: 'gym', label: '💪 Gym', text: 'Performing barbell bicep curls inside a modern gym' },
 	{ id: 'dog', label: '🐕 Dog', text: 'Petting a golden retriever on a patch of grass in a park' },
 	{ id: 'cat', label: '🐈 Cat', text: 'Sitting on a sofa petting a cat in a cozy apartment' },
-	{ id: 'wedding', label: '👔 Wedding', text: 'Standing in a sharp formal look at an outdoor wedding' },
+	{ id: 'wedding', label: '👔 Wedding', text: 'Standing at an outdoor wedding' },
 	{ id: 'cafe', label: '☕ Cafe', text: 'Sitting at a small wooden table in a cafe' },
 	{ id: 'city', label: '🏙️ City', text: 'Walking along a sidewalk in a busy city street' },
 	{ id: 'park', label: '🌳 Park', text: 'Walking along a paved path in a public park' },

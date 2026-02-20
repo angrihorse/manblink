@@ -170,7 +170,7 @@ npm run dev
 1. User navigates to `/app`
 2. **Screen 1**: Select prompts (default or custom)
 3. **Screen 2**: Upload selfie
-4. Click "Get Photos" → Calls API → Credits deducted
+4. Click "Get Photos" - Calls API - Credits deducted
 5. **Screen 3**: Timer counts down while photos generate
 6. Real-time updates as photos are generated
 7. Review photos and take actions (discard/Retry/edit/download)
@@ -205,10 +205,10 @@ Uses Google Gemini 2.0 Flash Exp model:
 
 ## Error Handling
 
-- Invalid prompts → 400 error
-- Missing selfie → 400 error
-- Insufficient credits → 402 error
-- Failed generations → Photo status set to 'failed'
+- Invalid prompts - 400 error
+- Missing selfie - 400 error
+- Insufficient credits - 402 error
+- Failed generations - Photo status set to 'failed'
 - Storage errors logged to console
 
 ## Notes

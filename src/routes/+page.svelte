@@ -15,6 +15,11 @@
 		{ src: '/pics/gen7.jpeg', alt: 'Generated 7' },
 		{ src: '/pics/gen8.jpeg', alt: 'Generated 8' }
 	];
+	const bottomPhotos = [
+		{ src: '/pics/gen9.jpg', alt: 'Generated 9' },
+		{ src: '/pics/gen10.jpg', alt: 'Generated 10' },
+		{ src: '/pics/gen11.jpg', alt: 'Generated 11' }
+	];
 
 	let uploadedSelfieBase64 = $state<string | null>(null);
 </script>
@@ -30,7 +35,7 @@
 			<ul class="list-disc pl-5">
 				<li>Everybody knows that photos make or break your dating profile</li>
 				<li>But you can't afford a professional photographer following you 24/7</li>
-				<li>Order high-quality AI photos right here and get them within 1 minute</li>
+				<li>Order high-quality AI photos right here and get them within 3 minutes</li>
 			</ul>
 		</div>
 
@@ -81,4 +86,6 @@
 			</a>
 		</div>
 	</div>
+
+	<PhotoRow generatedPhotos={bottomPhotos} />
 </div>

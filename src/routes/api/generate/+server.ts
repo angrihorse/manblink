@@ -6,15 +6,18 @@ import { GEMINI_API_KEY } from '$env/static/private';
 import { FieldValue } from 'firebase-admin/firestore';
 
 const ALWAYS_ON_SPRINKLES = [
-	'deep depth of field',
-	'35mm lens',
+	'shot by a photographer',
 ];
 
 const DEFAULT_SPRINKLES = [
-	{ group: 'Angle', text: 'upper body shot' },
-	{ group: 'Angle', text: 'full body shot' },
-	{ group: 'Angle', text: 'wide angle shot' },
-	{ group: 'Angle', text: 'low angle shot' },
+	{ group: 'Framing', text: 'upper body shot' },
+	{ group: 'Framing', text: 'full body shot' },
+
+	{ group: 'Lens', text: 'wide angle lens' },
+	{ group: 'Lens', text: 'telephoto lens' },
+
+	{ group: 'Angle', text: 'low angle' },
+	{ group: 'Angle', text: 'eye-level' },
 
 	{ group: 'Light', text: 'golden hour light' },
 	{ group: 'Light', text: 'overcast light' },
@@ -23,7 +26,6 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Pose', text: 'front facing with direct gaze' },
 	{ group: 'Pose', text: 'leaning to the left' },
 	{ group: 'Pose', text: 'leaning to the right' },
-
 	{ group: 'Pose', text: 'open chest posture' },
 	{ group: 'Pose', text: 'slight head tilt' },
 
@@ -34,13 +36,31 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Composition', text: 'use rule of thirds' },
 	{ group: 'Composition', text: 'centered composition' },
 	{ group: 'Composition', text: 'off-center composition' },
+	{ group: 'Composition', text: 'asymmetrical composition' },
+
+	{ group: 'ISO', text: 'overexposed' },
+	{ group: 'ISO', text: 'underexposed' },
+
+	{ group: 'Depth of field', text: 'blurry background' },
+	{ group: 'Depth of field', text: 'background in focus' },
+
+	{ group: 'Shutter speed', text: 'slight motion blur' },
 ];
 
-function applySprinkles(promptText: string): string {
+function fisherYates<T>(arr: T[]): T[] {
+	const a = [...arr];
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[a[i], a[j]] = [a[j], a[i]];
+	}
+	return a;
+}
+
+function applySprinkles(promptText: string): { augmented: string; sprinkles: string[] } {
 	const groups = [...new Set(DEFAULT_SPRINKLES.map((s) => s.group))];
 
 	const numGroups = Math.floor(Math.random() * 3) + 1; // 1-3
-	const shuffled = groups.sort(() => Math.random() - 0.5);
+	const shuffled = fisherYates(groups);
 	const selectedGroups = shuffled.slice(0, numGroups);
 
 	const picks = selectedGroups.map((group) => {
@@ -49,7 +69,14 @@ function applySprinkles(promptText: string): string {
 		return pick.text;
 	});
 
-	return [promptText, ...picks, ...ALWAYS_ON_SPRINKLES].join(', ');
+	const pairLog = selectedGroups.map((g, i) => `${g} - ${picks[i]}`).join(', ');
+	console.log(`[sprinkles] ${numGroups} groups: ${pairLog}`);
+
+	const allSprinkles = [...picks, ...ALWAYS_ON_SPRINKLES];
+	return {
+		augmented: [promptText, ...allSprinkles].join(', '),
+		sprinkles: allSprinkles,
+	};
 }
 
 const MOCK_GEMINI = false;
@@ -120,8 +147,6 @@ async function uploadPhotoToStorage(bucket: any, userId: string, imageBuffer: Bu
 
 	const url = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
 
-	console.log('URL generated:', { photoId, url, hasUrl: !!url });
-
 	return { photoId, url };
 }
 
@@ -141,6 +166,8 @@ function parseGeminiError(error: any): { title: string; message: string } {
 	}
 }
 
+function ms(t0: number) { return `+${Date.now() - t0}ms`; }
+
 async function generateImages(
 	promptTexts: string[],
 	selfieBuffer: Buffer,
@@ -149,8 +176,13 @@ async function generateImages(
 	bucket: any,
 	userId: string
 ) {
+	const t0 = Date.now();
+	console.log(`[generate] start — user:${userId} ${promptTexts.length} prompt(s), selfie ${(selfieBuffer.length / 1024).toFixed(0)} KB`);
+
 	try {
+		const t1 = Date.now();
 		const { photoId: inputPhotoId, url: inputPhotoUrl } = await uploadPhotoToStorage(bucket, userId, selfieBuffer);
+		console.log(`[generate] ${ms(t0)} selfie uploaded (${ms(t1)})`);
 
 		await adminDb.collection('photos').doc(inputPhotoId).set({
 			userId,
@@ -158,22 +190,24 @@ async function generateImages(
 			url: inputPhotoUrl,
 			createdAt: Date.now(),
 		});
+		console.log(`[generate] ${ms(t0)} input doc written`);
 
-		const generationPromises = promptTexts.map((promptText) => {
-			const augmented = applySprinkles(promptText);
-			return generateSingleImage(augmented, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl);
+		const generationPromises = promptTexts.map((promptText, i) => {
+			const { augmented, sprinkles } = applySprinkles(promptText);
+			console.log(`[generate] ${ms(t0)} starting image ${i + 1}/${promptTexts.length}: "${augmented}"`);
+			return generateSingleImage(augmented, promptText, sprinkles, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl, i + 1, t0);
 		});
 
 		const results = await Promise.allSettled(generationPromises);
 
 		const successful = results.filter(r => r.status === 'fulfilled').length;
 		const failed = results.filter(r => r.status === 'rejected').length;
+		console.log(`[generate] ${ms(t0)} all done — ${successful} ok, ${failed} failed`);
 
 		if (failed > 0) {
-			console.error(`Generation complete - Success: ${successful}, Failed: ${failed}`);
 			results.forEach((result, index) => {
 				if (result.status === 'rejected') {
-					console.error(`Generation ${index + 1} failed:`, result.reason);
+					console.error(`[generate] ${ms(t0)} image ${index + 1} failed:`, result.reason);
 				}
 			});
 		}
@@ -190,7 +224,7 @@ async function generateImages(
 			});
 		}
 	} catch (error: any) {
-		console.error('Fatal error in generateImages:', error);
+		console.error(`[generate] ${ms(t0)} fatal error:`, error);
 		const { title, message } = parseGeminiError(error);
 		await adminDb.collection('photos').add({
 			userId,
@@ -204,32 +238,44 @@ async function generateImages(
 
 async function generateSingleImage(
 	promptText: string,
+	originalPrompt: string,
+	sprinkles: string[],
 	selfieBuffer: Buffer,
 	ai: any,
 	model: string,
 	bucket: any,
 	userId: string,
 	inputPhotoId: string,
-	inputPhotoUrl: string
+	inputPhotoUrl: string,
+	idx: number,
+	t0global: number
 ) {
+	const t0 = Date.now();
 	try {
 		const imageBuffer = MOCK_GEMINI ? selfieBuffer : await callGeminiAPI(selfieBuffer, promptText, ai, model);
+		console.log(`[generate] ${ms(t0global)} image ${idx} gemini done (${ms(t0)})`);
 
 		if (!imageBuffer) {
 			return;
 		}
 
+		const t1 = Date.now();
 		const { photoId: outputPhotoId, url: outputPhotoUrl } = await uploadPhotoToStorage(bucket, userId, imageBuffer);
+		console.log(`[generate] ${ms(t0global)} image ${idx} uploaded (${ms(t1)}) - ${outputPhotoId}`);
 
+		const t2 = Date.now();
 		await adminDb.collection('photos').doc(outputPhotoId).set({
 			userId,
 			action: null,
+			originalPrompt,
+			sprinkles,
 			promptText,
 			inputPhotoId,
 			inputPhotoUrl,
 			url: outputPhotoUrl,
 			createdAt: Date.now()
 		});
+		console.log(`[generate] ${ms(t0global)} image ${idx} firestore written (${ms(t2)}) - ${outputPhotoId}`);
 
 		const userRef = adminDb.collection('users').doc(userId);
 		await userRef.update({
