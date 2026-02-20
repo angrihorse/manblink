@@ -5,6 +5,49 @@ import { GoogleGenAI } from '@google/genai';
 import { GEMINI_API_KEY } from '$env/static/private';
 import { FieldValue } from 'firebase-admin/firestore';
 
+const ALWAYS_ON_SPRINKLES = [
+	'everything in focus',
+];
+
+const DEFAULT_SPRINKLES = [
+	{ group: 'Camera', text: 'close-up shot' },
+	{ group: 'Camera', text: 'wide angle shot' },
+	{ group: 'Camera', text: 'low angle shot' },
+
+	{ group: 'Light', text: 'golden hour light' },
+	{ group: 'Light', text: 'overcast light' },
+
+	{ group: 'Pose', text: 'side profile looking away' },
+	{ group: 'Pose', text: 'front facing with direct gaze' },
+
+	{ group: 'Posture', text: 'shoulders relaxed' },
+	{ group: 'Posture', text: 'hands in pockets' },
+	{ group: 'Posture', text: 'open chest posture' },
+
+	{ group: 'Mood', text: 'focused mood' },
+	{ group: 'Mood', text: 'laughing' },
+	{ group: 'Mood', text: 'relaxed mood' },
+
+	{ group: 'Composition', text: 'rule of thirds composition' },
+	{ group: 'Composition', text: 'centered composition' },
+];
+
+function applySprinkles(promptText: string): string {
+	const groups = [...new Set(DEFAULT_SPRINKLES.map((s) => s.group))];
+
+	const numGroups = Math.floor(Math.random() * 3) + 1; // 1-3
+	const shuffled = groups.sort(() => Math.random() - 0.5);
+	const selectedGroups = shuffled.slice(0, numGroups);
+
+	const picks = selectedGroups.map((group) => {
+		const options = DEFAULT_SPRINKLES.filter((s) => s.group === group);
+		const pick = options[Math.floor(Math.random() * options.length)];
+		return pick.text;
+	});
+
+	return [promptText, ...picks, ...ALWAYS_ON_SPRINKLES].join(', ');
+}
+
 const ai = new GoogleGenAI({
 	apiKey: GEMINI_API_KEY
 });
@@ -95,7 +138,8 @@ async function generateImages(
 		});
 
 		const generationPromises = promptTexts.map((promptText) => {
-			return generateSingleImage(promptText, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl);
+			const augmented = applySprinkles(promptText);
+			return generateSingleImage(augmented, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl);
 		});
 
 		const results = await Promise.allSettled(generationPromises);

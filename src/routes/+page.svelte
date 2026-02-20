@@ -30,7 +30,7 @@
 			<ul class="list-disc pl-5">
 				<li>Everybody knows that photos make or break your dating profile</li>
 				<li>But you can't afford a professional photographer following you 24/7</li>
-				<li>Get your first high-quality AI photos in less than 2 minutes</li>
+				<li>Order high-quality AI photos right here and get them within 1 minute</li>
 			</ul>
 		</div>
 
@@ -58,7 +58,7 @@
 			</div>
 			<ul class="list-disc pl-5">
 				<li>100 AI photos</li>
-				<li>42 dating presets</li>
+				<li>18 hand-picked presets</li>
 				<li>Write your own prompts</li>
 				<li>Get Tinder verified</li>
 			</ul>
@@ -72,7 +72,7 @@
 				<div class="">Get a human answer within 10 minutes</div>
 			</div>
 			<a
-				href="https://t.me/manblinkbot"
+				href="https://t.me/oricocoach"
 				target="_blank"
 				class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
 			>
