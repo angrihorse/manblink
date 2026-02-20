@@ -6,13 +6,15 @@ import { GEMINI_API_KEY } from '$env/static/private';
 import { FieldValue } from 'firebase-admin/firestore';
 
 const ALWAYS_ON_SPRINKLES = [
-	'everything in focus',
+	'deep depth of field',
+	'35mm lens',
 ];
 
 const DEFAULT_SPRINKLES = [
-	{ group: 'Camera', text: 'close-up shot' },
-	{ group: 'Camera', text: 'wide angle shot' },
-	{ group: 'Camera', text: 'low angle shot' },
+	{ group: 'Angle', text: 'upper body shot' },
+	{ group: 'Angle', text: 'full body shot' },
+	{ group: 'Angle', text: 'wide angle shot' },
+	{ group: 'Angle', text: 'low angle shot' },
 
 	{ group: 'Light', text: 'golden hour light' },
 	{ group: 'Light', text: 'overcast light' },
@@ -23,12 +25,13 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Posture', text: 'shoulders relaxed' },
 	{ group: 'Posture', text: 'open chest posture' },
 
-	{ group: 'Mood', text: 'focused mood' },
+	{ group: 'Mood', text: 'focused' },
 	{ group: 'Mood', text: 'laughing' },
-	{ group: 'Mood', text: 'relaxed mood' },
+	{ group: 'Mood', text: 'relaxed' },
 
-	{ group: 'Composition', text: 'rule of thirds composition' },
+	{ group: 'Composition', text: 'use rule of thirds' },
 	{ group: 'Composition', text: 'centered composition' },
+	{ group: 'Composition', text: 'off-center composition' },
 ];
 
 function applySprinkles(promptText: string): string {
@@ -46,6 +49,8 @@ function applySprinkles(promptText: string): string {
 
 	return [promptText, ...picks, ...ALWAYS_ON_SPRINKLES].join(', ');
 }
+
+const MOCK_GEMINI = true;
 
 const ai = new GoogleGenAI({
 	apiKey: GEMINI_API_KEY
@@ -206,7 +211,7 @@ async function generateSingleImage(
 	inputPhotoUrl: string
 ) {
 	try {
-		const imageBuffer = await callGeminiAPI(selfieBuffer, promptText, ai, model);
+		const imageBuffer = MOCK_GEMINI ? selfieBuffer : await callGeminiAPI(selfieBuffer, promptText, ai, model);
 
 		if (!imageBuffer) {
 			return;

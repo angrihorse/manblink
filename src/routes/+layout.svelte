@@ -71,11 +71,11 @@
 			<div class=" font-bold">{$screenTitle}</div>
 		{/if}
 
-		{#if page.data.user && userCredits !== null}
+		{#if page.data.user && $userCredits !== null}
 			<div
 				class="absolute right-0 items-center justify-center px-6 font-bold tracking-wide select-none"
 			>
-				<span class="text-rose-500">@</span>{userCredits}
+				<span class="text-rose-500">@</span>{$userCredits}
 			</div>
 		{/if}
 	</div>
