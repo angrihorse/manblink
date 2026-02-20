@@ -38,7 +38,7 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Composition', text: 'off-center composition' },
 	{ group: 'Composition', text: 'asymmetrical composition' },
 
-	{ group: 'ISO', text: 'overexposed' },
+	{ group: 'ISO', text: 'slightly overexposed' },
 	{ group: 'ISO', text: 'underexposed' },
 
 	{ group: 'Depth of field', text: 'blurry background' },
@@ -79,10 +79,11 @@ function applySprinkles(promptText: string): { augmented: string; sprinkles: str
 	};
 }
 
-const MOCK_GEMINI = true;
+const MOCK_GEMINI = false;
 
 const ai = new GoogleGenAI({
-	apiKey: GEMINI_API_KEY
+	apiKey: GEMINI_API_KEY,
+	location: 'us-central1',
 });
 
 export const POST: RequestHandler = async ({ request, locals }) => {

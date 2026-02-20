@@ -36,7 +36,7 @@ export const DEFAULT_PROMPTS: Prompt[] = [
 	{ id: 'volleyball', label: '🏐 Volleyball', text: 'Receiving a serve on a sandy beach volleyball court' },
 	{ id: 'football', label: '⚽ Football', text: 'Playing in a football match on a green grass field' },
 	{ id: 'gym', label: '💪 Gym', text: 'Performing barbell bicep curls inside a modern gym' },
-	{ id: 'dog', label: '🐕 Dog', text: 'Petting a golden retriever on a patch of grass in a park' },
+	{ id: 'dog', label: '🐕 Dog', text: 'Petting a golden retriever in a park' },
 	{ id: 'cat', label: '🐈 Cat', text: 'Sitting on a sofa petting a cat in a cozy apartment' },
 	{ id: 'wedding', label: '👔 Wedding', text: 'Standing at an outdoor wedding' },
 	{ id: 'cafe', label: '☕ Cafe', text: 'Sitting at a small wooden table in a cafe' },

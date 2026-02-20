@@ -35,7 +35,7 @@
 			<ul class="list-disc pl-5">
 				<li>Everybody knows that photos make or break your dating profile</li>
 				<li>But you can't afford a professional photographer following you 24/7</li>
-				<li>Order high-quality AI photos right here and get them within 3 minutes</li>
+				<li>Order high-quality AI photos right here and get them within 5 minutes</li>
 			</ul>
 		</div>
 

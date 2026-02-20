@@ -64,10 +64,10 @@
 
 		const timeout = setTimeout(() => {
 			if (!currentPhoto) {
-				console.warn('[review] timeout — no photo arrived in 180s');
+				console.warn('[review] timeout — no photo arrived in 5 minutes');
 				goToError('Timed out', 'Generation took too long. Please try again');
 			}
-		}, 180_000);
+		}, 300_000);
 
 		const errorQ = query(
 			collection(db, 'photos'),
