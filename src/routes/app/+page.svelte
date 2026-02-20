@@ -1,15 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { signOut } from 'firebase/auth';
-	import { auth } from '$lib/client/firebase';
+	import { serverSignOut } from '$lib/client/firebase';
 	import { screenTitle, resetAppState } from '$lib/stores/app';
 	import { fly, slide } from 'svelte/transition';
 	import { initiateCheckout } from '$lib/client/stripe';
-
-	async function handleLogout() {
-		await signOut(auth);
-		goto('/');
-	}
 
 	function handleStart() {
 		goto('/app/select');
@@ -41,7 +35,7 @@
 			</a>
 
 			<button
-				onclick={handleLogout}
+				onclick={serverSignOut}
 				class="h-16 cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
 			>
 				Logout

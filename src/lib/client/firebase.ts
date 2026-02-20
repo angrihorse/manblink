@@ -64,7 +64,7 @@ export async function serverSignOut() {
     authLoading.set(true);
     await fetch("/api/auth", { method: "DELETE" });
     await signOut(auth);
-    await invalidateAll();
+    await goto('/');
     authLoading.set(false);
 }
 

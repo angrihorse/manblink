@@ -40,7 +40,7 @@ export const DEFAULT_PROMPTS: Prompt[] = [
 	{ id: 'city', label: '🏙️ City', text: 'Walking in a busy city street' },
 	{ id: 'park', label: '🌳 Park', text: 'Walking in a park' },
 	{ id: 'handstand', label: '🤸 Handstand', text: 'Straight handstand in a gymnastic hall lit by sun from a window' },
-	{ id: 'swim', label: '🏊 Swim', text: 'Half body underwater in a clear blue ocean' },
+	{ id: 'ocean', label: '🌊 Ocean', text: 'Standing in waist-deep clear blue ocean water topless' },
 	{ id: 'laptop', label: '💻 Laptop', text: 'Sitting behind a laptop in a cafe' },
 	{ id: 'sauna', label: '🧖 Sauna', text: 'After sauna with a towel on the back' },
 	{ id: 'bike', label: '🏍️ Bike', text: 'Sitting on a black motorcycle in a parking lot' },

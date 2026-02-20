@@ -21,7 +21,6 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Pose', text: 'front facing with direct gaze' },
 
 	{ group: 'Posture', text: 'shoulders relaxed' },
-	{ group: 'Posture', text: 'hands in pockets' },
 	{ group: 'Posture', text: 'open chest posture' },
 
 	{ group: 'Mood', text: 'focused mood' },
@@ -93,7 +92,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		selfieBuffer = Buffer.from(await res.arrayBuffer());
 	}
 
-	const model = 'gemini-2.0-flash-exp';
+	const model = 'gemini-3-pro-image-preview';
 	const bucket = adminStorage.bucket();
 
 	generateImages(promptTexts, selfieBuffer, ai, model, bucket, userId);
@@ -117,6 +116,22 @@ async function uploadPhotoToStorage(bucket: any, userId: string, imageBuffer: Bu
 	console.log('URL generated:', { photoId, url, hasUrl: !!url });
 
 	return { photoId, url };
+}
+
+function parseGeminiError(error: any): { title: string; message: string } {
+	try {
+		const outer = JSON.parse(error.message);
+		const inner = JSON.parse(outer.error.message);
+		return {
+			title: `${outer.error.code} ${outer.error.status}`,
+			message: inner.error.message,
+		};
+	} catch {
+		return {
+			title: 'Generation failed',
+			message: error?.message ?? 'Please try again.',
+		};
+	}
 }
 
 async function generateImages(
@@ -155,8 +170,28 @@ async function generateImages(
 				}
 			});
 		}
-	} catch (error) {
+
+		if (successful === 0) {
+			const firstError = results.find(r => r.status === 'rejected') as PromiseRejectedResult | undefined;
+			const { title, message } = parseGeminiError(firstError?.reason);
+			await adminDb.collection('photos').add({
+				userId,
+				action: 'error',
+				title,
+				message,
+				createdAt: Date.now(),
+			});
+		}
+	} catch (error: any) {
 		console.error('Fatal error in generateImages:', error);
+		const { title, message } = parseGeminiError(error);
+		await adminDb.collection('photos').add({
+			userId,
+			action: 'error',
+			title,
+			message,
+			createdAt: Date.now(),
+		});
 	}
 }
 
@@ -171,8 +206,7 @@ async function generateSingleImage(
 	inputPhotoUrl: string
 ) {
 	try {
-		const imageBuffer = selfieBuffer;
-		// const imageBuffer = await callGeminiAPI(selfieBuffer, promptText, ai, model);
+		const imageBuffer = await callGeminiAPI(selfieBuffer, promptText, ai, model);
 
 		if (!imageBuffer) {
 			return;
@@ -225,9 +259,10 @@ async function callGeminiAPI(
 	];
 
 	const config = {
-		responseModalities: ['IMAGE'],
+		responseModalities: ['IMAGE', 'TEXT'],
 		imageConfig: {
-			imageSize: '1K'
+			aspectRatio: '9:16',
+			imageSize: '1K',
 		}
 	};
 
@@ -238,10 +273,17 @@ async function callGeminiAPI(
 	});
 
 	for await (const chunk of response) {
-		if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
-			const inlineData = chunk.candidates[0].content.parts[0].inlineData;
-			const buffer = Buffer.from(inlineData.data || '', 'base64');
-			return buffer;
+		if (!chunk.candidates?.[0]?.content?.parts) {
+			console.log('Gemini chunk with no parts:', JSON.stringify(chunk, null, 2));
+			continue;
+		}
+		for (const part of chunk.candidates[0].content.parts) {
+			if (part.inlineData) {
+				return Buffer.from(part.inlineData.data || '', 'base64');
+			}
+			if (part.text) {
+				console.log('Gemini text response:', part.text);
+			}
 		}
 	}
 

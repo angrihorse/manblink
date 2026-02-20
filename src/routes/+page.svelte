@@ -72,7 +72,7 @@
 				<div class="">Get a human answer within 10 minutes</div>
 			</div>
 			<a
-				href="https://t.me/oricocoach"
+				href="https://t.me/oricoac"
 				target="_blank"
 				class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
 			>
