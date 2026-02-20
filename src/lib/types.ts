@@ -7,6 +7,7 @@ export interface Photo {
 	originalPrompt: string;
 	sprinkles: string[];
 	promptText: string;
+	isCustom?: boolean;
 	inputPhotoId: string;
 	inputPhotoUrl: string;
 	url: string;

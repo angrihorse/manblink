@@ -79,7 +79,9 @@
 				if (change.type === 'added') {
 					const data = change.doc.data();
 					const passes = data.createdAt >= $generationStartTime && !currentPhoto;
-					console.log(`[review] error doc — "${data.title}" createdAt:${data.createdAt} startTime:${$generationStartTime} passes:${passes}`);
+					console.log(
+						`[review] error doc — "${data.title}" createdAt:${data.createdAt} startTime:${$generationStartTime} passes:${passes}`
+					);
 					if (passes) {
 						goToError(data.title ?? 'Generation failed', data.message ?? 'Please try again.');
 					}
@@ -114,7 +116,9 @@
 						photoQueue.push(photoData);
 					}
 
-					console.log(`[review] photo ${photoData.id} — ${isOld ? 'old' : 'new'}, queue:${photoQueue.length} pending:${$photosInCount}`);
+					console.log(
+						`[review] photo ${photoData.id} — ${isOld ? 'old' : 'new'}, queue:${photoQueue.length} pending:${$photosInCount}`
+					);
 					screenTitle.set('Review photos');
 				}
 			}
@@ -162,6 +166,8 @@
 	}
 
 	let showEditModal = $state(false);
+	let showRetryModal = $state(false);
+	let retryValue = $state('');
 
 	async function handleEdit(prompt: string) {
 		if (!currentPhoto) return;
@@ -171,20 +177,37 @@
 		await fetch('/api/generate', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ promptTexts: [prompt], selfieUrl: photoUrl })
+			body: JSON.stringify({ prompts: [{ text: prompt, isCustom: true }], selfieUrl: photoUrl })
 		});
 	}
 
-	async function handleRetry() {
+	async function handleRetrySubmit(prompt: string) {
 		if (!currentPhoto) return;
 		const selfieUrl = currentPhoto.inputPhotoUrl;
-		const prompt = currentPhoto.originalPrompt ?? currentPhoto.promptText;
 		$photosInCount++;
 		animateSwipe('left');
 		await fetch('/api/generate', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ promptTexts: [prompt], selfieUrl })
+			body: JSON.stringify({ prompts: [{ text: prompt, isCustom: true }], selfieUrl })
+		});
+	}
+
+	function handleRetry() {
+		if (!currentPhoto) return;
+		if (currentPhoto.isCustom) {
+			retryValue = currentPhoto.originalPrompt ?? currentPhoto.promptText;
+			showRetryModal = true;
+			return;
+		}
+		const selfieUrl = currentPhoto.inputPhotoUrl;
+		const prompt = currentPhoto.originalPrompt ?? currentPhoto.promptText;
+		$photosInCount++;
+		animateSwipe('left');
+		fetch('/api/generate', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ prompts: [{ text: prompt, isCustom: false }], selfieUrl })
 		});
 	}
 
@@ -292,6 +315,14 @@
 	onsubmit={(prompt) => handleEdit(prompt)}
 />
 
+<TextInputModal
+	bind:show={showRetryModal}
+	bind:value={retryValue}
+	placeholder="Describe the scene"
+	submitLabel="Retry"
+	onsubmit={(prompt) => handleRetrySubmit(prompt)}
+/>
+
 <div class="flex justify-center">
 	<div class="flex w-full max-w-md flex-col space-y-8 text-center">
 		{#if currentPhoto}
@@ -380,19 +411,19 @@
 					</button>
 
 					<button
-						onclick={handleRetry}
-						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
-						title="Retry"
-					>
-						<RefreshCw class="size-6" strokeWidth={3} />
-					</button>
-
-					<button
 						onclick={() => (showEditModal = true)}
 						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
 						title="Edit"
 					>
 						<Pencil class="size-6" strokeWidth={3} />
+					</button>
+
+					<button
+						onclick={handleRetry}
+						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
+						title="Retry"
+					>
+						<RefreshCw class="size-6" strokeWidth={3} />
 					</button>
 
 					<button

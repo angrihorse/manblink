@@ -79,7 +79,7 @@ function applySprinkles(promptText: string): { augmented: string; sprinkles: str
 	};
 }
 
-const MOCK_GEMINI = false;
+const MOCK_GEMINI = true;
 
 const ai = new GoogleGenAI({
 	apiKey: GEMINI_API_KEY
@@ -90,9 +90,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'Unauthenticated' }, { status: 401 });
 	}
 
-	const { promptTexts, selfieBase64, selfieUrl } = await request.json();
+	const { prompts, selfieBase64, selfieUrl } = await request.json();
 
-	if (!promptTexts || !Array.isArray(promptTexts) || promptTexts.length === 0) {
+	if (!prompts || !Array.isArray(prompts) || prompts.length === 0) {
 		return json({ error: 'Invalid prompts' }, { status: 400 });
 	}
 
@@ -109,7 +109,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	const userData = userDoc.data();
-	const creditsNeeded = promptTexts.length;
+	const creditsNeeded = prompts.length;
 	const currentCredits = userData?.credits || 0;
 
 	if (currentCredits < creditsNeeded) {
@@ -129,7 +129,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const model = 'gemini-3-pro-image-preview';
 	const bucket = adminStorage.bucket();
 
-	generateImages(promptTexts, selfieBuffer, ai, model, bucket, userId);
+	generateImages(prompts, selfieBuffer, ai, model, bucket, userId);
 
 	return json({ success: true });
 };
@@ -169,7 +169,7 @@ function parseGeminiError(error: any): { title: string; message: string } {
 function ms(t0: number) { return `+${Date.now() - t0}ms`; }
 
 async function generateImages(
-	promptTexts: string[],
+	prompts: { text: string; isCustom?: boolean }[],
 	selfieBuffer: Buffer,
 	ai: any,
 	model: string,
@@ -177,7 +177,7 @@ async function generateImages(
 	userId: string
 ) {
 	const t0 = Date.now();
-	console.log(`[generate] start — user:${userId} ${promptTexts.length} prompt(s), selfie ${(selfieBuffer.length / 1024).toFixed(0)} KB`);
+	console.log(`[generate] start — user:${userId} ${prompts.length} prompt(s), selfie ${(selfieBuffer.length / 1024).toFixed(0)} KB`);
 
 	try {
 		const t1 = Date.now();
@@ -192,10 +192,13 @@ async function generateImages(
 		});
 		console.log(`[generate] ${ms(t0)} input doc written`);
 
-		const generationPromises = promptTexts.map((promptText, i) => {
-			const { augmented, sprinkles } = applySprinkles(promptText);
-			console.log(`[generate] ${ms(t0)} starting image ${i + 1}/${promptTexts.length}: "${augmented}"`);
-			return generateSingleImage(augmented, promptText, sprinkles, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl, i + 1, t0);
+		const generationPromises = prompts.map((prompt, i) => {
+			const { text, isCustom } = prompt;
+			const { augmented, sprinkles } = isCustom
+				? { augmented: text, sprinkles: [] as string[] }
+				: applySprinkles(text);
+			console.log(`[generate] ${ms(t0)} starting image ${i + 1}/${prompts.length}${isCustom ? ' [custom]' : ''}: "${augmented}"`);
+			return generateSingleImage(augmented, text, sprinkles, !!isCustom, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl, i + 1, t0);
 		});
 
 		const results = await Promise.allSettled(generationPromises);
@@ -240,6 +243,7 @@ async function generateSingleImage(
 	promptText: string,
 	originalPrompt: string,
 	sprinkles: string[],
+	isCustom: boolean,
 	selfieBuffer: Buffer,
 	ai: any,
 	model: string,
@@ -270,6 +274,7 @@ async function generateSingleImage(
 			originalPrompt,
 			sprinkles,
 			promptText,
+			isCustom,
 			inputPhotoId,
 			inputPhotoUrl,
 			url: outputPhotoUrl,

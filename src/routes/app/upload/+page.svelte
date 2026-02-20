@@ -62,7 +62,7 @@
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				promptTexts: $selectedPrompts.map((p) => p.text),
+				prompts: $selectedPrompts.map((p) => ({ text: p.text, isCustom: p.isCustom ?? false })),
 				selfieBase64: $uploadedSelfieBase64
 			})
 		});
