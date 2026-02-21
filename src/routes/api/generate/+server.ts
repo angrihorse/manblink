@@ -6,27 +6,32 @@ import { GEMINI_API_KEY } from '$env/static/private';
 import { FieldValue } from 'firebase-admin/firestore';
 
 const ALWAYS_ON_SPRINKLES = [
-	'shot by a photographer',
+	'shot on a cheap camera',
 ];
 
 const DEFAULT_SPRINKLES = [
 	{ group: 'Framing', text: 'upper body shot' },
 	{ group: 'Framing', text: 'full body shot' },
 
+	{ group: 'Lens', text: 'ultra wide lens' },
 	{ group: 'Lens', text: 'wide angle lens' },
 	{ group: 'Lens', text: 'telephoto lens' },
 
-	{ group: 'Angle', text: 'low angle' },
-	{ group: 'Angle', text: 'eye-level' },
+	{ group: 'Angle', text: 'from high angle' },
+	{ group: 'Angle', text: 'from low angle' },
+	{ group: 'Angle', text: 'at eye-level' },
 
 	{ group: 'Light', text: 'golden hour light' },
 	{ group: 'Light', text: 'overcast light' },
+	{ group: 'Light', text: 'slightly underexposed' },
+	{ group: 'Light', text: 'slightly overexposed' },
+	{ group: 'Light', text: 'camera flash' },
 
 	{ group: 'Pose', text: 'side profile looking away' },
 	{ group: 'Pose', text: 'front facing with direct gaze' },
+	{ group: 'Pose', text: 'looking away from the camera' },
 	{ group: 'Pose', text: 'leaning to the left' },
 	{ group: 'Pose', text: 'leaning to the right' },
-	{ group: 'Pose', text: 'open chest posture' },
 	{ group: 'Pose', text: 'slight head tilt' },
 
 	{ group: 'Mood', text: 'focused' },
@@ -37,9 +42,6 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Composition', text: 'centered composition' },
 	{ group: 'Composition', text: 'off-center composition' },
 	{ group: 'Composition', text: 'asymmetrical composition' },
-
-	{ group: 'ISO', text: 'slightly overexposed' },
-	{ group: 'ISO', text: 'underexposed' },
 
 	{ group: 'Depth of field', text: 'blurry background' },
 	{ group: 'Depth of field', text: 'background in focus' },
@@ -59,7 +61,7 @@ function fisherYates<T>(arr: T[]): T[] {
 function applySprinkles(promptText: string): { augmented: string; sprinkles: string[] } {
 	const groups = [...new Set(DEFAULT_SPRINKLES.map((s) => s.group))];
 
-	const numGroups = Math.floor(Math.random() * 3) + 1; // 1-3
+	const numGroups = Math.floor(Math.random() * 5) + 1; // 1-3
 	const shuffled = fisherYates(groups);
 	const selectedGroups = shuffled.slice(0, numGroups);
 
@@ -83,7 +85,6 @@ const MOCK_GEMINI = false;
 
 const ai = new GoogleGenAI({
 	apiKey: GEMINI_API_KEY,
-	location: 'us-central1',
 });
 
 export const POST: RequestHandler = async ({ request, locals }) => {

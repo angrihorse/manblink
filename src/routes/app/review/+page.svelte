@@ -411,19 +411,19 @@
 					</button>
 
 					<button
-						onclick={() => (showEditModal = true)}
-						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
-						title="Edit"
-					>
-						<Pencil class="size-6" strokeWidth={3} />
-					</button>
-
-					<button
 						onclick={handleRetry}
 						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
 						title="Retry"
 					>
 						<RefreshCw class="size-6" strokeWidth={3} />
+					</button>
+
+					<button
+						onclick={() => (showEditModal = true)}
+						class="flex h-16 grow cursor-pointer items-center justify-center rounded-xl bg-stone-200 hover:bg-stone-300"
+						title="Edit"
+					>
+						<Pencil class="size-6" strokeWidth={3} />
 					</button>
 
 					<button
