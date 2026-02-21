@@ -11,7 +11,8 @@
 	import { Spring } from 'svelte/motion';
 	import { screenTitle, generationStartTime, photosInCount, fullSreen } from '$lib/stores/app';
 
-	screenTitle.set('Loading...');
+	screenTitle.set('Loading... (3-7 minutes)');
+
 	afterNavigate(() => {
 		fullSreen.set(true);
 	});
@@ -64,10 +65,10 @@
 
 		const timeout = setTimeout(() => {
 			if (!currentPhoto) {
-				console.warn('[review] timeout — no photo arrived in 5 minutes');
+				console.warn('[review] timeout — no photo arrived in 10 minutes');
 				goToError('Timed out', 'Generation took too long. Please try again');
 			}
-		}, 300_000);
+		}, 600_000);
 
 		const errorQ = query(
 			collection(db, 'photos'),

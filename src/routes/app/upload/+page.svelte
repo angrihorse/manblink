@@ -52,13 +52,15 @@
 		fileInput.click();
 	}
 
-	async function handleGetPhotos() {
+	function handleGetPhotos() {
 		if (!$uploadedSelfieBase64 || $selectedPrompts.length === 0) return;
 
 		$generationStartTime = Date.now();
 		$photosInCount = $selectedPrompts.length;
 
-		const res = await fetch('/api/generate', {
+		goto('/app/review');
+
+		fetch('/api/generate', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -66,16 +68,6 @@
 				selfieBase64: $uploadedSelfieBase64
 			})
 		});
-
-		if (!res.ok) {
-			const body = await res.json();
-			const title = `${res.status} ${res.statusText}`;
-			const message = body.error ?? 'Something went wrong. Please try again.';
-			goto(`/error?title=${encodeURIComponent(title)}&message=${encodeURIComponent(message)}`);
-			return;
-		}
-
-		goto('/app/review');
 	}
 </script>
 

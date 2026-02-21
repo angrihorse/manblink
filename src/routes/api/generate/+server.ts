@@ -40,8 +40,6 @@ const DEFAULT_SPRINKLES = [
 
 	{ group: 'Composition', text: 'use rule of thirds' },
 	{ group: 'Composition', text: 'centered composition' },
-	{ group: 'Composition', text: 'off-center composition' },
-	{ group: 'Composition', text: 'asymmetrical composition' },
 
 	{ group: 'Depth of field', text: 'blurry background' },
 	{ group: 'Depth of field', text: 'background in focus' },
