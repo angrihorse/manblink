@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex justify-center">
-	<div class="flex max-w-md flex-col justify-center space-y-4 text-left">
+	<div class="flex w-full max-w-md flex-col justify-center space-y-4 text-left">
 		<div class="space-y-1">
 			<p class="text-3xl font-bold">{title}</p>
 			<p class="">{message}</p>
