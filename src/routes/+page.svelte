@@ -44,7 +44,7 @@
 		<div class="aspect-video w-full overflow-hidden rounded-xl bg-black">
 			<iframe
 				class="h-full w-full"
-				src="https://www.youtube.com/embed/NF0xr1sBOQ8?si=Gdw6fM-wOQPo4CpB"
+				src="https://www.youtube.com/embed/9DqNQ2SkciY?si=Ca0i0WsR83cLpZhG"
 				title="Tutorial"
 				frameborder="0"
 				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -63,9 +63,10 @@
 			</div>
 			<ul class="list-disc pl-5">
 				<li>100 AI photos</li>
-				<li>18 hand-picked presets</li>
+				<li>14 hand-picked presets</li>
 				<li>Write your own prompts</li>
 				<li>Get Tinder verified</li>
+				<li>Same face for every photo</li>
 			</ul>
 		</div>
 
