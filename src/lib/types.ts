@@ -30,13 +30,13 @@ export type Prompt = {
 };
 
 export const DEFAULT_PROMPTS: Prompt[] = [
-	{ id: 'party', label: '🥳 Party', text: 'A group of friends laughing together at a Project X party' },
+	{ id: 'party', label: '🥳 Party', text: 'A group of friends laughing together at a New Years Eve party' },
 	{ id: 'hiking', label: '🏔️ Hiking', text: 'Hiking along a rugged mountain trail with a view' },
 	{ id: 'cooking', label: '🍳 Cooking', text: 'Cooking steak at the stove in a clean modern kitchen' },
 	{ id: 'volleyball', label: '🏐 Volleyball', text: 'Receiving a serve on a sandy beach volleyball court' },
 	{ id: 'gym', label: '💪 Gym', text: 'Performing barbell bicep curls inside a modern gym' },
 	{ id: 'dog', label: '🐕 Dog', text: 'Petting a golden retriever in a park' },
-	{ id: 'wedding', label: '👔 Wedding', text: 'Standing at an outdoor wedding' },
+	{ id: 'wedding', label: '👔 Wedding', text: 'Standing at an outdoor wedding in a well-fitted suit' },
 	{ id: 'cafe', label: '☕ Cafe', text: 'Sitting at a small wooden table in a cafe' },
 	{ id: 'city', label: '🏙️ City', text: 'Walking along a sidewalk in a busy city street' },
 	{ id: 'park', label: '🌳 Park', text: 'Walking along a paved path in a public park' },

@@ -10,7 +10,7 @@ import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFPXvqefQ5fYRdjEKlKLuws74FdC5tQmk",
-    authDomain: "manblink-fc10d.firebaseapp.com",
+    authDomain: "manblink.com",
     projectId: "manblink-fc10d",
     storageBucket: "manblink-fc10d.firebasestorage.app",
     messagingSenderId: "475445669621",

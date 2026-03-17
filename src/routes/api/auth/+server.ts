@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ request, cookies, url }) => {
         const firebaseUser = await adminAuth.getUser(decodedIdToken.uid);
         const userRef = adminDb.collection('users').doc(firebaseUser.uid);
         await userRef.set({
-            displayName: firebaseUser.displayName,
+            displayName: firebaseUser.displayName ?? null,
             email: firebaseUser.email,
         }, { merge: true });
 

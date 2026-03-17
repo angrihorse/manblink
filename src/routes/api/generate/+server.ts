@@ -129,7 +129,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const model = 'gemini-3-pro-image-preview';
 	const bucket = adminStorage.bucket();
 
-	generateImages(prompts, selfieBuffer, ai, model, bucket, userId);
+	await generateImages(prompts, selfieBuffer, ai, model, bucket, userId);
 
 	return json({ success: true });
 };

@@ -31,17 +31,34 @@
 <div class="space-y-8">
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 		<div class="space-y-2">
-			<div class="text-3xl font-bold">Turn 1 selfie into 100 Tinder photos</div>
-			<ul class="list-disc pl-5">
-				<li>Everybody knows that photos make or break your dating profile</li>
-				<li>But you can't afford a professional photographer following you 24/7</li>
-				<li>Order high-quality AI photos right here and get them within 5 minutes</li>
-			</ul>
+			<div
+				class="inline-flex items-center rounded-full border-4 border-stone-200 px-4 py-1.5 text-sm font-medium"
+			>
+				<span>3.7x average increase in matches</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<div class="text-3xl font-bold">Take one selfie. <br />Get laid tonight</div>
+			</div>
+			<p class=" ">
+				Get high-quality photos for your dating profile in less time than you need to finish — no
+				photographer needed.
+			</p>
+		</div>
+
+		<div class="relative flex w-full items-start justify-center space-x-4">
+			<img src="/pics/selfie-mockup.png" alt="Your selfie" class="h-72 -rotate-4 object-contain" />
+			<!-- <div class="relative rotate-2"> -->
+			<img
+				src="/pics/tinder-mockup.png"
+				alt="Tinder profile"
+				class="h-80 rotate-2 object-contain"
+			/>
+			<img src="/pics/verified.png" alt="Verified" class="absolute top-8 size-16 object-contain" />
 		</div>
 
 		<AuthForm />
 
-		<div class="aspect-video w-full overflow-hidden rounded-xl bg-black">
+		<!-- <div class="aspect-video w-full overflow-hidden rounded-xl bg-black">
 			<iframe
 				class="h-full w-full"
 				src="https://www.youtube.com/embed/9DqNQ2SkciY?si=Ca0i0WsR83cLpZhG"
@@ -50,7 +67,7 @@
 				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 				allowfullscreen
 			></iframe>
-		</div>
+		</div> -->
 	</div>
 
 	<PhotoRow sourceImg="/pics/src1.jpg" generatedPhotos={heroPhotos} />
@@ -58,7 +75,7 @@
 	<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
 		<div class=" space-y-1">
 			<div class="font-bold">
-				<span class="text-5xl">$20</span>
+				<span class="text-5xl">$10</span>
 				<span class="">one-time </span>
 			</div>
 			<ul class="list-disc pl-5">

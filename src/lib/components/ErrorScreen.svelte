@@ -11,7 +11,7 @@
 			<p class="">{message}</p>
 		</div>
 		<a
-			href="https://t.me/oricocoach?text={encodeURIComponent(`${title}: ${message}`)}"
+			href="https://t.me/oricoac?text={encodeURIComponent(`${title}: ${message}`)}"
 			target="_blank"
 			class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
 		>
