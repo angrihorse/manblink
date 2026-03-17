@@ -34,7 +34,7 @@
 			<div
 				class="inline-flex items-center rounded-full border-4 border-stone-200 px-4 py-1.5 text-sm font-medium"
 			>
-				<span>3.7x average increase in matches</span>
+				<span>3.7x average increase in matches after</span>
 			</div>
 			<div class="flex items-center gap-2">
 				<div class="text-3xl font-bold">Take one selfie. <br />Get laid tonight</div>
@@ -79,11 +79,11 @@
 				<span class="">one-time </span>
 			</div>
 			<ul class="list-disc pl-5">
-				<li>100 AI photos</li>
-				<li>14 hand-picked presets</li>
-				<li>Write your own prompts</li>
+				<li>20 AI photos</li>
 				<li>Get Tinder verified</li>
-				<li>Same face for every photo</li>
+				<li>14 hand-picked presets</li>
+				<li>Write your own</li>
+				<li>Consistent face</li>
 			</ul>
 		</div>
 

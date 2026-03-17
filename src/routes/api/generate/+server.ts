@@ -30,6 +30,7 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Pose', text: 'side profile looking away' },
 	{ group: 'Pose', text: 'front facing with direct gaze' },
 	{ group: 'Pose', text: 'looking away from the camera' },
+	{ group: 'Pose', text: 'looking at the camera' },
 	{ group: 'Pose', text: 'leaning to the left' },
 	{ group: 'Pose', text: 'leaning to the right' },
 	{ group: 'Pose', text: 'slight head tilt' },
