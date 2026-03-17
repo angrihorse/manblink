@@ -7,6 +7,7 @@ import { writable } from "svelte/store";
 import { page } from "$app/state";
 import { initiateCheckout } from "./stripe";
 import { getStorage } from "firebase/storage";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFPXvqefQ5fYRdjEKlKLuws74FdC5tQmk",
@@ -14,10 +15,12 @@ const firebaseConfig = {
     projectId: "manblink-fc10d",
     storageBucket: "manblink-fc10d.firebasestorage.app",
     messagingSenderId: "475445669621",
-    appId: "1:475445669621:web:b5c76e791950f3ff9d1fbc"
+    appId: "1:475445669621:web:b5c76e791950f3ff9d1fbc",
+    measurementId: "G-NT083H48C6"
 };
 
 export const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
 export const auth = getAuth();
 export const db = getFirestore()
 export const storage = getStorage();

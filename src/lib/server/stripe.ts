@@ -8,8 +8,8 @@ export async function createCheckoutSession(userId: string, email: string, origi
         payment_method_types: ['card'],
         line_items: [{ price: PRICE_ID, quantity: 1 }],
         mode: 'payment',
-        success_url: `${origin}/app`,
-        cancel_url: origin,
+        success_url: `${origin}/app/upload`,
+        cancel_url: `${origin}/app/stripe`,
         client_reference_id: userId,
         customer_email: email,
     });

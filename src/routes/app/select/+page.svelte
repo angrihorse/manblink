@@ -63,23 +63,26 @@
 			{/each}
 		</div>
 
-		<div class="flex w-full max-w-md flex-row gap-4">
-			<button
-				onclick={() => {
-					showCustomInput = true;
-					customRender.set(true);
-				}}
-				class="h-16 flex-1 cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
-			>
-				Add
-			</button>
-			<button
-				onclick={() => goto('/app/upload')}
-				disabled={$selectedPrompts.length === 0}
-				class="h-16 flex-1 cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
-			>
-				Next
-			</button>
-		</div>
+	</div>
+</div>
+
+<div class="fixed bottom-0 left-0 right-0 flex justify-center bg-white px-4 pb-4 pt-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64">
+	<div class="flex w-full max-w-md flex-row gap-4">
+		<button
+			onclick={() => {
+				showCustomInput = true;
+				customRender.set(true);
+			}}
+			class="h-16 flex-1 cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
+		>
+			Add
+		</button>
+		<button
+			onclick={() => goto('/app/upload')}
+			disabled={$selectedPrompts.length === 0}
+			class="h-16 flex-1 cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
+		>
+			Next
+		</button>
 	</div>
 </div>

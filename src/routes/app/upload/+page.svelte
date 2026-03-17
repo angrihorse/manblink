@@ -6,7 +6,8 @@
 		selectedPrompts,
 		uploadedSelfieBase64,
 		generationStartTime,
-		photosInCount
+		photosInCount,
+		userCredits
 	} from '$lib/stores/app';
 
 	screenTitle.set('Upload selfie');
@@ -55,6 +56,11 @@
 	function handleGetPhotos() {
 		if (!$uploadedSelfieBase64 || $selectedPrompts.length === 0) return;
 
+		if (($userCredits ?? 0) < $selectedPrompts.length) {
+			goto('/app/stripe');
+			return;
+		}
+
 		$generationStartTime = Date.now();
 		$photosInCount = $selectedPrompts.length;
 
@@ -101,15 +107,15 @@
 			{/if}
 		</button>
 
-		<div class="flex max-w-md flex-wrap gap-4">
-			<button
-				onclick={handleGetPhotos}
-				disabled={!$uploadedSelfieBase64}
-				class="h-16 grow cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
-			>
-				Launch
-			</button>
-		</div>
-
 	</div>
+</div>
+
+<div class="fixed bottom-0 left-0 right-0 flex justify-center bg-white px-4 pb-4 pt-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64">
+	<button
+		onclick={handleGetPhotos}
+		disabled={!$uploadedSelfieBase64}
+		class="h-16 w-full max-w-md cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
+	>
+		Launch
+	</button>
 </div>

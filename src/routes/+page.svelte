@@ -3,7 +3,7 @@
 	import Balls from '$lib/components/Balls.svelte';
 	import PhotoRow from '$lib/components/PhotoRow.svelte';
 	import PhotoUpload from '$lib/components/PhotoUpload.svelte';
-	import { Send } from '@lucide/svelte';
+	import { ArrowRight, CircleArrowRight, Redo, Send } from '@lucide/svelte';
 
 	const heroPhotos = [
 		{ src: '/pics/gen1.jpeg', alt: 'Generated 1' },
@@ -34,26 +34,34 @@
 			<div
 				class="inline-flex items-center rounded-full border-4 border-stone-200 px-4 py-1.5 text-sm font-medium"
 			>
-				<span>3.7x average increase in matches after</span>
+				<span>3.7x average increase in matches</span>
 			</div>
 			<div class="flex items-center gap-2">
-				<div class="text-3xl font-bold">Take one selfie. <br />Get laid tonight</div>
+				<div class="text-3xl font-bold">Take one selfie <br />Get laid tonight</div>
 			</div>
 			<p class=" ">
-				Get high-quality photos for your dating profile in less time than you need to finish — no
-				photographer needed.
+				Get high-quality dating profile photos without leaving your room in less time than you last
+				in bed.
 			</p>
 		</div>
 
-		<div class="relative flex w-full items-start justify-center space-x-4">
-			<img src="/pics/selfie-mockup.png" alt="Your selfie" class="h-72 -rotate-4 object-contain" />
-			<!-- <div class="relative rotate-2"> -->
-			<img
-				src="/pics/tinder-mockup.png"
-				alt="Tinder profile"
-				class="h-80 rotate-2 object-contain"
-			/>
-			<img src="/pics/verified.png" alt="Verified" class="absolute top-8 size-16 object-contain" />
+		<div class="flex w-full items-center justify-center">
+			<img src="/pics/selfie-mockup.png" alt="Your selfie" class="h-60 -rotate-4 object-contain" />
+			<div>
+				<Redo strokeWidth={3} class="size-12 -scale-x-100 rotate-170 text-stone-700" />
+			</div>
+			<div class="relative">
+				<img
+					src="/pics/tinder-mockup.png"
+					alt="Tinder profile"
+					class="h-72 rotate-2 object-contain"
+				/>
+				<img
+					src="/pics/verified.png"
+					alt="Verified"
+					class="absolute -top-4 right-0 size-16 object-contain"
+				/>
+			</div>
 		</div>
 
 		<AuthForm />

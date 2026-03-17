@@ -6,13 +6,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     if (sessionCookie) {
         try {
-            const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
+            const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, false);
+
             event.locals.user = {
                 id: decodedClaims.uid,
                 email: decodedClaims.email,
                 displayName: decodedClaims.name
             };
-        } catch (error) {
+        } catch {
             event.cookies.delete('__session', { path: '/' });
             event.locals.user = null;
         }

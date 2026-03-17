@@ -38,3 +38,4 @@ vite.config.ts.timestamp-*
 manblink/
 firebase-debug.log
 package-lock.json
+firebase-debug.1.log

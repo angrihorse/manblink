@@ -83,7 +83,7 @@
 		class:mt-16={$fixedBar}
 		class:overflow-hidden={$fullSreen}
 		class:h-dvh={$fullSreen}
-		class="relative h-full px-4 py-8 text-stone-800 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
+		class="relative h-full px-4 py-8 pb-26 text-stone-800 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
 	>
 		{@render children()}
 	</div>

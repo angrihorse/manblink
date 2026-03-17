@@ -80,7 +80,7 @@ function applySprinkles(promptText: string): { augmented: string; sprinkles: str
 	};
 }
 
-const MOCK_GEMINI = false;
+const MOCK_GEMINI = true;
 
 const ai = new GoogleGenAI({
 	apiKey: GEMINI_API_KEY,

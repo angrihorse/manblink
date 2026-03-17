@@ -1,10 +1,9 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
-import { adminAuth, adminDb, getUserFromDb, updateUserInDb } from '$lib/server/firebase';
-import { createCheckoutSession } from '$lib/server/stripe';
+import { adminAuth, adminDb, updateUserInDb } from '$lib/server/firebase';
 
-export const POST: RequestHandler = async ({ request, cookies, url }) => {
+export const POST: RequestHandler = async ({ request, cookies }) => {
     const { idToken } = await request.json();
 
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
@@ -26,19 +25,7 @@ export const POST: RequestHandler = async ({ request, cookies, url }) => {
         };
         cookies.set('__session', cookie, options);
 
-        const userData = await getUserFromDb(firebaseUser.uid);
-        const credits = userData?.credits ?? 0;
-        const needsPayment = credits <= 0;
-        let redirectUrl = '/app';
-        if (needsPayment) {
-            redirectUrl = await createCheckoutSession(
-                firebaseUser.uid,
-                firebaseUser.email!,
-                url.origin
-            );
-        }
-
-        return json({ redirectUrl });
+        return json({ redirectUrl: '/app' });
     } else {
         throw error(401, 'Recent sign in required!');
     }
