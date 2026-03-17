@@ -18,13 +18,13 @@
 		>
 			Start
 		</button>
-
+		<!-- 
 		<button
 			onclick={() => initiateCheckout('', '')}
 			class="h-16 cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
 		>
 			Top-up
-		</button>
+		</button> -->
 
 		<a
 			href="/app/history"

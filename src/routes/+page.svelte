@@ -34,7 +34,7 @@
 			<div
 				class="inline-flex items-center rounded-full border-4 border-stone-200 px-4 py-1.5 text-sm font-medium"
 			>
-				<span>3.7x average increase in matches</span>
+				<span>3.7x more matches on average</span>
 			</div>
 			<div class="flex items-center gap-2">
 				<div class="text-3xl font-bold">Take one selfie <br />Get laid tonight</div>
@@ -61,6 +61,11 @@
 					alt="Verified"
 					class="absolute -top-4 right-0 size-16 object-contain"
 				/>
+				<div
+					class="absolute right-0 bottom-0 rounded-full bg-linear-to-bl from-yellow-300 to-yellow-400 px-2 py-1 font-bold select-none"
+				>
+					99+
+				</div>
 			</div>
 		</div>
 
@@ -88,10 +93,9 @@
 			</div>
 			<ul class="list-disc pl-5">
 				<li>20 AI photos</li>
+				<li>Choose from hand-picked presets</li>
+				<li>Write your own scenes</li>
 				<li>Get Tinder verified</li>
-				<li>14 hand-picked presets</li>
-				<li>Write your own</li>
-				<li>Consistent face</li>
 			</ul>
 		</div>
 
