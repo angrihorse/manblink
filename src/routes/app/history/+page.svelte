@@ -13,7 +13,7 @@
 	} from 'firebase/firestore';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import { X, Download } from '@lucide/svelte';
+	import { X, Download, Trash2, Trash } from '@lucide/svelte';
 	import Balls from '$lib/components/Balls.svelte';
 	import { fixedBar, screenTitle } from '$lib/stores/app';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
@@ -135,26 +135,26 @@
 
 <div class="flex justify-center">
 	<div class="flex w-full max-w-md flex-col space-y-8">
-		<div class="flex gap-8">
+		<div class="flex gap-4">
 			<button
 				onclick={() => (historyTab = 'saved')}
-				class="flex h-16 flex-1 cursor-pointer items-center justify-center rounded-xl font-bold outline-8"
-				class:outline={historyTab === 'saved'}
-				class:outline-rose-500={historyTab === 'saved'}
-				class:outline-stone-200={historyTab !== 'saved'}
-				class:hover:outline-stone-300={historyTab !== 'saved'}
+				class="flex h-16 flex-1 cursor-pointer items-center justify-center rounded-xl font-bold"
+				class:bg-stone-700={historyTab === 'saved'}
+				class:text-white={historyTab === 'saved'}
+				class:bg-stone-200={historyTab !== 'saved'}
+				class:hover:bg-stone-300={historyTab !== 'saved'}
 			>
 				<Download class="size-6" strokeWidth={3} />
 			</button>
 			<button
 				onclick={() => (historyTab = 'discarded')}
-				class="flex h-16 flex-1 cursor-pointer items-center justify-center rounded-xl font-bold outline-8"
-				class:outline={historyTab === 'discarded'}
-				class:outline-rose-500={historyTab === 'discarded'}
-				class:outline-stone-200={historyTab !== 'discarded'}
-				class:hover:outline-stone-300={historyTab !== 'discarded'}
+				class="flex h-16 flex-1 cursor-pointer items-center justify-center rounded-xl font-bold"
+				class:bg-stone-700={historyTab === 'discarded'}
+				class:text-white={historyTab === 'discarded'}
+				class:bg-stone-200={historyTab !== 'discarded'}
+				class:hover:bg-stone-300={historyTab !== 'discarded'}
 			>
-				<X class="size-6" strokeWidth={3} />
+				<Trash class="size-6" strokeWidth={3} />
 			</button>
 		</div>
 

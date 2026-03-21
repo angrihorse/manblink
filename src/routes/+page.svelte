@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Balls from '$lib/components/Balls.svelte';
 	import PhotoRow from '$lib/components/PhotoRow.svelte';
-	import { Redo, Send } from '@lucide/svelte';
+	import { MessageCircle, Redo, Send } from '@lucide/svelte';
 	import { page } from '$app/state';
 
 	const heroPhotos = [
@@ -112,10 +112,9 @@
 			</div>
 			<ul class="list-disc pl-5">
 				<li>50 AI photos</li>
-				<li>Tinder Verified</li>
 				<li>Your exact face</li>
-				<li>Choose hand-picked scenes</li>
-				<li>CWrite your own</li>
+				<li>Tinder Verified</li>
+				<li>Hand-picked scenes</li>
 			</ul>
 		</div>
 
@@ -146,7 +145,7 @@
 		<div class="flex flex-col space-y-4">
 			<div class="space-y-1">
 				<div class="text-3xl font-bold">Have a question?</div>
-				<div class="">Get a human answer within 10 minutes</div>
+				<div class="">Get a human answer within 12h</div>
 			</div>
 			<a
 				href="https://t.me/oricoac"
@@ -155,6 +154,14 @@
 			>
 				<Send class="absolute right-6 size-6" strokeWidth={3} />
 				<span>Ask on Telegram</span>
+			</a>
+			<a
+				href="https://wa.me/85293247714"
+				target="_blank"
+				class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
+			>
+				<MessageCircle class="absolute right-6 size-6" strokeWidth={3} />
+				<span>Ask on WhatsApp</span>
 			</a>
 		</div>
 	</div>
