@@ -6,7 +6,7 @@ import { GEMINI_API_KEY } from '$env/static/private';
 import { FieldValue } from 'firebase-admin/firestore';
 
 const ALWAYS_ON_SPRINKLES = [
-	'shot on a cheap camera',
+	'shot on a cheap camera'
 ];
 
 const DEFAULT_SPRINKLES = [
@@ -20,12 +20,6 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Angle', text: 'from high angle' },
 	{ group: 'Angle', text: 'from low angle' },
 	{ group: 'Angle', text: 'at eye-level' },
-
-	{ group: 'Light', text: 'golden hour light' },
-	{ group: 'Light', text: 'overcast light' },
-	{ group: 'Light', text: 'slightly underexposed' },
-	{ group: 'Light', text: 'slightly overexposed' },
-	{ group: 'Light', text: 'camera flash' },
 
 	{ group: 'Pose', text: 'side profile looking away' },
 	{ group: 'Pose', text: 'front facing with direct gaze' },

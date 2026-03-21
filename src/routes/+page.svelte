@@ -1,9 +1,8 @@
 <script lang="ts">
-	import AuthForm from '$lib/components/AuthForm.svelte';
 	import Balls from '$lib/components/Balls.svelte';
 	import PhotoRow from '$lib/components/PhotoRow.svelte';
-	import PhotoUpload from '$lib/components/PhotoUpload.svelte';
-	import { ArrowRight, CircleArrowRight, Redo, Send } from '@lucide/svelte';
+	import { Redo, Send } from '@lucide/svelte';
+	import { page } from '$app/state';
 
 	const heroPhotos = [
 		{ src: '/pics/gen1.jpeg', alt: 'Generated 1' },
@@ -20,8 +19,6 @@
 		{ src: '/pics/gen10.jpg', alt: 'Generated 10' },
 		{ src: '/pics/gen11.jpg', alt: 'Generated 11' }
 	];
-
-	let uploadedSelfieBase64 = $state<string | null>(null);
 </script>
 
 <svelte:head>
@@ -34,7 +31,7 @@
 			<div
 				class="inline-flex items-center rounded-full border-4 border-stone-200 px-4 py-1.5 text-sm font-medium"
 			>
-				<span>3.7x more matches on average</span>
+				<span>4.2x increase in matches</span>
 			</div>
 			<div class="flex items-center gap-2">
 				<div class="text-3xl font-bold">Take one selfie <br />Get laid tonight</div>
@@ -69,7 +66,29 @@
 			</div>
 		</div>
 
-		<AuthForm />
+		<div class="flex flex-col gap-3">
+			{#if page.data.user}
+				<a
+					href="/app"
+					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+				>
+					Open App
+				</a>
+			{:else}
+				<a
+					href="/quiz"
+					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+				>
+					Get Started
+				</a>
+				<a
+					href="/app"
+					class="flex h-16 items-center justify-center rounded-xl bg-stone-200 font-bold hover:bg-stone-300"
+				>
+					Login
+				</a>
+			{/if}
+		</div>
 
 		<!-- <div class="aspect-video w-full overflow-hidden rounded-xl bg-black">
 			<iframe
@@ -88,18 +107,41 @@
 	<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
 		<div class=" space-y-1">
 			<div class="font-bold">
-				<span class="text-5xl">$10</span>
+				<span class="text-5xl">$29</span>
 				<span class="">one-time </span>
 			</div>
 			<ul class="list-disc pl-5">
-				<li>20 AI photos</li>
-				<li>Choose from hand-picked presets</li>
-				<li>Write your own scenes</li>
-				<li>Get Tinder verified</li>
+				<li>50 AI photos</li>
+				<li>Tinder Verified</li>
+				<li>Your exact face</li>
+				<li>Choose hand-picked scenes</li>
+				<li>CWrite your own</li>
 			</ul>
 		</div>
 
-		<AuthForm />
+		<div class="flex flex-col gap-3">
+			{#if page.data.user}
+				<a
+					href="/app"
+					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+				>
+					Open App
+				</a>
+			{:else}
+				<a
+					href="/quiz"
+					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+				>
+					Get Started
+				</a>
+				<a
+					href="/app"
+					class="flex h-16 items-center justify-center rounded-xl bg-stone-200 font-bold hover:bg-stone-300"
+				>
+					Login
+				</a>
+			{/if}
+		</div>
 
 		<div class="flex flex-col space-y-4">
 			<div class="space-y-1">

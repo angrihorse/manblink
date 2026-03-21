@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { collection, doc, DocumentReference, getDoc, getDocs, getFirestore, limit, onSnapshot, query, setDoc, where } from "firebase/firestore";
-import { getAuth, GoogleAuthProvider, isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInWithEmailLink, signInWithPopup, signOut, type User } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInAnonymously, signInWithEmailLink, signInWithPopup, signOut, type User } from "firebase/auth";
 import { browser } from "$app/environment";
 import { goto, invalidateAll } from "$app/navigation";
 import { writable } from "svelte/store";
@@ -32,35 +32,44 @@ export const authLoading = writable(false);
 export const customRender = writable(false);
 
 
-export async function signInWithGoogle() {
+async function syncQuizData(uid: string) {
+    const quizData = localStorage.getItem('manblink_quiz');
+    if (!quizData) return;
+    try {
+        await setDoc(doc(db, 'users', uid), { quiz: JSON.parse(quizData) }, { merge: true });
+        localStorage.removeItem('manblink_quiz');
+    } catch { }
+}
+
+export async function signInWithGoogle(redirectUrl = '/app') {
     const provider = new GoogleAuthProvider();
     const credential = await signInWithPopup(auth, provider);
     const user = credential.user;
     if (user) {
         authLoading.set(true);
+        await syncQuizData(user.uid);
         const idToken = await user.getIdToken();
-        await serverSignIn(idToken);
+        await serverSignIn(idToken, redirectUrl);
     }
 }
 
-async function serverSignIn(idToken: string) {
-    const response = await fetch("/api/auth", {
+async function serverSignIn(idToken: string, redirectUrl = '/app') {
+    await fetch("/api/auth", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ idToken }),
     });
-    const { redirectUrl } = await response.json();
 
-    if (redirectUrl.startsWith('http://') || redirectUrl.startsWith('https://')) {
-        window.location.href = redirectUrl;
-    } else {
-        console.log('goto', redirectUrl)
-        await goto(redirectUrl);
-        // await invalidateAll(); if we stay on the same page this needs to be called
-        authLoading.set(false);
-    }
+    window.location.href = redirectUrl;
+}
+
+export async function signInAsGuest() {
+    authLoading.set(true);
+    const credential = await signInAnonymously(auth);
+    const idToken = await credential.user.getIdToken();
+    await serverSignIn(idToken);
 }
 
 export async function serverSignOut() {
@@ -101,6 +110,7 @@ export async function handleEmailLinkSignIn() {
         const cleanUrl = new URL(window.location.href);
         cleanUrl.searchParams.delete('email');
         window.history.replaceState({}, '', cleanUrl.toString());
+        await syncQuizData(user.uid);
         const idToken = await user.getIdToken();
         await serverSignIn(idToken);
     }

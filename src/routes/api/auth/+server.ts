@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         };
         cookies.set('__session', cookie, options);
 
-        return json({ redirectUrl: '/app' });
+        return json({ success: true });
     } else {
         throw error(401, 'Recent sign in required!');
     }

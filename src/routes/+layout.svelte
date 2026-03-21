@@ -9,8 +9,22 @@
 	import type { UserData } from '$lib/types';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { ArrowLeft } from '@lucide/svelte';
-	import { fixedBar, fullSreen as fullSreen, screenTitle, userCredits } from '$lib/stores/app';
+	import {
+		fixedBar,
+		fullSreen as fullSreen,
+		screenTitle,
+		userCredits,
+		navProgress
+	} from '$lib/stores/app';
 	import { fly } from 'svelte/transition';
+
+	const BACK_URLS: Record<string, string> = {
+		'/app/select': '/app',
+		'/app/upload': '/app/select',
+		'/app/stripe': '/app/upload',
+		'/app/review': '/app/upload',
+		'/app/history': '/app',
+	};
 
 	let { children } = $props();
 
@@ -21,7 +35,6 @@
 	afterNavigate(() => {
 		fixedBar.set(false);
 		fullSreen.set(false);
-		console.log('Set fullSreen to false');
 	});
 
 	$effect(() => {
@@ -55,7 +68,8 @@
 			<div class="absolute left-0">
 				<button
 					onclick={() => {
-						window.history.back();
+						const url = BACK_URLS[page.url.pathname];
+						url ? goto(url) : window.history.back();
 					}}
 					class="flex size-16 cursor-pointer items-center justify-center"
 				>
@@ -67,6 +81,15 @@
 		{#if page.url.pathname === '/' || page.url.pathname === '/app'}
 			<a href="/" class=" font-black tracking-widest"><span class="">MAN</span><span>BLINK</span></a
 			>
+		{:else if $navProgress !== null}
+			<div class="w-full pr-4 pl-16">
+				<div class="h-2 overflow-hidden rounded-full bg-stone-200">
+					<div
+						class="h-full bg-rose-500 transition-all duration-300"
+						style="width: {$navProgress}%"
+					></div>
+				</div>
+			</div>
 		{:else}
 			<div class=" font-bold">{$screenTitle}</div>
 		{/if}
@@ -83,7 +106,7 @@
 		class:mt-16={$fixedBar}
 		class:overflow-hidden={$fullSreen}
 		class:h-dvh={$fullSreen}
-		class="relative h-full px-4 py-8 pb-26 text-stone-800 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
+		class="relative h-full px-4 py-8 text-stone-800 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
 	>
 		{@render children()}
 	</div>

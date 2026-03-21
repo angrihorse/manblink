@@ -53,7 +53,7 @@
 	{:else}
 		<div class="flex grow flex-col text-stone-800">
 			<button
-				onclick={signInWithGoogle}
+				onclick={() => signInWithGoogle()}
 				class="flex h-16 cursor-pointer items-center justify-center gap-3 rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
 			>
 				{@html googleIcon}
@@ -85,7 +85,7 @@
 				/>
 				<button
 					type="submit"
-					class="relative flex h-16 cursor-pointer items-center justify-center rounded-xl bg-rose-500 font-bold text-white select-none hover:bg-rose-600"
+					class="relative flex h-16 cursor-pointer items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
 				>
 					<span>Continue with email</span>
 				</button>

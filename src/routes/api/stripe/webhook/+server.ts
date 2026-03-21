@@ -26,7 +26,7 @@ export const POST: RequestHandler = async ({ request }) => {
             const session = data as Stripe.Checkout.Session;
             if (session.client_reference_id && session.payment_status === 'paid') {
                 await updateUserInDb(session.client_reference_id, {
-                    credits: FieldValue.increment(20)
+                    credits: FieldValue.increment(50)
                 });
             }
             break;
