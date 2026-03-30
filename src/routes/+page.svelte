@@ -76,7 +76,7 @@
 				</a>
 			{:else}
 				<a
-					href="/quiz"
+					href="/app/quiz"
 					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
 				>
 					Get Started
@@ -111,10 +111,9 @@
 				<span class="">one-time </span>
 			</div>
 			<ul class="list-disc pl-5">
-				<li>50 AI photos</li>
-				<li>Your exact face</li>
-				<li>Tinder Verified</li>
-				<li>Hand-picked scenes</li>
+				<li>30 AI photos</li>
+				<li>Get Tinder Verified</li>
+				<li>Optimized for dating</li>
 			</ul>
 		</div>
 
@@ -128,7 +127,7 @@
 				</a>
 			{:else}
 				<a
-					href="/quiz"
+					href="/app/quiz"
 					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
 				>
 					Get Started

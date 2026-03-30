@@ -9,6 +9,8 @@
 	import { Landmark, LogOut, Mail } from '@lucide/svelte';
 	import Balls from '$lib/components/Balls.svelte';
 
+	let { redirectUrl = '/app' }: { redirectUrl?: string } = $props();
+
 	let email = $state('');
 	let emailSent = $state(false);
 
@@ -17,9 +19,10 @@
 
 <div class="h-full w-full max-w-md">
 	{#if emailSent}
-		<div class="flex h-full grow flex-col items-center justify-center gap-4 text-stone-800">
-			<div class="space-y-1">
+		<div class="flex h-full grow flex-col gap-4 text-stone-800">
+			<div class="space-y-2">
 				<div class="text-3xl font-bold">Email sent</div>
+				<div class="text-stone-500">Don't forget to check spam</div>
 				{#if email.includes('gmail')}
 					<a
 						href="http://mail.google.com/"
@@ -53,7 +56,7 @@
 	{:else}
 		<div class="flex grow flex-col text-stone-800">
 			<button
-				onclick={() => signInWithGoogle()}
+				onclick={() => signInWithGoogle(redirectUrl)}
 				class="flex h-16 cursor-pointer items-center justify-center gap-3 rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
 			>
 				{@html googleIcon}
@@ -71,7 +74,7 @@
 				onsubmit={(e) => {
 					e.preventDefault();
 					emailSent = true;
-					signInWithEmail(email);
+					signInWithEmail(email, redirectUrl);
 				}}
 			>
 				<input

@@ -2,15 +2,29 @@
 	import { goto } from '$app/navigation';
 	import { User } from '@lucide/svelte';
 	import {
-		screenTitle,
 		selectedPrompts,
 		uploadedSelfieBase64,
-		generationStartTime,
-		photosInCount,
-		userCredits
+		userCredits,
+		navStepsTotal,
+		navCurrentStep,
+		navDirection,
+		bottomBar
 	} from '$lib/stores/app';
 
-	screenTitle.set('Upload selfie');
+	$effect(() => {
+		if ($navStepsTotal !== null) navCurrentStep.set($navStepsTotal - 1);
+	});
+
+	$effect(() => {
+		bottomBar.set([
+			{
+				label: 'Launch',
+				onclick: handleGetPhotos,
+				disabled: !$uploadedSelfieBase64,
+				variant: 'primary'
+			}
+		]);
+	});
 
 	let isDragging = $state(false);
 	let fileInput: HTMLInputElement;
@@ -57,28 +71,31 @@
 		if (!$uploadedSelfieBase64 || $selectedPrompts.length === 0) return;
 
 		if (($userCredits ?? 0) < $selectedPrompts.length) {
-			goto('/app/stripe');
+			navDirection.set('forward');
+			goto('/app/topup');
 			return;
 		}
 
-		$generationStartTime = Date.now();
-		$photosInCount = $selectedPrompts.length;
-
-		goto('/app/review');
-
-		fetch('/api/generate', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				prompts: $selectedPrompts.map((p) => ({ text: p.text, isCustom: p.isCustom ?? false })),
-				selfieBase64: $uploadedSelfieBase64
-			})
-		});
+		navDirection.set('forward');
+		goto('/app/loading');
 	}
 </script>
 
 <div class="flex justify-center">
-	<div class="flex w-full max-w-md flex-col space-y-8 text-center">
+	<div class="flex w-full max-w-md flex-col space-y-8">
+		<div class="space-y-2">
+			<div class="text-3xl font-bold">Upload selfie</div>
+			<div class="grid grid-cols-2">
+				<ul class="list-disc pl-5">
+					<li>Face the camera</li>
+					<li>Good lighting</li>
+				</ul>
+				<ul class="list-disc pl-5">
+					<li>No sunglasses</li>
+					<li>No filters</li>
+				</ul>
+			</div>
+		</div>
 		<button
 			type="button"
 			onclick={triggerFileInput}
@@ -101,21 +118,10 @@
 				<img src={$uploadedSelfieBase64} alt="Uploaded selfie" class="h-full w-full object-cover" />
 			{:else}
 				<div class="flex flex-col items-center space-y-2 select-none">
-					<User class="size-8" strokeWidth={3} />
+					<User class="size-6" strokeWidth={3} />
 					<span class="font-bold">Upload Selfie</span>
 				</div>
 			{/if}
 		</button>
-
 	</div>
-</div>
-
-<div class="fixed bottom-0 left-0 right-0 flex justify-center bg-white px-4 pb-4 pt-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64">
-	<button
-		onclick={handleGetPhotos}
-		disabled={!$uploadedSelfieBase64}
-		class="h-16 w-full max-w-md cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
-	>
-		Launch
-	</button>
 </div>

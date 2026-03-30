@@ -15,13 +15,10 @@
 	import { onMount } from 'svelte';
 	import { X, Download, Trash2, Trash } from '@lucide/svelte';
 	import Balls from '$lib/components/Balls.svelte';
-	import { fixedBar, screenTitle } from '$lib/stores/app';
+	import { screenTitle } from '$lib/stores/app';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 
 	screenTitle.set('History');
-	afterNavigate(() => {
-		fixedBar.set(true);
-	});
 
 	let historyTab = $state<'saved' | 'discarded'>('saved');
 

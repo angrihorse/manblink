@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 import { PRIVATE_WEBHOOK_SECRET } from '$env/static/private';
 import { stripe } from '$lib/server/stripe';
-import { updateUserInDb } from '$lib/server/firebase';
+import { adminDb, updateUserInDb } from '$lib/server/firebase';
 import { FieldValue } from 'firebase-admin/firestore';
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -24,10 +24,22 @@ export const POST: RequestHandler = async ({ request }) => {
     switch (event.type) {
         case 'checkout.session.completed': {
             const session = data as Stripe.Checkout.Session;
-            if (session.client_reference_id && session.payment_status === 'paid') {
+            if (session.payment_status !== 'paid') break;
+
+            const credits = parseInt(session.metadata?.credits ?? '0', 10);
+            if (!credits) break;
+
+            if (session.client_reference_id) {
                 await updateUserInDb(session.client_reference_id, {
-                    credits: FieldValue.increment(50)
+                    credits: FieldValue.increment(credits)
                 });
+            } else {
+                const email = session.customer_details?.email;
+                if (email) {
+                    await adminDb.collection('pendingCredits').doc(email).set({
+                        credits: FieldValue.increment(credits)
+                    }, { merge: true });
+                }
             }
             break;
         }

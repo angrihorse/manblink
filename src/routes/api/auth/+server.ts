@@ -17,6 +17,15 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
             email: firebaseUser.email,
         }, { merge: true });
 
+        if (firebaseUser.email) {
+            const pendingRef = adminDb.collection('pendingCredits').doc(firebaseUser.email);
+            const pending = await pendingRef.get();
+            if (pending.exists) {
+                await userRef.set({ credits: FieldValue.increment(pending.data()!.credits) }, { merge: true });
+                await pendingRef.delete();
+            }
+        }
+
         const cookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
         const options = {
             maxAge: expiresIn,

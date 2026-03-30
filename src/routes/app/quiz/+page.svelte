@@ -4,10 +4,14 @@
 	import { cubicOut } from 'svelte/easing';
 	import { onMount, onDestroy } from 'svelte';
 	import { ThumbsUp, ThumbsDown, Star } from '@lucide/svelte';
-	import { screenTitle, navStepsTotal, navCurrentStep } from '$lib/stores/app';
+	import {
+		navStepsTotal,
+		navCurrentStep,
+		navDirection,
+		navBackOverride,
+		bottomBar
+	} from '$lib/stores/app';
 	import { select, easeCubicOut } from 'd3';
-
-	screenTitle.set('');
 
 	type StepType = 'choice' | 'info';
 
@@ -99,19 +103,19 @@
 		{
 			id: 'timeline',
 			type: 'choice',
-			question: 'When do you want to get more matches?',
-			options: [{ label: 'Right now' }, { label: 'Next month' }, { label: 'This year' }]
+			question: 'When do you want to get better photos?',
+			options: [{ label: 'Right now' }, { label: 'Next week' }, { label: 'This year' }]
 		}
 	];
 
-	// +3 slots: reviews + select + upload
-	navStepsTotal.set(steps.length + 3);
+	// +4 slots: reviews + select + upload + topup
+	navStepsTotal.set(steps.length + 4);
 
 	type Screen = 'quiz' | 'reviews';
 
 	const STORAGE_KEY = 'manblink_quiz_progress';
 
-	function loadProgress(): { step: number; answers: Record<string, string> } {
+	function loadProgress(): { step: number; answers: Record<string, string>; onReviews?: boolean } {
 		try {
 			const saved = localStorage.getItem(STORAGE_KEY);
 			if (saved) return JSON.parse(saved);
@@ -126,7 +130,7 @@
 
 	const saved = loadProgress();
 
-	let screen = $state<Screen>('quiz');
+	let screen = $state<Screen>(saved.onReviews ? 'reviews' : 'quiz');
 	let currentStep = $state(saved.step);
 	let answers = $state<Record<string, string>>(saved.answers);
 	let selectedOption = $state<string | null>(saved.answers[steps[saved.step]?.id] ?? null);
@@ -139,14 +143,19 @@
 		navCurrentStep.set(screen === 'reviews' ? steps.length + 1 : currentStep + 1);
 	});
 
-	onMount(() => {
-		// Rebuild history stack so back has entries to pop
-		history.replaceState({}, '');
-		for (let i = 1; i <= currentStep; i++) {
-			history.pushState({}, '');
-		}
+	$effect(() => {
+		bottomBar.set([
+			{
+				label: 'Continue',
+				onclick: screen === 'reviews' ? handleReviewsContinue : handleContinue,
+				disabled: screen === 'quiz' && !canContinue,
+				variant: 'dark'
+			}
+		]);
+	});
 
-		function handlePopState() {
+	onMount(() => {
+		navBackOverride.set(() => {
 			direction = 'backward';
 			if (screen === 'reviews') {
 				screen = 'quiz';
@@ -158,10 +167,11 @@
 			} else {
 				goto('/');
 			}
-		}
+		});
+	});
 
-		window.addEventListener('popstate', handlePopState);
-		return () => window.removeEventListener('popstate', handlePopState);
+	onDestroy(() => {
+		navBackOverride.set(null);
 	});
 
 	function selectOption(value: string) {
@@ -181,14 +191,20 @@
 			currentStep++;
 			selectedOption = answers[steps[currentStep].id] ?? null;
 			saveProgress(currentStep, answers);
-			history.pushState({}, '');
 		} else {
 			direction = 'forward';
 			localStorage.setItem('manblink_quiz', JSON.stringify(answers));
-			localStorage.removeItem(STORAGE_KEY);
+			localStorage.setItem(
+				STORAGE_KEY,
+				JSON.stringify({ step: currentStep, answers, onReviews: true })
+			);
 			screen = 'reviews';
-			history.pushState({}, '');
 		}
+	}
+
+	function handleReviewsContinue() {
+		navDirection.set('forward');
+		goto('/app/select');
 	}
 
 	function animateChart(node: HTMLElement) {
@@ -218,14 +234,14 @@
 
 <svelte:head><title>Get More Matches — Manblink</title></svelte:head>
 
-<div class="flex justify-center">
-	<div class="flex w-full max-w-md flex-col space-y-8">
-		<div class="slide-container">
-			{#key screen === 'quiz' ? currentStep : screen}
-				<div
-					in:fly={{ x: direction === 'forward' ? 400 : -400, duration: 280, easing: cubicOut }}
-					out:fly={{ x: direction === 'forward' ? -400 : 400, duration: 280, easing: cubicOut }}
-				>
+<div class="slide-container">
+	{#key screen === 'quiz' ? currentStep : screen}
+		<div
+			in:fly={{ x: direction === 'forward' ? 400 : -400, duration: 280, easing: cubicOut }}
+			out:fly={{ x: direction === 'forward' ? -400 : 400, duration: 280, easing: cubicOut }}
+		>
+			<div class="flex justify-center">
+				<div class="flex w-full max-w-md flex-col space-y-8">
 					{#if screen === 'quiz'}
 						<div class={step.replyText ? 'flex flex-col space-y-4' : 'space-y-8'}>
 							{#if step.id === 'dates_reply'}
@@ -326,7 +342,7 @@
 					{:else if screen === 'reviews'}
 						<div class="space-y-6">
 							<div class="text-3xl font-bold">Manblink was made for people like you</div>
-							{#each [{ name: 'James', text: '21 matches the first day. The photos look insane', starsCount: 5 }, { name: 'Marc', text: "My mom didn't believe these weren't real :)", starsCount: 5 }, { name: 'Tom', text: 'I got best results when I mixed AI photos with my own', starsCount: 4 }] as review (review.name)}
+							{#each [{ name: 'James', text: '21 matches the first day. The photos look insane', starsCount: 5 }, { name: 'Marc', text: "My mom didn't believe these weren't real :)", starsCount: 5 }, { name: 'Tom', text: 'I got the most matches when I mixed AI photos with my own', starsCount: 4 }] as review (review.name)}
 								<div class="space-y-2 rounded-xl bg-stone-100 p-5">
 									<div class="flex w-full justify-between space-x-2">
 										<div class="font-bold">{review.name}</div>
@@ -342,22 +358,9 @@
 						</div>
 					{/if}
 				</div>
-			{/key}
+			</div>
 		</div>
-	</div>
-</div>
-
-<!-- Sticky Continue button -->
-<div
-	class="fixed right-0 bottom-0 left-0 flex justify-center border-t-4 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
->
-	<button
-		onclick={screen === 'reviews' ? () => goto('/app/select') : handleContinue}
-		disabled={screen === 'quiz' && !canContinue}
-		class="min-h-16 w-full max-w-md cursor-pointer rounded-xl bg-stone-700 px-4 py-3 font-bold text-white hover:bg-stone-800 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
-	>
-		Continue
-	</button>
+	{/key}
 </div>
 
 <style>

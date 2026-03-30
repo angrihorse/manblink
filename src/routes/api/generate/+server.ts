@@ -124,9 +124,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const model = 'gemini-3-pro-image-preview';
 	const bucket = adminStorage.bucket();
 
-	await generateImages(prompts, selfieBuffer, ai, model, bucket, userId);
+	const photoIds = await generateImages(prompts, selfieBuffer, ai, model, bucket, userId);
 
-	return json({ success: true });
+	return json({ photoIds });
 };
 
 async function uploadPhotoToStorage(bucket: any, userId: string, imageBuffer: Buffer) {
@@ -170,7 +170,7 @@ async function generateImages(
 	model: string,
 	bucket: any,
 	userId: string
-) {
+): Promise<string[]> {
 	const t0 = Date.now();
 	console.log(`[generate] start — user:${userId} ${prompts.length} prompt(s), selfie ${(selfieBuffer.length / 1024).toFixed(0)} KB`);
 
@@ -198,9 +198,13 @@ async function generateImages(
 
 		const results = await Promise.allSettled(generationPromises);
 
-		const successful = results.filter(r => r.status === 'fulfilled').length;
+		const photoIds = results
+			.filter((r): r is PromiseFulfilledResult<string | null> => r.status === 'fulfilled')
+			.map((r) => r.value)
+			.filter((v): v is string => v !== null);
+
 		const failed = results.filter(r => r.status === 'rejected').length;
-		console.log(`[generate] ${ms(t0)} all done — ${successful} ok, ${failed} failed`);
+		console.log(`[generate] ${ms(t0)} all done — ${photoIds.length} ok, ${failed} failed`);
 
 		if (failed > 0) {
 			results.forEach((result, index) => {
@@ -210,7 +214,7 @@ async function generateImages(
 			});
 		}
 
-		if (successful === 0) {
+		if (photoIds.length === 0) {
 			const firstError = results.find(r => r.status === 'rejected') as PromiseRejectedResult | undefined;
 			const { title, message } = parseGeminiError(firstError?.reason);
 			await adminDb.collection('photos').add({
@@ -221,6 +225,8 @@ async function generateImages(
 				createdAt: Date.now(),
 			});
 		}
+
+		return photoIds;
 	} catch (error: any) {
 		console.error(`[generate] ${ms(t0)} fatal error:`, error);
 		const { title, message } = parseGeminiError(error);
@@ -231,6 +237,7 @@ async function generateImages(
 			message,
 			createdAt: Date.now(),
 		});
+		return [];
 	}
 }
 
@@ -248,14 +255,14 @@ async function generateSingleImage(
 	inputPhotoUrl: string,
 	idx: number,
 	t0global: number
-) {
+): Promise<string | null> {
 	const t0 = Date.now();
 	try {
 		const imageBuffer = MOCK_GEMINI ? selfieBuffer : await callGeminiAPI(selfieBuffer, promptText, ai, model);
 		console.log(`[generate] ${ms(t0global)} image ${idx} gemini done (${ms(t0)})`);
 
 		if (!imageBuffer) {
-			return;
+			return null;
 		}
 
 		const t1 = Date.now();
@@ -277,11 +284,11 @@ async function generateSingleImage(
 		});
 		console.log(`[generate] ${ms(t0global)} image ${idx} firestore written (${ms(t2)}) - ${outputPhotoId}`);
 
-		const userRef = adminDb.collection('users').doc(userId);
-		await userRef.update({
+		await adminDb.collection('users').doc(userId).update({
 			credits: FieldValue.increment(-1)
 		});
 
+		return outputPhotoId;
 	} catch (err) {
 		console.error(`Error generating image for "${promptText}":`, err);
 		throw err;

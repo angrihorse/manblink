@@ -60,7 +60,7 @@
 		<div class="w-full max-w-md space-y-4 rounded-xl bg-white p-8">
 			<div class="flex items-center justify-between">
 				<div class="text-3xl font-bold">Edit prompt</div>
-				<button onclick={handleClose} class="text-stone-400 hover:text-stone-600">
+				<button onclick={handleClose} class="text-stone-400 hover:text-stone-500">
 					<X class="size-6" />
 				</button>
 			</div>

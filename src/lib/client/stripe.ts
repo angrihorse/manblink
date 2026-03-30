@@ -1,9 +1,8 @@
-export async function initiateCheckout(email: string, nextUrl: string) {
+export async function initiateCheckout(priceId: string) {
     const response = await fetch('/api/stripe', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
     });
 
     if (!response.ok) {

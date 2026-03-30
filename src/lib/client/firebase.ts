@@ -1,10 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { collection, doc, DocumentReference, getDoc, getDocs, getFirestore, limit, onSnapshot, query, setDoc, where } from "firebase/firestore";
-import { getAuth, GoogleAuthProvider, isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInAnonymously, signInWithEmailLink, signInWithPopup, signOut, type User } from "firebase/auth";
-import { browser } from "$app/environment";
+import { getAuth, getRedirectResult, GoogleAuthProvider, isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInAnonymously, signInWithEmailLink, signInWithPopup, signInWithRedirect, signOut, type User } from "firebase/auth";
+import { browser, dev } from "$app/environment";
 import { goto, invalidateAll } from "$app/navigation";
 import { writable } from "svelte/store";
-import { page } from "$app/state";
 import { initiateCheckout } from "./stripe";
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
@@ -41,15 +40,39 @@ async function syncQuizData(uid: string) {
     } catch { }
 }
 
+const REDIRECT_URL_KEY = 'auth_redirect_url';
+
 export async function signInWithGoogle(redirectUrl = '/app') {
     const provider = new GoogleAuthProvider();
-    const credential = await signInWithPopup(auth, provider);
-    const user = credential.user;
-    if (user) {
+    if (dev) {
+        const credential = await signInWithPopup(auth, provider);
         authLoading.set(true);
-        await syncQuizData(user.uid);
-        const idToken = await user.getIdToken();
+        await syncQuizData(credential.user.uid);
+        const idToken = await credential.user.getIdToken();
         await serverSignIn(idToken, redirectUrl);
+    } else {
+        sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
+        await signInWithRedirect(auth, provider);
+    }
+}
+
+export async function handleGoogleRedirectResult() {
+    const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
+    if (!redirectUrl) return;
+    try {
+        const result = await getRedirectResult(auth);
+        if (!result) {
+            sessionStorage.removeItem(REDIRECT_URL_KEY);
+            return;
+        }
+        authLoading.set(true);
+        sessionStorage.removeItem(REDIRECT_URL_KEY);
+        await syncQuizData(result.user.uid);
+        const idToken = await result.user.getIdToken();
+        await serverSignIn(idToken, redirectUrl);
+    } catch {
+        sessionStorage.removeItem(REDIRECT_URL_KEY);
+        authLoading.set(false);
     }
 }
 
@@ -73,46 +96,56 @@ export async function signInAsGuest() {
 }
 
 export async function serverSignOut() {
-    authLoading.set(true);
     await fetch("/api/auth", { method: "DELETE" });
     await signOut(auth);
     await goto('/');
-    authLoading.set(false);
 }
 
-export async function signInWithEmail(email: string) {
-    const actionCodeSettings = {
-        url: `${page.url.origin}/app`,
-        handleCodeInApp: true,
-    };
+export async function signInWithEmail(email: string, redirectUrl = '/app') {
+    const continueUrl = new URL(window.location.href);
+    continueUrl.searchParams.set('email', email);
+    continueUrl.searchParams.set('redirectAfterAuth', redirectUrl);
 
-    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    await sendSignInLinkToEmail(auth, email, {
+        url: continueUrl.toString(),
+        handleCodeInApp: true,
+    });
     window.localStorage.setItem('emailForSignIn', email);
 }
 
 export async function handleEmailLinkSignIn() {
-    if (!isSignInWithEmailLink(auth, window.location.href)) {
-        return null;
-    }
-    let email = window.localStorage.getItem('emailForSignIn');
-    if (!email) {
-        email = window.prompt('Please provide your email for confirmation');
-    }
-    if (!email) {
-        throw new Error('Email is required for sign-in');
-    }
+    if (!browser) return null;
+    if (!isSignInWithEmailLink(auth, window.location.href)) return null;
+
+    const email =
+        window.localStorage.getItem('emailForSignIn') ??
+        new URL(window.location.href).searchParams.get('email');
+    if (!email) return null;
 
     authLoading.set(true);
-    const credential = await signInWithEmailLink(auth, email);
-    const user = credential.user;
-    if (user) {
+    let firebaseSignedIn = false;
+    try {
+        const credential = await signInWithEmailLink(auth, email, window.location.href);
+        firebaseSignedIn = true;
+        await syncQuizData(credential.user.uid);
+        const idToken = await credential.user.getIdToken();
+        const redirectAfterAuth = new URL(window.location.href).searchParams.get('redirectAfterAuth') ?? '/app';
+        await serverSignIn(idToken, redirectAfterAuth);
         window.localStorage.removeItem('emailForSignIn');
+        return credential.user;
+    } catch (err) {
+        if (firebaseSignedIn) {
+            try { await signOut(auth); } catch { }
+        }
+        throw err;
+    } finally {
         const cleanUrl = new URL(window.location.href);
-        cleanUrl.searchParams.delete('email');
+        ['email', 'redirectAfterAuth', 'apiKey', 'oobCode', 'mode', 'lang'].forEach((p) =>
+            cleanUrl.searchParams.delete(p)
+        );
         window.history.replaceState({}, '', cleanUrl.toString());
-        await syncQuizData(user.uid);
-        const idToken = await user.getIdToken();
-        await serverSignIn(idToken);
+        await invalidateAll();
+        authLoading.set(false);
     }
 }
 

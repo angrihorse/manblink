@@ -10,20 +10,23 @@
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { ArrowLeft } from '@lucide/svelte';
 	import {
-		fixedBar,
 		fullSreen as fullSreen,
 		screenTitle,
 		userCredits,
-		navProgress
+		navStepsTotal,
+		navCurrentStep,
+		navDirection,
+		navBackOverride
 	} from '$lib/stores/app';
 	import { fly } from 'svelte/transition';
 
 	const BACK_URLS: Record<string, string> = {
-		'/app/select': '/app',
+		'/app/select': '/app/quiz',
 		'/app/upload': '/app/select',
-		'/app/stripe': '/app/upload',
-		'/app/review': '/app/upload',
-		'/app/history': '/app',
+		'/app/topup': '/app/upload',
+		'/app/signin': '/app/topup',
+		'/app/review': '/app/loading',
+		'/app/history': '/app'
 	};
 
 	let { children } = $props();
@@ -32,9 +35,13 @@
 		await handleEmailLinkSignIn();
 	});
 
-	afterNavigate(() => {
-		fixedBar.set(false);
+	afterNavigate(({ to }) => {
 		fullSreen.set(false);
+		const dest = to?.url.pathname;
+		if (dest === '/' || dest === '/app') {
+			navStepsTotal.set(null);
+			navCurrentStep.set(null);
+		}
 	});
 
 	$effect(() => {
@@ -59,17 +66,19 @@
 	</div>
 {:else}
 	<div
-		class:fixed={$fixedBar}
-		class:top-0={$fixedBar}
-		class:left-0={$fixedBar}
-		class="z-10 flex h-16 w-full items-center justify-center border-b-4 border-stone-100 bg-white select-none sm:px-4 md:px-8 lg:px-12 xl:px-28 2xl:px-60"
+		class="relative z-10 flex h-16 w-full items-center justify-center border-b-4 border-stone-200 bg-white select-none"
 	>
-		{#if !(page.url.pathname === '/' || page.url.pathname === '/app')}
+		{#if !(page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/app/loading')}
 			<div class="absolute left-0">
 				<button
 					onclick={() => {
-						const url = BACK_URLS[page.url.pathname];
-						url ? goto(url) : window.history.back();
+						if ($navBackOverride) {
+							$navBackOverride();
+						} else {
+							navDirection.set('backward');
+							const url = BACK_URLS[page.url.pathname];
+							url ? goto(url) : window.history.back();
+						}
 					}}
 					class="flex size-16 cursor-pointer items-center justify-center"
 				>
@@ -78,32 +87,32 @@
 			</div>
 		{/if}
 
-		{#if page.url.pathname === '/' || page.url.pathname === '/app'}
-			<a href="/" class=" font-black tracking-widest"><span class="">MAN</span><span>BLINK</span></a
-			>
-		{:else if $navProgress !== null}
-			<div class="w-full pr-4 pl-16">
-				<div class="h-2 overflow-hidden rounded-full bg-stone-200">
+		<div class="flex w-full max-w-md items-center justify-center">
+			{#if page.url.pathname === '/' || page.url.pathname === '/app'}
+				<a href="/" class=" font-black tracking-widest"
+					><span class="">MAN</span><span>BLINK</span></a
+				>
+			{:else if $navStepsTotal !== null && $navCurrentStep !== null}
+				<div class="h-2 w-full overflow-hidden rounded-full bg-stone-200">
 					<div
 						class="h-full bg-rose-500 transition-all duration-300"
-						style="width: {$navProgress}%"
+						style="width: {($navCurrentStep / $navStepsTotal) * 100}%"
 					></div>
 				</div>
-			</div>
-		{:else}
-			<div class=" font-bold">{$screenTitle}</div>
-		{/if}
+			{:else}
+				<div class=" font-bold">{$screenTitle}</div>
+			{/if}
+		</div>
 
 		{#if page.data.user && $userCredits !== null}
 			<div
-				class="absolute right-0 items-center justify-center px-6 font-bold tracking-wide select-none"
+				class="absolute right-0 flex items-center justify-center px-6 font-bold tracking-wide select-none"
 			>
 				<span class="text-rose-500">@</span>{$userCredits}
 			</div>
 		{/if}
 	</div>
 	<div
-		class:mt-16={$fixedBar}
 		class:overflow-hidden={$fullSreen}
 		class:h-dvh={$fullSreen}
 		class="relative h-full px-4 py-8 text-stone-800 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"

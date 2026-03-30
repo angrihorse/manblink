@@ -76,7 +76,7 @@
 		<img src={activeAvatarUrl} alt="Active avatar" class="h-full w-full object-cover" />
 	{:else}
 		<div class="flex flex-col items-center space-y-2 select-none">
-			<User class="size-8" strokeWidth={3} />
+			<User class="size-6" strokeWidth={3} />
 			<span class="font-bold">Upload Selfie</span>
 		</div>
 	{/if}

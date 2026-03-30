@@ -38,7 +38,7 @@ remove
     < !--Selected Prompts List-- >
         { #if appState.selectedPrompts.length > 0 }
         < div class="space-y-2" >
-			<div class="font-bold text-stone-600">Selected ({appState.selectedPrompts.length})</div>
+			<div class="font-bold text-stone-500">Selected ({appState.selectedPrompts.length})</div>
 			<div class="max-h-48 space-y-2 overflow-y-auto">
 				{#each appState.selectedPrompts as prompt}
 					<div class="flex items-center space-x-2 rounded-xl bg-stone-200 p-3">
