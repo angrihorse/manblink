@@ -58,7 +58,7 @@
 	ondrop={handleDrop}
 	ondragover={handleDragOver}
 	ondragleave={handleDragLeave}
-	class="flex w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl bg-stone-200 outline-8 outline-stone-700 outline-dotted hover:bg-stone-300"
+	class="flex w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-8 border-dotted border-stone-700 bg-stone-200 hover:bg-stone-300"
 	class:py-8={!$uploadedSelfieBase64}
 	class:aspect-square={$uploadedSelfieBase64}
 	class:bg-stone-300={isDragging}

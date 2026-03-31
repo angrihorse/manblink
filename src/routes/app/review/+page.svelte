@@ -53,7 +53,7 @@
 		const snapshots = await Promise.all(ids.map((id) => getDoc(doc(db, 'photos', id))));
 		const photos = snapshots
 			.filter((snap) => snap.exists())
-			.map((snap) => ({ id: snap.id, ...snap.data() } as Photo));
+			.map((snap) => ({ id: snap.id, ...snap.data() }) as Photo);
 
 		if (!photos.length) {
 			goto('/app');
@@ -71,6 +71,7 @@
 		currentImageLoaded = false;
 		const next = photoQueue.pop();
 		if (next === undefined) {
+			currentPhoto = null;
 			goto('/app');
 			return;
 		}
@@ -218,12 +219,12 @@
 	$effect(() => {
 		bottomBar.set([
 			{
-				label: 'Discard',
+				icon: X,
 				onclick: () => animateSwipe('left'),
 				variant: 'secondary'
 			},
 			{
-				label: 'Save',
+				icon: Download,
 				onclick: () => animateSwipe('right')
 			}
 		]);
@@ -265,7 +266,8 @@
 					{#each animatingCards as card (card.id)}
 						<div
 							class="pointer-events-none absolute inset-0 overflow-hidden rounded-xl bg-stone-100"
-							style="transform: translateX({card.coords.current.x}px) translateY({card.coords.current.y}px) rotate({card.coords.current.x * 0.1}deg); z-index: 10;"
+							style="transform: translateX({card.coords.current.x}px) translateY({card.coords
+								.current.y}px) rotate({card.coords.current.x * 0.1}deg); z-index: 10;"
 						>
 							<img
 								src={card.photo.url}
@@ -293,7 +295,8 @@
 						ontouchstart={handleTouchStart}
 						ontouchend={handleTouchEnd}
 						class="absolute inset-0 touch-pan-y overflow-hidden rounded-xl bg-stone-100"
-						style="transform: translateX({coords.current.x}px) translateY({coords.current.y}px) rotate({rotation}deg);"
+						style="transform: translateX({coords.current.x}px) translateY({coords.current
+							.y}px) rotate({rotation}deg);"
 					>
 						<img
 							src={currentPhoto.url}

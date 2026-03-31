@@ -55,7 +55,7 @@
 		const discardedQuery = query(
 			collection(db, 'photos'),
 			where('userId', '==', page.data.user.id),
-			where('action', '==', 'discarded'),
+			where('action', '==', null),
 			orderBy('createdAt', 'desc'),
 			limit(PAGE_SIZE)
 		);
@@ -79,7 +79,7 @@
 		const q = query(
 			collection(db, 'photos'),
 			where('userId', '==', page.data.user.id),
-			where('action', '==', historyTab),
+			where('action', '==', historyTab === 'saved' ? 'saved' : null),
 			orderBy('createdAt', 'desc'),
 			limit(PAGE_SIZE),
 			startAfter(lastDoc)
@@ -131,7 +131,7 @@
 </script>
 
 <div class="flex justify-center">
-	<div class="flex w-full max-w-md flex-col space-y-8">
+	<div class="flex w-full max-w-md flex-col space-y-4">
 		<div class="flex gap-4">
 			<button
 				onclick={() => (historyTab = 'saved')}

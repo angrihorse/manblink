@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 export const generatedPhotoIds = writable<string[]>([]);
 import { browser } from '$app/environment';
 import type { Prompt } from '$lib/types';
+import type { Component } from 'svelte';
 
 function localStore<T>(key: string, initial: T) {
 	const stored = browser ? localStorage.getItem(key) : null;
@@ -26,7 +27,8 @@ export const navDirection = writable<'forward' | 'backward'>('forward')
 export const navBackOverride = writable<(() => void) | null>(null)
 
 export interface BottomBarButton {
-	label: string;
+	label?: string;
+	icon?: Component;
 	onclick: () => void;
 	disabled?: boolean;
 	variant?: 'primary' | 'secondary' | 'dark';

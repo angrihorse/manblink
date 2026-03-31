@@ -52,9 +52,7 @@
 	<div class="flex w-full max-w-md flex-col space-y-8">
 		<div class="space-y-2">
 			<div class="text-3xl font-bold">Your photos are being generated</div>
-			<p class="text-stone-500">
-				This takes 3–7 minutes. You'll be taken to your photos when ready.
-			</p>
+			<p class="text-stone-500">The process takes 3-7 minutes. Don't close this page</p>
 		</div>
 	</div>
 </div>

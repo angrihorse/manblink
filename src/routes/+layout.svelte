@@ -66,7 +66,7 @@
 	</div>
 {:else}
 	<div
-		class="relative z-10 flex h-16 w-full items-center justify-center border-b-4 border-stone-200 bg-white select-none"
+		class="relative z-10 flex h-14 w-full items-center justify-center border-b-4 border-stone-200 bg-white select-none"
 	>
 		{#if !(page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/app/loading')}
 			<div class="absolute left-0">
@@ -115,7 +115,7 @@
 	<div
 		class:overflow-hidden={$fullSreen}
 		class:h-dvh={$fullSreen}
-		class="relative h-full px-4 py-8 text-stone-800 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
+		class="relative h-full p-4 text-stone-800 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
 	>
 		{@render children()}
 	</div>

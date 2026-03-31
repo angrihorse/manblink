@@ -44,28 +44,21 @@ const REDIRECT_URL_KEY = 'auth_redirect_url';
 
 export async function signInWithGoogle(redirectUrl = '/app') {
     const provider = new GoogleAuthProvider();
-    if (dev) {
-        const credential = await signInWithPopup(auth, provider);
-        authLoading.set(true);
-        await syncQuizData(credential.user.uid);
-        const idToken = await credential.user.getIdToken();
-        await serverSignIn(idToken, redirectUrl);
-    } else {
-        sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-        await signInWithRedirect(auth, provider);
-    }
+    sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
+    await signInWithRedirect(auth, provider);
 }
 
 export async function handleGoogleRedirectResult() {
     const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
     if (!redirectUrl) return;
+    authLoading.set(true);
     try {
         const result = await getRedirectResult(auth);
         if (!result) {
             sessionStorage.removeItem(REDIRECT_URL_KEY);
+            authLoading.set(false);
             return;
         }
-        authLoading.set(true);
         sessionStorage.removeItem(REDIRECT_URL_KEY);
         await syncQuizData(result.user.uid);
         const idToken = await result.user.getIdToken();

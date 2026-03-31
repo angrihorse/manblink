@@ -3,10 +3,11 @@
 	import { page } from '$app/state';
 	import { serverSignOut } from '$lib/client/firebase';
 	import AuthForm from '$lib/components/AuthForm.svelte';
-	import { navStepsTotal, navCurrentStep } from '$lib/stores/app';
+	import { navStepsTotal, navCurrentStep, bottomBar } from '$lib/stores/app';
 
 	navStepsTotal.set(null);
 	navCurrentStep.set(null);
+	bottomBar.set(null);
 </script>
 
 {#if page.data.user}

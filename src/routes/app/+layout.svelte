@@ -9,7 +9,6 @@
 	import { beforeNavigate } from '$app/navigation';
 
 	beforeNavigate(() => {
-		bottomBar.set(null);
 		navBackOverride.set(null);
 	});
 
@@ -30,7 +29,7 @@
 	});
 </script>
 
-<div class="slide-container pb-22">
+<div class="slide-container pb-26">
 	{#key page.url.pathname}
 		<div
 			in:fly={{ x: $navDirection === 'forward' ? 400 : -400, duration: 280, easing: cubicOut }}
@@ -54,9 +53,14 @@
 						? 'bg-stone-200 hover:bg-stone-300'
 						: btn.variant === 'dark'
 							? 'bg-stone-700 text-white hover:bg-stone-800'
-							: 'bg-rose-500 text-white hover:bg-rose-600'} h-16 flex-1 cursor-pointer rounded-xl px-4 font-bold disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
-					>{btn.label}</button
+							: 'bg-rose-500 text-white hover:bg-rose-600'} flex h-16 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 font-bold disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
 				>
+					{#if btn.icon}
+						{@const Icon = btn.icon}
+						<Icon class="size-6 shrink-0" strokeWidth={3} />
+					{/if}
+					{#if btn.label}{btn.label}{/if}
+				</button>
 			{/each}
 		</div>
 	</div>
