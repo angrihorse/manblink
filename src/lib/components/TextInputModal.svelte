@@ -55,14 +55,14 @@
 			<div class="flex gap-4">
 				<button
 					onclick={handleCancel}
-					class="h-16 flex-1 cursor-pointer rounded-xl bg-stone-200 font-bold text-stone-800 hover:bg-stone-300"
+					class="min-h-16 flex-1 cursor-pointer rounded-xl bg-stone-200 py-3 font-bold text-stone-800 hover:bg-stone-300"
 				>
 					{cancelLabel}
 				</button>
 				<button
 					onclick={handleSubmit}
 					disabled={!value.trim()}
-					class="h-16 flex-1 cursor-pointer rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
+					class="min-h-16 flex-1 cursor-pointer rounded-xl bg-rose-500 py-3 font-bold text-white hover:bg-rose-600 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
 				>
 					{submitLabel}
 				</button>

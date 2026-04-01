@@ -15,21 +15,21 @@
 		<div class="flex w-full max-w-md flex-col gap-4">
 			<button
 				onclick={() => goto('/app/select')}
-				class="h-16 cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600"
+				class="min-h-16 cursor-pointer rounded-xl bg-rose-500 px-4 py-3 font-bold text-white hover:bg-rose-600"
 			>
 				Start
 			</button>
 
 			<a
 				href="/app/history"
-				class="flex h-16 items-center justify-center rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
+				class="flex min-h-16 items-center justify-center rounded-xl bg-stone-200 px-4 py-3 font-bold hover:bg-stone-300"
 			>
 				History
 			</a>
 
 			<button
 				onclick={serverSignOut}
-				class="h-16 cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300"
+				class="min-h-16 cursor-pointer rounded-xl bg-stone-200 px-4 py-3 font-bold hover:bg-stone-300"
 			>
 				Logout
 			</button>

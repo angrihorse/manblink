@@ -75,14 +75,14 @@
 				<button
 					onclick={handleClose}
 					disabled={submitting}
-					class="h-16 flex-1 rounded-xl bg-stone-200 font-bold hover:bg-stone-300 disabled:bg-stone-200"
+					class="min-h-16 flex-1 rounded-xl bg-stone-200 py-3 font-bold hover:bg-stone-300 disabled:bg-stone-200"
 				>
 					Cancel
 				</button>
 				<button
 					onclick={handleSave}
 					disabled={!editedPromptText.trim() || submitting}
-					class="h-16 flex-1 rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600 disabled:bg-stone-300"
+					class="min-h-16 flex-1 rounded-xl bg-rose-500 py-3 font-bold text-white hover:bg-rose-600 disabled:bg-stone-300"
 				>
 					{submitting ? 'Saving...' : 'Retry'}
 				</button>

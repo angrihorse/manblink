@@ -12,7 +12,7 @@
 
 	<a
 		href="/app"
-		class="flex h-16 max-w-48 items-center justify-center rounded-xl bg-rose-500 px-4 font-bold text-white select-none hover:bg-rose-600"
+		class="flex min-h-16 max-w-48 items-center justify-center rounded-xl bg-rose-500 px-4 py-3 font-bold text-white select-none hover:bg-rose-600"
 	>
 		Open the app
 	</a>

@@ -135,7 +135,7 @@
 		<div class="flex gap-4">
 			<button
 				onclick={() => (historyTab = 'saved')}
-				class="flex h-16 flex-1 cursor-pointer items-center justify-center rounded-xl font-bold"
+				class="flex min-h-16 flex-1 cursor-pointer items-center justify-center rounded-xl py-3 font-bold"
 				class:bg-stone-700={historyTab === 'saved'}
 				class:text-white={historyTab === 'saved'}
 				class:bg-stone-200={historyTab !== 'saved'}
@@ -145,7 +145,7 @@
 			</button>
 			<button
 				onclick={() => (historyTab = 'discarded')}
-				class="flex h-16 flex-1 cursor-pointer items-center justify-center rounded-xl font-bold"
+				class="flex min-h-16 flex-1 cursor-pointer items-center justify-center rounded-xl py-3 font-bold"
 				class:bg-stone-700={historyTab === 'discarded'}
 				class:text-white={historyTab === 'discarded'}
 				class:bg-stone-200={historyTab !== 'discarded'}
@@ -179,7 +179,7 @@
 					</div>
 				{:else}
 					<div class="flex h-64 items-center justify-center text-center">
-						<div class="text-3xl font-bold text-stone-300">Empty</div>
+						<div class="text-3xl font-bold text-stone-500">Empty</div>
 					</div>
 				{/each}
 			</div>
@@ -189,7 +189,7 @@
 			<button
 				onclick={loadMore}
 				disabled={loadingMore}
-				class="h-16 w-full cursor-pointer rounded-xl bg-stone-200 px-4 font-bold text-stone-700 hover:bg-stone-300 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
+				class="min-h-16 w-full cursor-pointer rounded-xl bg-stone-200 px-4 py-3 font-bold text-stone-700 hover:bg-stone-300 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
 			>
 				More
 			</button>

@@ -39,14 +39,14 @@ After completing the code, ask the user if they want a playground link. Only cal
 - **Button row**: `flex gap-4`
 
 ### Cards & Containers
-- **Card**: `rounded-xl bg-stone-100 p-5`
+- **Card**: `rounded-xl bg-stone-100 p-4`
 - **Border container**: `rounded-xl border-4 border-stone-200`
 - **Row item** (inside a container): `flex justify-between px-4 py-3`
 - **Highlighted row** (dark): `bg-stone-800 px-4 py-3 font-bold text-white`
 
 ### Buttons
-- Standard button: `h-16 w-full max-w-md cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600`
-- Secondary button: `h-16 w-full max-w-md cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300`
+- Standard button: `py-3 min-h-16 w-full max-w-md cursor-pointer rounded-xl bg-rose-500 px-4 font-bold text-white hover:bg-rose-600`
+- Secondary button: `py-3 min-h-16 w-full max-w-md cursor-pointer rounded-xl bg-stone-200 px-4 font-bold hover:bg-stone-300`
 - Disabled state: add `disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300`
 
 ### Sticky bottom bars
@@ -55,4 +55,4 @@ After completing the code, ask the user if they want a playground link. Only cal
 
 ### Icons
 - All icons use `strokeWidth={3}`
-- Size is context-dependent (`size-4`, `size-5`, `size-6`, etc.) — use `size-6` for standard inline/action icons, smaller for compact contexts
+- Size is context-dependent (`size-6`, `size-5`, `size-6`, etc.) — use `size-6` for standard inline/action icons, smaller for compact contexts

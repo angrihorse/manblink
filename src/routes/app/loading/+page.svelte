@@ -13,7 +13,7 @@
 
 	bottomBar.set(null);
 
-	screenTitle.set('Loading');
+	screenTitle.set('Loading...');
 
 	onMount(async () => {
 		const prompts = $selectedPrompts;

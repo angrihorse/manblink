@@ -3,7 +3,8 @@
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { onMount, onDestroy } from 'svelte';
-	import { ThumbsUp, ThumbsDown, Star } from '@lucide/svelte';
+	import { ThumbsUp, ThumbsDown } from '@lucide/svelte';
+	import Stars from '$lib/components/Stars.svelte';
 	import { screenTitle, navStepsTotal, navCurrentStep } from '$lib/stores/app';
 	import { select, easeCubicOut } from 'd3';
 
@@ -308,7 +309,7 @@
 											style="animation: option-in 220ms cubic-bezier(0.22, 1, 0.36, 1) {280 +
 												i * 80}ms both"
 											onclick={() => selectOption(option.label)}
-											class="flex min-h-16 w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-center font-bold"
+											class="min-py-3 flex min-h-16 w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-center font-bold"
 											class:bg-stone-700={selectedOption === option.label}
 											class:text-white={selectedOption === option.label}
 											class:bg-stone-200={selectedOption !== option.label}
@@ -327,14 +328,10 @@
 						<div class="space-y-6">
 							<div class="text-3xl font-bold">Manblink was made for people like you</div>
 							{#each [{ name: 'James', text: '21 matches the first day. The photos look insane', starsCount: 5 }, { name: 'Marc', text: "My mom didn't believe these weren't real :)", starsCount: 5 }, { name: 'Tom', text: 'I got best results when I mixed AI photos with my own', starsCount: 4 }] as review (review.name)}
-								<div class="space-y-2 rounded-xl bg-stone-100 p-5">
+								<div class="space-y-2 rounded-xl bg-stone-100 p-4">
 									<div class="flex w-full justify-between space-x-2">
 										<div class="font-bold">{review.name}</div>
-										<div class="flex gap-0.5">
-											{#each { length: review.starsCount } as _}
-												<Star class="size-6 fill-amber-500 text-amber-500" />
-											{/each}
-										</div>
+										<Stars count={review.starsCount} />
 									</div>
 									<p class="text-stone-500">{review.text}</p>
 								</div>
@@ -354,7 +351,7 @@
 	<button
 		onclick={screen === 'reviews' ? () => goto('/app/select') : handleContinue}
 		disabled={screen === 'quiz' && !canContinue}
-		class="min-h-16 w-full max-w-md cursor-pointer rounded-xl bg-stone-700 px-4 py-3 font-bold text-white hover:bg-stone-800 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
+		class="min-py-3 min-h-16 w-full max-w-md cursor-pointer rounded-xl bg-stone-700 px-4 py-3 font-bold text-white hover:bg-stone-800 disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
 	>
 		Continue
 	</button>

@@ -3,7 +3,9 @@
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { onMount, onDestroy } from 'svelte';
-	import { ThumbsUp, ThumbsDown, Star } from '@lucide/svelte';
+	import { ThumbsUp, ThumbsDown } from '@lucide/svelte';
+	import ReviewCard from '$lib/components/ReviewCard.svelte';
+	import SocialProof from '$lib/components/SocialProof.svelte';
 	import {
 		navStepsTotal,
 		navCurrentStep,
@@ -112,6 +114,40 @@
 	navStepsTotal.set(steps.length + 4);
 
 	type Screen = 'quiz' | 'reviews';
+
+	const reviews = [
+		{
+			name: 'Alex, 31',
+			avatar: '/pics/review7.jpg',
+			quote:
+				'Went from barely any matches to getting dates within the same week. The photos are that good.'
+		},
+		{
+			name: 'Jordan, 47',
+			avatar: '/pics/review8.jpg',
+			quote: 'My friends asked who took my photos. Nobody believes they were AI generated.'
+		},
+		{
+			name: 'Sam, 40',
+			avatar: '/pics/review9.jpg',
+			quote: 'Used to get maybe 1-2 matches a week. Now I have to keep up with conversations.'
+		},
+		{
+			name: 'Luke, 32',
+			avatar: '/pics/review10.jpg',
+			quote: "Honestly the best $29 I've spent. Updated my profile and saw results the same night."
+		},
+		{
+			name: 'Nick, 22',
+			avatar: '/pics/review11.jpg',
+			quote: 'I was skeptical but tried it anyway. My match rate doubled within a few days.'
+		},
+		{
+			name: 'Ben, 36',
+			avatar: '/pics/review12.jpg',
+			quote: 'Super fast, super easy. Photos look like I hired a professional photographer.'
+		}
+	];
 
 	const STORAGE_KEY = 'manblink_quiz_progress';
 
@@ -324,7 +360,7 @@
 											style="animation: option-in 220ms cubic-bezier(0.22, 1, 0.36, 1) {280 +
 												i * 80}ms both"
 											onclick={() => selectOption(option.label)}
-											class="flex min-h-16 w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-center font-bold"
+											class="min-py-3 flex min-h-16 w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-center font-bold"
 											class:bg-stone-700={selectedOption === option.label}
 											class:text-white={selectedOption === option.label}
 											class:bg-stone-200={selectedOption !== option.label}
@@ -340,21 +376,17 @@
 							{/if}
 						</div>
 					{:else if screen === 'reviews'}
-						<div class="space-y-6">
+						<div class="space-y-4">
 							<div class="text-3xl font-bold">Manblink was made for people like you</div>
-							{#each [{ name: 'James', text: '21 matches the first day. The photos look insane', starsCount: 5 }, { name: 'Marc', text: "My mom didn't believe these weren't real :)", starsCount: 5 }, { name: 'Tom', text: 'I got the most matches when I mixed AI photos with my own', starsCount: 4 }] as review (review.name)}
-								<div class="space-y-2 rounded-xl bg-stone-100 p-5">
-									<div class="flex w-full justify-between space-x-2">
-										<div class="font-bold">{review.name}</div>
-										<div class="flex gap-0.5">
-											{#each { length: review.starsCount } as _}
-												<Star class="size-6 fill-amber-500 text-amber-500" />
-											{/each}
-										</div>
-									</div>
-									<p class="text-stone-500">{review.text}</p>
-								</div>
-							{/each}
+							<SocialProof
+								avatars={reviews.slice(0, 5).map((r) => r.avatar)}
+								text="130+ guys upgraded their profiles this month"
+							/>
+							<div class="space-y-3">
+								{#each reviews as r (r.name)}
+									<ReviewCard name={r.name} avatar={r.avatar} quote={r.quote} />
+								{/each}
+							</div>
 						</div>
 					{/if}
 				</div>

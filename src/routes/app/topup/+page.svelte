@@ -254,7 +254,7 @@
 		</div>
 
 		<!-- SOCIAL PROOF -->
-		<div class="space-y-4 rounded-xl bg-stone-100 p-5">
+		<div class="space-y-4 rounded-xl bg-stone-100 p-4">
 			<p>
 				"I went from 2 matches a week to 15. Literally just changed my photos to the ones Manblink
 				generated"

@@ -13,7 +13,7 @@
 		<a
 			href="https://t.me/oricoac?text={encodeURIComponent(`${title}: ${message}`)}"
 			target="_blank"
-			class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
+			class="relative flex min-h-16 w-full items-center justify-center rounded-xl bg-stone-200 py-3 font-bold select-none hover:bg-stone-300"
 		>
 			<Send class="absolute right-6 size-6" strokeWidth={3} />
 			<span>Message developer</span>

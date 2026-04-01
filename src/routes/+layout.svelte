@@ -68,7 +68,7 @@
 	<div
 		class="relative z-10 flex h-14 w-full items-center justify-center border-b-4 border-stone-200 bg-white select-none"
 	>
-		{#if !(page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/app/loading')}
+		{#if !(page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/app/loading' || page.url.pathname === '/landing')}
 			<div class="absolute left-0">
 				<button
 					onclick={() => {
@@ -88,7 +88,7 @@
 		{/if}
 
 		<div class="flex w-full max-w-md items-center justify-center">
-			{#if page.url.pathname === '/' || page.url.pathname === '/app'}
+			{#if page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/landing'}
 				<a href="/" class=" font-black tracking-widest"
 					><span class="">MAN</span><span>BLINK</span></a
 				>

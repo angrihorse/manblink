@@ -70,20 +70,20 @@
 			{#if page.data.user}
 				<a
 					href="/app"
-					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+					class="flex min-h-16 items-center justify-center rounded-xl bg-rose-500 py-3 font-bold text-white hover:bg-rose-600"
 				>
 					Open App
 				</a>
 			{:else}
 				<a
 					href="/app/quiz"
-					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+					class="flex min-h-16 items-center justify-center rounded-xl bg-rose-500 py-3 font-bold text-white hover:bg-rose-600"
 				>
 					Get Started
 				</a>
 				<a
 					href="/app"
-					class="flex h-16 items-center justify-center rounded-xl bg-stone-200 font-bold hover:bg-stone-300"
+					class="flex min-h-16 items-center justify-center rounded-xl bg-stone-200 py-3 font-bold hover:bg-stone-300"
 				>
 					Login
 				</a>
@@ -121,20 +121,20 @@
 			{#if page.data.user}
 				<a
 					href="/app"
-					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+					class="flex min-h-16 items-center justify-center rounded-xl bg-rose-500 py-3 font-bold text-white hover:bg-rose-600"
 				>
 					Open App
 				</a>
 			{:else}
 				<a
 					href="/app/quiz"
-					class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white hover:bg-rose-600"
+					class="flex min-h-16 items-center justify-center rounded-xl bg-rose-500 py-3 font-bold text-white hover:bg-rose-600"
 				>
 					Get Started
 				</a>
 				<a
 					href="/app"
-					class="flex h-16 items-center justify-center rounded-xl bg-stone-200 font-bold hover:bg-stone-300"
+					class="flex min-h-16 items-center justify-center rounded-xl bg-stone-200 py-3 font-bold hover:bg-stone-300"
 				>
 					Login
 				</a>
@@ -149,7 +149,7 @@
 			<a
 				href="https://t.me/oricoac"
 				target="_blank"
-				class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
+				class="relative flex min-h-16 w-full items-center justify-center rounded-xl bg-stone-200 py-3 font-bold select-none hover:bg-stone-300"
 			>
 				<Send class="absolute right-6 size-6" strokeWidth={3} />
 				<span>Ask on Telegram</span>
@@ -157,7 +157,7 @@
 			<a
 				href="https://wa.me/85293247714"
 				target="_blank"
-				class="relative flex h-16 w-full items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
+				class="relative flex min-h-16 w-full items-center justify-center rounded-xl bg-stone-200 py-3 font-bold select-none hover:bg-stone-300"
 			>
 				<MessageCircle class="absolute right-6 size-6" strokeWidth={3} />
 				<span>Ask on WhatsApp</span>

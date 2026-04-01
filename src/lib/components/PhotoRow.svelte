@@ -14,7 +14,7 @@
 	{#if sourceImg}
 		<div class="relative aspect-3/4">
 			<img src={sourceImg} alt={name} class="h-full w-full rounded-xl object-cover" />
-			<span class="absolute top-4 left-4 rounded-xl bg-stone-200 px-4 py-2 font-bold select-none">
+			<span class="absolute top-4 left-4 rounded-xl bg-stone-100 px-4 py-2 font-bold select-none">
 				SELFIE
 			</span>
 		</div>
@@ -23,7 +23,9 @@
 	{#each generatedPhotos as photo}
 		<div class="relative aspect-3/4">
 			<img src={photo.src} alt={photo.alt} class="h-full w-full rounded-xl object-cover" />
-			<div class="absolute top-4 left-4 rounded-xl bg-stone-200 px-4 py-2 font-bold select-none">
+			<div
+				class="absolute top-4 left-4 rounded-xl bg-stone-100 px-4 py-2 font-bold text-rose-500 select-none"
+			>
 				AI
 			</div>
 		</div>

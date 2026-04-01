@@ -53,7 +53,7 @@
 						? 'bg-stone-200 hover:bg-stone-300'
 						: btn.variant === 'dark'
 							? 'bg-stone-700 text-white hover:bg-stone-800'
-							: 'bg-rose-500 text-white hover:bg-rose-600'} flex h-16 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 font-bold disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
+							: 'bg-rose-500 text-white hover:bg-rose-600'} flex min-h-16 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300"
 				>
 					{#if btn.icon}
 						{@const Icon = btn.icon}

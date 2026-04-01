@@ -26,7 +26,7 @@
 				{#if email.includes('gmail')}
 					<a
 						href="http://mail.google.com/"
-						class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white select-none hover:bg-rose-600"
+						class="flex min-h-16 items-center justify-center rounded-xl bg-rose-500 py-3 font-bold text-white select-none hover:bg-rose-600"
 					>
 						Open Gmail
 					</a>
@@ -48,7 +48,7 @@
 
 			<a
 				href="/app"
-				class="flex h-16 items-center justify-center rounded-xl bg-rose-500 font-bold text-white select-none hover:bg-rose-600"
+				class="flex min-h-16 items-center justify-center rounded-xl bg-rose-500 py-3 font-bold text-white select-none hover:bg-rose-600"
 			>
 				Open app
 			</a>
@@ -57,7 +57,7 @@
 		<div class="flex grow flex-col text-stone-800">
 			<button
 				onclick={() => signInWithGoogle(redirectUrl)}
-				class="flex h-16 cursor-pointer items-center justify-center gap-3 rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
+				class="flex min-h-16 cursor-pointer items-center justify-center gap-3 rounded-xl bg-stone-200 py-3 font-bold select-none hover:bg-stone-300"
 			>
 				{@html googleIcon}
 				<span>Continue with Google</span>
@@ -83,12 +83,12 @@
 					name="email"
 					autocomplete="email"
 					placeholder="Enter your email"
-					class="h-16 rounded-xl bg-stone-200 px-4 font-bold placeholder-stone-700 outline-none focus:ring-4 focus:ring-rose-500"
+					class="min-h-16 rounded-xl bg-stone-200 px-4 py-3 font-bold placeholder-stone-700 outline-none focus:ring-4 focus:ring-rose-500"
 					required
 				/>
 				<button
 					type="submit"
-					class="relative flex h-16 cursor-pointer items-center justify-center rounded-xl bg-stone-200 font-bold select-none hover:bg-stone-300"
+					class="relative flex min-h-16 cursor-pointer items-center justify-center rounded-xl bg-stone-200 py-3 font-bold select-none hover:bg-stone-300"
 				>
 					<span>Continue with email</span>
 				</button>
