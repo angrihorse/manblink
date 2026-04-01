@@ -134,6 +134,7 @@
 	<div class="flex w-full max-w-md flex-col space-y-4">
 		<div class="flex gap-4">
 			<button
+				aria-label="Saved"
 				onclick={() => (historyTab = 'saved')}
 				class="flex min-h-16 flex-1 cursor-pointer items-center justify-center rounded-xl py-3 font-bold"
 				class:bg-stone-700={historyTab === 'saved'}
@@ -144,6 +145,7 @@
 				<Download class="size-6" strokeWidth={3} />
 			</button>
 			<button
+				aria-label="Discarded"
 				onclick={() => (historyTab = 'discarded')}
 				class="flex min-h-16 flex-1 cursor-pointer items-center justify-center rounded-xl py-3 font-bold"
 				class:bg-stone-700={historyTab === 'discarded'}
@@ -164,6 +166,7 @@
 				{#each displayedPhotos as photo (photo.id)}
 					<div class="space-y-2">
 						<button
+							aria-label="Download photo"
 							onclick={() => handleDownload(photo)}
 							class="aspect-3/4 w-full cursor-pointer overflow-hidden rounded-xl outline-8 outline-transparent hover:outline-stone-300"
 						>

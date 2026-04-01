@@ -3,7 +3,14 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import { authLoading, handleEmailLinkSignIn, db, customRender } from '$lib/client/firebase';
+	import {
+		authLoading,
+		handleEmailLinkSignIn,
+		db,
+		customRender,
+		analytics
+	} from '$lib/client/firebase';
+	import { logEvent } from 'firebase/analytics';
 	import Balls from '$lib/components/Balls.svelte';
 	import { doc, onSnapshot } from 'firebase/firestore';
 	import type { UserData } from '$lib/types';
@@ -33,6 +40,17 @@
 
 	onMount(async () => {
 		await handleEmailLinkSignIn();
+
+		function handleButtonClick(e: MouseEvent) {
+			const btn = (e.target as Element).closest('button');
+			if (!btn || !analytics) return;
+			const label =
+				btn.getAttribute('aria-label') || btn.textContent?.trim().slice(0, 50) || 'unknown';
+			console.log('button_click', { label, page_path: window.location.pathname });
+			logEvent(analytics, 'button_click', { label, page_path: window.location.pathname });
+		}
+		document.addEventListener('click', handleButtonClick);
+		return () => document.removeEventListener('click', handleButtonClick);
 	});
 
 	afterNavigate(({ to }) => {
@@ -71,6 +89,7 @@
 		{#if !(page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/app/loading' || page.url.pathname === '/landing')}
 			<div class="absolute left-0">
 				<button
+					aria-label="Go back"
 					onclick={() => {
 						if ($navBackOverride) {
 							$navBackOverride();
