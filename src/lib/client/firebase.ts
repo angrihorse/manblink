@@ -7,6 +7,7 @@ import { writable } from "svelte/store";
 import { initiateCheckout } from "./stripe";
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
+import Clarity from "@microsoft/clarity";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFPXvqefQ5fYRdjEKlKLuws74FdC5tQmk",
@@ -20,8 +21,10 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export let analytics;
-if (browser)
+if (browser) {
     analytics = getAnalytics(app);
+    Clarity.init("w4r3edffyr");
+}
 export const auth = getAuth();
 export const db = getFirestore()
 export const storage = getStorage();

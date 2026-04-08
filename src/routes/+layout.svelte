@@ -23,7 +23,8 @@
 		navStepsTotal,
 		navCurrentStep,
 		navDirection,
-		navBackOverride
+		navBackOverride,
+		sessionId
 	} from '$lib/stores/app';
 	import { fly } from 'svelte/transition';
 
@@ -47,7 +48,7 @@
 			const label =
 				btn.getAttribute('aria-label') || btn.textContent?.trim().slice(0, 50) || 'unknown';
 			console.log('button_click', { label, page_path: window.location.pathname });
-			logEvent(analytics, 'button_click', { label, page_path: window.location.pathname });
+			logEvent(analytics, 'button_click', { label, page_path: window.location.pathname, session_id: sessionId });
 		}
 		document.addEventListener('click', handleButtonClick);
 		return () => document.removeEventListener('click', handleButtonClick);
@@ -106,7 +107,7 @@
 			</div>
 		{/if}
 
-		<div class="flex w-full max-w-md items-center justify-center">
+		<div class="flex w-full max-w-md items-center justify-center px-16">
 			{#if page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/landing'}
 				<a href="/" class=" font-black tracking-widest"
 					><span class="">MAN</span><span>BLINK</span></a

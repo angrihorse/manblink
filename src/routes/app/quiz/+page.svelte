@@ -11,8 +11,11 @@
 		navCurrentStep,
 		navDirection,
 		navBackOverride,
-		bottomBar
+		bottomBar,
+		sessionId
 	} from '$lib/stores/app';
+	import { analytics } from '$lib/client/firebase';
+	import { logEvent } from 'firebase/analytics';
 	import { select, easeCubicOut } from 'd3';
 
 	type StepType = 'choice' | 'info';
@@ -106,7 +109,7 @@
 			id: 'timeline',
 			type: 'choice',
 			question: 'When do you want to get better photos?',
-			options: [{ label: 'Right now' }, { label: 'Next week' }, { label: 'This year' }]
+			options: [{ label: 'Right now' }, { label: 'Next month' }, { label: 'This year' }]
 		}
 	];
 
@@ -214,6 +217,10 @@
 		selectedOption = value;
 	}
 
+	function track(step_id: string, step_index: number) {
+		if (analytics) logEvent(analytics, 'quiz_step', { step_id, step_index, session_id: sessionId });
+	}
+
 	function handleContinue() {
 		if (!canContinue) return;
 
@@ -227,6 +234,7 @@
 			currentStep++;
 			selectedOption = answers[steps[currentStep].id] ?? null;
 			saveProgress(currentStep, answers);
+			track(steps[currentStep].id, currentStep);
 		} else {
 			direction = 'forward';
 			localStorage.setItem('manblink_quiz', JSON.stringify(answers));
@@ -235,10 +243,12 @@
 				JSON.stringify({ step: currentStep, answers, onReviews: true })
 			);
 			screen = 'reviews';
+			track('reviews', steps.length);
 		}
 	}
 
 	function handleReviewsContinue() {
+		track('completed', steps.length + 1);
 		navDirection.set('forward');
 		goto('/app/select');
 	}

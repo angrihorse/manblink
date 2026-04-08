@@ -18,6 +18,19 @@ export const uploadedSelfieBase64 = localStore<string | null>('uploadedSelfieBas
 export const generationStartTime = localStore<number>('generationStartTime', 0);
 export const generationComplete = localStore<boolean>('generationComplete', false);
 
+function getOrCreateSessionId(): string {
+	const key = 'manblink_sid';
+	const existing = localStorage.getItem(key);
+	if (existing) return existing;
+	const id = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+		.map((b) => b.toString(16).padStart(2, '0'))
+		.join('');
+	localStorage.setItem(key, id);
+	return id;
+}
+
+export const sessionId = browser ? getOrCreateSessionId() : '';
+
 export const screenTitle = writable<string>('');
 export const fullSreen = writable<boolean>(true)
 export const userCredits = writable<number | null>(null)

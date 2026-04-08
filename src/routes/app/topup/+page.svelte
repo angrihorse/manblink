@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { screenTitle, bottomBar, navStepsTotal, navCurrentStep } from '$lib/stores/app';
 	import { initiateCheckout } from '$lib/client/stripe';
-	import { Check, Lock, Clock, Shield, Star, ChevronDown } from '@lucide/svelte';
+	import ReviewCard from '$lib/components/ReviewCard.svelte';
+	import FaqList from '$lib/components/FaqList.svelte';
+	import { Check, Lock, Shield } from '@lucide/svelte';
 	import type { PageData } from './$types';
 	import { authLoading } from '$lib/client/firebase';
 	import { onMount } from 'svelte';
@@ -74,7 +76,6 @@
 	});
 
 	let selectedIndex = $state(1);
-	let openFaq = $state<number | null>(null);
 
 	const tierMeta: Record<
 		number,
@@ -178,16 +179,16 @@
 		</div>
 
 		<!-- PRICE COMPARISON -->
-		<div class="space-y-2 overflow-hidden rounded-xl border-4 border-stone-200 px-4 py-3 font-bold">
+		<div class="overflow-hidden rounded-xl border-4 border-stone-200">
 			{#each compareRows as row (row.label)}
-				<div class="flex justify-between text-stone-500">
-					<span class="font-bold">{row.label}</span>
-					<span class="">{row.value}</span>
+				<div class="flex justify-between px-4 py-3 text-stone-500">
+					<span>{row.label}</span>
+					<span>{row.value}</span>
 				</div>
 			{/each}
-			<div class="flex justify-between">
-				<span class="font-bold">Manblink (one-time)</span>
-				<span class="">$29-49</span>
+			<div class="flex justify-between bg-stone-800 px-4 py-3 font-bold text-white">
+				<span>Manblink (one-time)</span>
+				<span>$29–49</span>
 			</div>
 		</div>
 
@@ -231,7 +232,7 @@
 							{tier.credits} photos
 						</div>
 						<div class="flex items-baseline gap-1">
-							<span class="line-through {selectedIndex === i ? 'text-white/50' : 'text-stone-400'}"
+							<span class="line-through {selectedIndex === i ? 'text-white/50' : 'text-stone-500'}"
 								>{tier.oldPrice}</span
 							>
 							<span class="font-bold">{tier.price}</span>
@@ -254,43 +255,16 @@
 		</div>
 
 		<!-- SOCIAL PROOF -->
-		<div class="space-y-4 rounded-xl bg-stone-100 p-4">
-			<p>
-				"I went from 2 matches a week to 15. Literally just changed my photos to the ones Manblink
-				generated"
-			</p>
-			<div class="flex items-center gap-3">
-				<div>
-					<div class="font-bold">Jake</div>
-				</div>
-				<div class="ml-auto flex gap-0.5">
-					{#each { length: 5 } as _}
-						<Star class="size-6 fill-amber-500 text-amber-500" />
-					{/each}
-				</div>
-			</div>
-		</div>
+		<ReviewCard
+			name="Jake, 23"
+			avatar="/pics/review1.jpg"
+			quote="I went from 2 matches a week to 15. Literally just changed my photos to the ones Manblink generated"
+		/>
 
 		<!-- FAQ -->
-		<div class="space-y-2">
+		<div class="space-y-4">
 			<div class="font-bold">Quick questions</div>
-			{#each faqs as faq, i (faq.q)}
-				<div class="overflow-hidden rounded-xl bg-stone-100">
-					<button
-						onclick={() => (openFaq = openFaq === i ? null : i)}
-						class="flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left"
-					>
-						<span>{faq.q}</span>
-						<ChevronDown
-							class="ml-4 size-6 shrink-0 transition-transform {openFaq === i ? 'rotate-180' : ''}"
-							strokeWidth={3}
-						/>
-					</button>
-					{#if openFaq === i}
-						<div class="px-4 pb-4 text-stone-500">{faq.a}</div>
-					{/if}
-				</div>
-			{/each}
+			<FaqList {faqs} />
 		</div>
 	</div>
 </div>
