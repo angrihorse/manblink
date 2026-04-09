@@ -39,7 +39,6 @@ const DEFAULT_SPRINKLES = [
 	{ group: 'Depth of field', text: 'blurry background' },
 	{ group: 'Depth of field', text: 'background in focus' },
 
-	{ group: 'Shutter speed', text: 'slight motion blur' },
 ];
 
 function fisherYates<T>(arr: T[]): T[] {
@@ -96,7 +95,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	const userId = locals.user.id;
-	const userRef = adminDb.collection('users').doc(userId);
+	const userEmail = locals.user.email;
+	if (!userEmail) return json({ error: 'User has no email' }, { status: 400 });
+
+	const userRef = adminDb.collection('users').doc(userEmail);
 	const userDoc = await userRef.get();
 
 	if (!userDoc.exists) {
@@ -124,7 +126,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const model = 'gemini-3-pro-image-preview';
 	const bucket = adminStorage.bucket();
 
-	const photoIds = await generateImages(prompts, selfieBuffer, ai, model, bucket, userId);
+	const photoIds = await generateImages(prompts, selfieBuffer, ai, model, bucket, userId, userEmail);
 
 	return json({ photoIds });
 };
@@ -169,7 +171,8 @@ async function generateImages(
 	ai: any,
 	model: string,
 	bucket: any,
-	userId: string
+	userId: string,
+	userEmail: string
 ): Promise<string[]> {
 	const t0 = Date.now();
 	console.log(`[generate] start — user:${userId} ${prompts.length} prompt(s), selfie ${(selfieBuffer.length / 1024).toFixed(0)} KB`);
@@ -193,7 +196,7 @@ async function generateImages(
 				? { augmented: text, sprinkles: [] as string[] }
 				: applySprinkles(text);
 			console.log(`[generate] ${ms(t0)} starting image ${i + 1}/${prompts.length}${isCustom ? ' [custom]' : ''}: "${augmented}"`);
-			return generateSingleImage(augmented, text, sprinkles, !!isCustom, selfieBuffer, ai, model, bucket, userId, inputPhotoId, inputPhotoUrl, i + 1, t0);
+			return generateSingleImage(augmented, text, sprinkles, !!isCustom, selfieBuffer, ai, model, bucket, userId, userEmail, inputPhotoId, inputPhotoUrl, i + 1, t0);
 		});
 
 		const results = await Promise.allSettled(generationPromises);
@@ -251,6 +254,7 @@ async function generateSingleImage(
 	model: string,
 	bucket: any,
 	userId: string,
+	userEmail: string,
 	inputPhotoId: string,
 	inputPhotoUrl: string,
 	idx: number,
@@ -284,7 +288,7 @@ async function generateSingleImage(
 		});
 		console.log(`[generate] ${ms(t0global)} image ${idx} firestore written (${ms(t2)}) - ${outputPhotoId}`);
 
-		await adminDb.collection('users').doc(userId).update({
+		await adminDb.collection('users').doc(userEmail).update({
 			credits: FieldValue.increment(-1)
 		});
 

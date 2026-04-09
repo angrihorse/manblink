@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { User } from '@lucide/svelte';
+	import imageCompression from 'browser-image-compression';
 	import {
 		selectedPrompts,
 		uploadedSelfieBase64,
@@ -30,14 +31,18 @@
 	let fileInput: HTMLInputElement;
 
 	async function processFile(file: File) {
-		if (file && file.type.startsWith('image/')) {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				const dataUrl = e.target?.result as string;
-				$uploadedSelfieBase64 = dataUrl;
-			};
-			reader.readAsDataURL(file);
-		}
+		if (!file?.type.startsWith('image/')) return;
+		const compressed = await imageCompression(file, {
+			maxWidthOrHeight: 1024,
+			initialQuality: 0.9,
+			fileType: 'image/jpeg',
+			useWebWorker: true
+		});
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			$uploadedSelfieBase64 = e.target?.result as string;
+		};
+		reader.readAsDataURL(compressed);
 	}
 
 	function handleFileSelect(e: Event) {
@@ -98,6 +103,7 @@
 		</div>
 		<button
 			type="button"
+			aria-label="Upload selfie"
 			onclick={triggerFileInput}
 			ondrop={handleDrop}
 			ondragover={handleDragOver}
@@ -115,7 +121,7 @@
 				onchange={handleFileSelect}
 			/>
 			{#if $uploadedSelfieBase64}
-				<img src={$uploadedSelfieBase64} alt="Uploaded selfie" class="h-full w-full object-cover" />
+				<img src={$uploadedSelfieBase64} alt="Uploaded selfie" class="h-full w-full rounded-xl bg-stone-100 object-cover" />
 			{:else}
 				<div class="flex flex-col items-center space-y-2 select-none">
 					<User class="size-6" strokeWidth={3} />

@@ -121,33 +121,33 @@
 	const reviews = [
 		{
 			name: 'Alex, 31',
-			avatar: '/pics/review7.jpg',
+			avatar: '/pics/review7.webp',
 			quote:
 				'Went from barely any matches to getting dates within the same week. The photos are that good.'
 		},
 		{
 			name: 'Jordan, 47',
-			avatar: '/pics/review8.jpg',
+			avatar: '/pics/review8.webp',
 			quote: 'My friends asked who took my photos. Nobody believes they were AI generated.'
 		},
 		{
 			name: 'Sam, 40',
-			avatar: '/pics/review9.jpg',
+			avatar: '/pics/review9.webp',
 			quote: 'Used to get maybe 1-2 matches a week. Now I have to keep up with conversations.'
 		},
 		{
 			name: 'Luke, 32',
-			avatar: '/pics/review10.jpg',
+			avatar: '/pics/review10.webp',
 			quote: "Honestly the best $29 I've spent. Updated my profile and saw results the same night."
 		},
 		{
 			name: 'Nick, 22',
-			avatar: '/pics/review11.jpg',
+			avatar: '/pics/review11.webp',
 			quote: 'I was skeptical but tried it anyway. My match rate doubled within a few days.'
 		},
 		{
 			name: 'Ben, 36',
-			avatar: '/pics/review12.jpg',
+			avatar: '/pics/review12.webp',
 			quote: 'Super fast, super easy. Photos look like I hired a professional photographer.'
 		}
 	];
@@ -333,7 +333,7 @@
 										<div class="space-y-2">
 											<div class="aspect-3/4 overflow-hidden rounded-xl bg-stone-100">
 												<img
-													src="/pics/gpt.jpeg"
+													src="/pics/gpt.webp"
 													alt="Free ChatGPT"
 													class="h-full w-full object-cover"
 												/>
@@ -348,7 +348,7 @@
 										<div class="space-y-2">
 											<div class="aspect-3/4 overflow-hidden rounded-xl bg-stone-100">
 												<img
-													src="/pics/gen1.jpeg"
+													src="/pics/gen1.webp"
 													alt="Manblink result"
 													class="h-full w-full object-cover"
 												/>

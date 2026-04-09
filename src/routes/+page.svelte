@@ -5,19 +5,19 @@
 	import { page } from '$app/state';
 
 	const heroPhotos = [
-		{ src: '/pics/gen1.jpeg', alt: 'Generated 1' },
-		{ src: '/pics/gen2.jpeg', alt: 'Generated 2' },
-		{ src: '/pics/gen3.jpeg', alt: 'Generated 3' },
-		{ src: '/pics/gen4.jpeg', alt: 'Generated 4' },
-		{ src: '/pics/gen5.jpeg', alt: 'Generated 5' },
-		{ src: '/pics/gen6.jpeg', alt: 'Generated 6' },
-		{ src: '/pics/gen7.jpeg', alt: 'Generated 7' },
-		{ src: '/pics/gen8.jpeg', alt: 'Generated 8' }
+		{ src: '/pics/gen1.webp', alt: 'Generated 1' },
+		{ src: '/pics/gen2.webp', alt: 'Generated 2' },
+		{ src: '/pics/gen3.webp', alt: 'Generated 3' },
+		{ src: '/pics/gen4.webp', alt: 'Generated 4' },
+		{ src: '/pics/gen5.webp', alt: 'Generated 5' },
+		{ src: '/pics/gen6.webp', alt: 'Generated 6' },
+		{ src: '/pics/gen7.webp', alt: 'Generated 7' }
 	];
 	const bottomPhotos = [
-		{ src: '/pics/gen9.jpg', alt: 'Generated 9' },
-		{ src: '/pics/gen10.jpg', alt: 'Generated 10' },
-		{ src: '/pics/gen11.jpg', alt: 'Generated 11' }
+		{ src: '/pics/gen9.webp', alt: 'Generated 9' },
+		{ src: '/pics/gen8.webp', alt: 'Generated 8' },
+		{ src: '/pics/gen10.webp', alt: 'Generated 10' },
+		{ src: '/pics/gen11.webp', alt: 'Generated 11' }
 	];
 </script>
 
@@ -43,20 +43,20 @@
 		</div>
 
 		<div class="flex w-full items-center justify-center">
-			<img src="/pics/selfie-mockup.png" alt="Your selfie" class="h-60 -rotate-4 object-contain" />
+			<img src="/pics/selfie-mockup.webp" alt="Your selfie" class="h-60 -rotate-4 rounded-xl bg-stone-100 object-contain" />
 			<div>
 				<Redo strokeWidth={3} class="size-12 -scale-x-100 rotate-170 text-stone-700" />
 			</div>
 			<div class="relative">
 				<img
-					src="/pics/tinder-mockup.png"
+					src="/pics/tinder-mockup.webp"
 					alt="Tinder profile"
-					class="h-72 rotate-2 object-contain"
+					class="h-72 rotate-2 rounded-xl bg-stone-100 object-contain"
 				/>
 				<img
-					src="/pics/verified.png"
+					src="/pics/verified.webp"
 					alt="Verified"
-					class="absolute -top-4 right-0 size-16 object-contain"
+					class="absolute -top-4 right-0 size-16 rounded-xl bg-stone-100 object-contain"
 				/>
 				<div
 					class="absolute right-0 bottom-0 rounded-full bg-linear-to-bl from-yellow-300 to-yellow-400 px-2 py-1 font-bold select-none"
@@ -102,7 +102,7 @@
 		</div> -->
 	</div>
 
-	<PhotoRow sourceImg="/pics/src1.jpg" generatedPhotos={heroPhotos} />
+	<PhotoRow sourceImg="/pics/src1.webp" generatedPhotos={heroPhotos} />
 
 	<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
 		<div class=" space-y-1">

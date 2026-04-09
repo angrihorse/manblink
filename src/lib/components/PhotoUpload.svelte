@@ -71,9 +71,9 @@
 		onchange={handleFileSelect}
 	/>
 	{#if $uploadedSelfieBase64}
-		<img src={$uploadedSelfieBase64} alt="Uploaded selfie" class="h-full w-full object-cover" />
+		<img src={$uploadedSelfieBase64} alt="Uploaded selfie" class="h-full w-full rounded-xl bg-stone-100 object-cover" />
 	{:else if activeAvatarUrl}
-		<img src={activeAvatarUrl} alt="Active avatar" class="h-full w-full object-cover" />
+		<img src={activeAvatarUrl} alt="Active avatar" class="h-full w-full rounded-xl bg-stone-100 object-cover" />
 	{:else}
 		<div class="flex flex-col items-center space-y-2 select-none">
 			<User class="size-6" strokeWidth={3} />

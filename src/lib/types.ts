@@ -59,7 +59,7 @@ export const DEFAULT_PROMPTS: Prompt[] = [
 
 	// Food and Drink
 	{ id: 'cooking', category: 'At home', emoji: '🍳', label: 'Cooking', text: 'Cooking steak on a wood-fired grill in a sunny backyard, wearing a clean casual t-shirt, golden hour light' },
-	{ id: 'cafe', category: 'Date ideas', emoji: '☕', label: 'Cafe', text: 'Sitting at an outdoor café terrace in the sun, stirring a flat white, half-reading a book, wearing a clean casual linen shirt, slightly overexposed' },
+	{ id: 'cafe', category: 'Date ideas', emoji: '☕', label: 'Cafe', text: 'Sitting at an outdoor cafe terrace in the sun, wearing a clean casual linen shirt, slightly overexposed' },
 	{ id: 'cocktails', category: 'Date ideas', emoji: '🍸', label: 'Cocktails', text: 'Leaning against the railing of a rooftop bar at dusk, mid-conversation, negroni in hand, wearing a fitted shirt, city skyline behind them, golden hour light' },
 	{ id: 'beer', category: 'Date ideas', emoji: '🍺', label: 'Beer', text: 'Clinking beer bottles with friends around a fire pit, wearing a clean casual clothes, golden hour light' },
 	{ id: 'tea', category: 'Date ideas', emoji: '🍵', label: 'Tea', text: 'Sitting in a garden chair cradling a mug of tea on a quiet sunny morning, wearing a knit sweater, surrounded by greenery, slightly overexposed' },

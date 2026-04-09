@@ -64,8 +64,8 @@
 	});
 
 	$effect(() => {
-		if (page.data.user?.id) {
-			const unsubscribe = onSnapshot(doc(db, 'users', page.data.user.id), (snapshot) => {
+		if (page.data.user?.email) {
+			const unsubscribe = onSnapshot(doc(db, 'users', page.data.user.email), (snapshot) => {
 				if (snapshot.exists()) {
 					const data = snapshot.data() as UserData;
 					userCredits.set(data.credits ?? 0);

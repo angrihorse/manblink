@@ -23,9 +23,9 @@ export async function createCheckoutSession(
         payment_method_types: ['card'],
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'payment',
-        success_url: userId ? `${origin}/app/loading` : `${origin}/app/signin`,
+        success_url: userId ? `${origin}/app/loading` : `${origin}/app/claimed`,
         cancel_url: `${origin}/app/topup`,
-        metadata: { credits: String(credits) },
+        metadata: { credits: String(credits), origin },
         ...(userId ? { client_reference_id: userId, customer_email: email ?? undefined } : { customer_creation: 'always' }),
     });
 

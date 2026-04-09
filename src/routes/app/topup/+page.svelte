@@ -4,13 +4,15 @@
 	import ReviewCard from '$lib/components/ReviewCard.svelte';
 	import FaqList from '$lib/components/FaqList.svelte';
 	import { Check, Lock, Shield } from '@lucide/svelte';
-	import type { PageData } from './$types';
 	import { authLoading } from '$lib/client/firebase';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 
-	let { data }: { data: PageData } = $props();
+	const prices = [
+		{ priceId: 'price_1TF4gpFSeIeyfxy9I0ASQWgJ', credits: 30 },
+		{ priceId: 'price_1TF4hzFSeIeyfxy9UsCXZPZx', credits: 60 }
+	];
 
 	const SPOTS_STEPS = [
 		{ t: 3_000, val: 8 },
@@ -85,7 +87,7 @@
 		60: { label: 'Pro', price: '$49', oldPrice: '$89', badge: 'Best value' }
 	};
 
-	const tiers = $derived(data.prices.map((p) => ({ ...p, ...tierMeta[p.credits] })));
+	const tiers = $derived(prices.map((p) => ({ ...p, ...tierMeta[p.credits] })));
 	const selected = $derived(tiers[selectedIndex]);
 
 	async function checkout() {
@@ -117,17 +119,17 @@
 	];
 
 	const previewImages = [
-		{ src: '/pics/gen2.jpeg' },
-		{ src: '/pics/gen4.jpeg' },
-		{ src: '/pics/gen1.jpeg' },
-		{ src: '/pics/gen7.jpeg' },
-		{ src: '/pics/gen3.jpeg' },
-		{ src: '/pics/gen5.jpeg' }
+		{ src: '/pics/gen2.webp' },
+		{ src: '/pics/gen4.webp' },
+		{ src: '/pics/gen1.webp' },
+		{ src: '/pics/gen7.webp' },
+		{ src: '/pics/gen3.webp' },
+		{ src: '/pics/gen5.webp' }
 	];
 
 	const compareRows = [
-		{ label: 'Professional photoshoot', value: '$300–800' },
-		{ label: 'Other AI apps (subscription)', value: '$63-270' }
+		{ label: 'Photoshoot', value: '$300–800' },
+		{ label: 'Other apps', value: '$63-270' }
 	];
 </script>
 
@@ -149,7 +151,11 @@
 			<div class="relative overflow-hidden rounded-xl text-white">
 				<div class="grid grid-cols-3">
 					{#each previewImages as { src } (src)}
-						<img {src} alt="" class="aspect-square w-full object-cover opacity-50" />
+						<img
+							{src}
+							alt=""
+							class="aspect-square w-full rounded-xl bg-stone-100 object-cover opacity-50"
+						/>
 					{/each}
 				</div>
 				<div
@@ -179,16 +185,20 @@
 		</div>
 
 		<!-- PRICE COMPARISON -->
-		<div class="overflow-hidden rounded-xl border-4 border-stone-200">
+		<div class="flex flex-col space-y-4 font-bold">
 			{#each compareRows as row (row.label)}
-				<div class="flex justify-between px-4 py-3 text-stone-500">
-					<span>{row.label}</span>
-					<span>{row.value}</span>
+				<div
+					class="flex flex-col items-center justify-center space-y-1 rounded-xl border-4 border-stone-200 px-2 py-4 text-center"
+				>
+					<div>{row.label}</div>
+					<div class="text-stone-500">{row.value}</div>
 				</div>
 			{/each}
-			<div class="flex justify-between bg-stone-800 px-4 py-3 font-bold text-white">
-				<span>Manblink (one-time)</span>
-				<span>$29–49</span>
+			<div
+				class="flex flex-col items-center justify-center space-y-1 rounded-xl bg-stone-700 px-2 py-4 text-center text-white"
+			>
+				<div>Manblink</div>
+				<div class="">$29–49</div>
 			</div>
 		</div>
 
@@ -257,7 +267,7 @@
 		<!-- SOCIAL PROOF -->
 		<ReviewCard
 			name="Jake, 23"
-			avatar="/pics/review1.jpg"
+			avatar="/pics/review1.webp"
 			quote="I went from 2 matches a week to 15. Literally just changed my photos to the ones Manblink generated"
 		/>
 

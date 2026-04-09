@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import {
-		signInWithEmail,
-		signInWithGoogle,
-		serverSignOut,
-		authLoading
-	} from '$lib/client/firebase';
-	import { Landmark, LogOut, Mail } from '@lucide/svelte';
+	import { signInWithEmail, signInWithGoogle, authLoading } from '$lib/client/firebase';
 	import Balls from '$lib/components/Balls.svelte';
 
 	let { redirectUrl = '/app' }: { redirectUrl?: string } = $props();
@@ -47,7 +41,7 @@
 			</div>
 
 			<a
-				href="/app"
+				href={redirectUrl}
 				class="flex min-h-16 items-center justify-center rounded-xl bg-rose-500 py-3 font-bold text-white select-none hover:bg-rose-600"
 			>
 				Open app

@@ -13,7 +13,7 @@
 	<div class="flex flex-wrap items-center gap-2">
 		<div class="flex -space-x-2">
 			{#each avatars as src (src)}
-				<img {src} alt="" class="size-12 rounded-full object-cover outline-4 outline-white" />
+				<img {src} alt="" class="size-12 rounded-full bg-stone-100 object-cover outline-4 outline-white" />
 			{/each}
 		</div>
 		<span>{text}</span>

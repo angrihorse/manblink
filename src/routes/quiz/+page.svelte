@@ -272,7 +272,7 @@
 										<div class="space-y-2">
 											<div class="aspect-3/4 overflow-hidden rounded-xl bg-stone-100">
 												<img
-													src="/pics/gpt.jpeg"
+													src="/pics/gpt.webp"
 													alt="Free ChatGPT"
 													class="h-full w-full object-cover"
 												/>
@@ -287,7 +287,7 @@
 										<div class="space-y-2">
 											<div class="aspect-3/4 overflow-hidden rounded-xl bg-stone-100">
 												<img
-													src="/pics/gen1.jpeg"
+													src="/pics/gen1.webp"
 													alt="Manblink result"
 													class="h-full w-full object-cover"
 												/>

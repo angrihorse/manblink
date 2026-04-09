@@ -32,9 +32,11 @@ export const storage = getStorage();
 
 export const getUserData = async (uid: string) => (await getDoc(doc(db, 'users', uid))).data();
 
-export const authLoading = writable(false);
 export const customRender = writable(false);
 
+const REDIRECT_URL_KEY = 'auth_redirect_url';
+
+export const authLoading = writable(browser && !!sessionStorage.getItem(REDIRECT_URL_KEY));
 
 async function syncQuizData(uid: string) {
     const quizData = localStorage.getItem('manblink_quiz');
@@ -44,8 +46,6 @@ async function syncQuizData(uid: string) {
         localStorage.removeItem('manblink_quiz');
     } catch { }
 }
-
-const REDIRECT_URL_KEY = 'auth_redirect_url';
 
 export async function signInWithGoogle(redirectUrl = '/app') {
     const provider = new GoogleAuthProvider();
@@ -100,7 +100,7 @@ export async function serverSignOut() {
 }
 
 export async function signInWithEmail(email: string, redirectUrl = '/app') {
-    const continueUrl = new URL(window.location.href);
+    const continueUrl = new URL(window.location.origin + redirectUrl);
     continueUrl.searchParams.set('email', email);
     continueUrl.searchParams.set('redirectAfterAuth', redirectUrl);
 
@@ -122,6 +122,7 @@ export async function handleEmailLinkSignIn() {
 
     authLoading.set(true);
     let firebaseSignedIn = false;
+    let redirected = false;
     try {
         const credential = await signInWithEmailLink(auth, email, window.location.href);
         firebaseSignedIn = true;
@@ -129,6 +130,7 @@ export async function handleEmailLinkSignIn() {
         const idToken = await credential.user.getIdToken();
         const redirectAfterAuth = new URL(window.location.href).searchParams.get('redirectAfterAuth') ?? '/app';
         await serverSignIn(idToken, redirectAfterAuth);
+        redirected = true;
         window.localStorage.removeItem('emailForSignIn');
         return credential.user;
     } catch (err) {
@@ -142,7 +144,9 @@ export async function handleEmailLinkSignIn() {
             cleanUrl.searchParams.delete(p)
         );
         window.history.replaceState({}, '', cleanUrl.toString());
-        await invalidateAll();
+        if (!redirected) {
+            await invalidateAll();
+        }
         authLoading.set(false);
     }
 }

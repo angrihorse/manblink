@@ -6,67 +6,67 @@
 	import { Check, X } from '@lucide/svelte';
 
 	const sameGuy = [
-		{ src: '/pics/gen1.jpeg' },
-		{ src: '/pics/gen3.jpeg' },
-		{ src: '/pics/gen2.jpeg' }
+		{ src: '/pics/gen1.webp' },
+		{ src: '/pics/gen3.webp' },
+		{ src: '/pics/gen2.webp' }
 	];
 	const everythingNeeds = [
-		{ src: '/pics/gen9.jpeg' },
-		{ src: '/pics/gen2.jpeg' },
-		{ src: '/pics/gen4.jpeg' },
-		{ src: '/pics/gen5.jpeg' }
+		{ src: '/pics/gen9.webp' },
+		{ src: '/pics/gen2.webp' },
+		{ src: '/pics/gen4.webp' },
+		{ src: '/pics/gen5.webp' }
 	];
 	const oneSelfie = [
-		{ src: '/pics/gen11.jpeg' },
-		{ src: '/pics/gen10.jpeg' },
-		{ src: '/pics/gen7.jpeg' },
-		{ src: '/pics/gen6.jpeg' }
+		{ src: '/pics/gen11.webp' },
+		{ src: '/pics/gen10.webp' },
+		{ src: '/pics/gen7.webp' },
+		{ src: '/pics/gen6.webp' }
 	];
 	const stopOverthinking = [
-		{ src: '/pics/gen10.jpeg' },
-		{ src: '/pics/gen8.jpeg' },
-		{ src: '/pics/gen1.jpeg' },
-		{ src: '/pics/gen4.jpeg' }
+		{ src: '/pics/gen10.webp' },
+		{ src: '/pics/gen8.webp' },
+		{ src: '/pics/gen1.webp' },
+		{ src: '/pics/gen4.webp' }
 	];
 
 	const reviews = [
 		{
 			name: 'Jake, 23',
-			avatar: '/pics/review1.jpg',
+			avatar: '/pics/review1.webp',
 			quote:
 				"About to delete Tinder. Uploaded one selfie at 2am. Got my photos by 2:05am. Updated my profile and woke up to new matches I didn't have before.",
 			result: 'From zero matches to double digits overnight'
 		},
 		{
 			name: 'Marcus, 25',
-			avatar: '/pics/review2.jpg',
+			avatar: '/pics/review2.webp',
 			quote:
 				'Updated my Tinder with new photos. Changed nothing else — same bio, same prompts. The only difference was better photos.'
 		},
 		{
 			name: 'Tyler, 21',
-			avatar: '/pics/review3.jpg',
+			avatar: '/pics/review3.webp',
 			quote:
 				'The girl who unmatched me rematched after I updated my photos. Better photos change how people see you.',
 			result: 'Same guy. Better first impression.'
 		},
 		{
 			name: 'Daniel, 26',
-			avatar: '/pics/review4.jpg',
+			avatar: '/pics/review4.webp',
 			quote:
 				'Spent 6 months thinking Tinder was broken. Turns out it was just my photos. Changed nothing else. Same bio. Same prompts. Just better photos.',
 			result: "It's not the app. It's the photos."
 		},
 		{
 			name: 'Ryan, 24',
-			avatar: '/pics/review5.jpg',
+			avatar: '/pics/review5.webp',
 			quote:
 				'My profile went from 3 gym selfies to looking like I actually have a life. The variety is what makes the difference — different settings, different outfits, same face.',
 			result: 'From gym selfies to a real profile.'
 		},
 		{
 			name: 'Mateo, 29',
-			avatar: '/pics/review6.jpg',
+			avatar: '/pics/review6.webp',
 			quote:
 				'Never thought a photo upgrade would make this much of a difference. Matches went up immediately.',
 			result: 'Better photos. Better matches. Simple.'
@@ -155,17 +155,17 @@
 				</ul>
 			</div>
 		</div>
-		<img src="pics/prerendered.jpg" alt="" class="w-full rounded-xl" />
+		<img src="pics/prerendered.webp" alt="" class="w-full rounded-xl bg-stone-100" />
 	</div>
 
 	<!-- SOCIAL PROOF -->
 	<SocialProof
 		avatars={[
-			'/pics/review1.jpg',
-			'/pics/review2.jpg',
-			'/pics/review3.jpg',
-			'/pics/review4.jpg',
-			'/pics/review5.jpg'
+			'/pics/review1.webp',
+			'/pics/review2.webp',
+			'/pics/review3.webp',
+			'/pics/review4.webp',
+			'/pics/review5.webp'
 		]}
 		text="1200+ guys upgraded their profiles this month"
 	/>
@@ -180,7 +180,7 @@
 				waiting to happen.
 			</p>
 		</div>
-		<PhotoRow sourceImg="/pics/src1.jpg" generatedPhotos={sameGuy} />
+		<PhotoRow sourceImg="/pics/src1.webp" generatedPhotos={sameGuy} />
 	</div>
 
 	<!-- <PhotoRow generatedPhotos={bottomPhotos} /> -->

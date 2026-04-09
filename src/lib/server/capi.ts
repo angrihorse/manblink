@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { META_CONVERSION_API_KEY, META_PIXEL_ID } from '$env/static/private';
+import { META_CONVERSION_API_KEY, META_PIXEL_ID, META_TEST_EVENT_CODE } from '$env/static/private';
 
 function sha256(value: string): string {
     return createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
@@ -20,8 +20,7 @@ export async function sendPurchaseEvent(opts: {
     if (opts.clientUserAgent) userData.client_user_agent = opts.clientUserAgent;
 
     const payload: Record<string, unknown> = {
-        // Remove test_event_code before going live
-        test_event_code: 'TEST49697',
+        ...(META_TEST_EVENT_CODE ? { test_event_code: META_TEST_EVENT_CODE } : {}),
         data: [
             {
                 event_name: 'Purchase',

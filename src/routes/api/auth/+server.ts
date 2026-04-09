@@ -1,7 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { FieldValue, Timestamp } from 'firebase-admin/firestore';
-import { adminAuth, adminDb, updateUserInDb } from '$lib/server/firebase';
+import { adminAuth, adminDb } from '$lib/server/firebase';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
     const { idToken } = await request.json();
@@ -11,28 +10,17 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
     if (new Date().getTime() / 1000 - decodedIdToken.auth_time < 5 * 60) {
         const firebaseUser = await adminAuth.getUser(decodedIdToken.uid);
-        const userRef = adminDb.collection('users').doc(firebaseUser.uid);
-        await userRef.set({
+        const email = firebaseUser.email;
+        if (!email) throw error(400, 'User has no email');
+
+        // User doc ID = email — webhook also writes to this doc, no race condition
+        await adminDb.collection('users').doc(email).set({
             displayName: firebaseUser.displayName ?? null,
-            email: firebaseUser.email,
+            email,
         }, { merge: true });
 
-        if (firebaseUser.email) {
-            const pendingRef = adminDb.collection('pendingCredits').doc(firebaseUser.email);
-            const pending = await pendingRef.get();
-            if (pending.exists) {
-                await userRef.set({ credits: FieldValue.increment(pending.data()!.credits) }, { merge: true });
-                await pendingRef.delete();
-            }
-        }
-
         const cookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
-        const options = {
-            maxAge: expiresIn,
-            httpOnly: true,
-            path: '/'
-        };
-        cookies.set('__session', cookie, options);
+        cookies.set('__session', cookie, { maxAge: expiresIn, httpOnly: true, path: '/' });
 
         return json({ success: true });
     } else {

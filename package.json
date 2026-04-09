@@ -33,11 +33,13 @@
 		"@lucide/svelte": "^0.562.0",
 		"@microsoft/clarity": "^1.0.2",
 		"@types/d3": "^7.4.3",
+		"browser-image-compression": "^2.0.2",
 		"d3": "^7.9.0",
 		"dotenv": "^17.2.3",
 		"firebase": "^12.8.0",
 		"firebase-admin": "^13.6.0",
 		"mime": "^4.1.0",
+		"sharp": "^0.33.5",
 		"stripe": "^20.1.2"
 	}
 }

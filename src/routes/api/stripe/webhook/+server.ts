@@ -3,9 +3,11 @@ import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 import { PRIVATE_WEBHOOK_SECRET } from '$env/static/private';
 import { stripe } from '$lib/server/stripe';
-import { adminDb, updateUserInDb } from '$lib/server/firebase';
+import { adminDb } from '$lib/server/firebase';
 import { FieldValue } from 'firebase-admin/firestore';
 import { sendPurchaseEvent } from '$lib/server/capi';
+import { sendSignInLinkToEmail } from 'firebase/auth';
+import { auth } from '$lib/client/firebase';
 
 export const POST: RequestHandler = async ({ request }) => {
     const rawBody = await request.text();
@@ -30,22 +32,29 @@ export const POST: RequestHandler = async ({ request }) => {
             const credits = parseInt(session.metadata?.credits ?? '0', 10);
             if (!credits) break;
 
-            const email = session.customer_details?.email ?? null;
+            const email = session.customer_details?.email;
+            if (email) {
+                // User doc ID = email — works whether user signs in before or after payment
+                await adminDb.collection('users').doc(email).set(
+                    { credits: FieldValue.increment(credits) },
+                    { merge: true }
+                );
 
-            if (session.client_reference_id) {
-                await updateUserInDb(session.client_reference_id, {
-                    credits: FieldValue.increment(credits)
-                });
-            } else {
-                if (email) {
-                    await adminDb.collection('pendingCredits').doc(email).set({
-                        credits: FieldValue.increment(credits)
-                    }, { merge: true });
+                // Only send magic link for unauthenticated purchases (no client_reference_id)
+                if (!session.client_reference_id) {
+                    const origin = session.metadata?.origin ?? 'https://manblink.com';
+                    const continueUrl = new URL(`${origin}/app/loading`);
+                    continueUrl.searchParams.set('email', email);
+                    continueUrl.searchParams.set('redirectAfterAuth', '/app/loading');
+                    await sendSignInLinkToEmail(auth, email, {
+                        url: continueUrl.toString(),
+                        handleCodeInApp: true,
+                    });
                 }
             }
 
             await sendPurchaseEvent({
-                email,
+                email: email ?? null,
                 valueCents: session.amount_total ?? 0,
                 currency: session.currency ?? 'usd',
                 eventSourceUrl: 'https://manblink.com/app/topup',
