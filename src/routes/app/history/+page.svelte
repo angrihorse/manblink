@@ -117,7 +117,7 @@
 			const blobUrl = URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = blobUrl;
-			link.download = `manblink-${photo.id}.webp`;
+			link.download = `manblink-${photo.id}.jpg`;
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);

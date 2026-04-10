@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { adminDb, adminStorage } from '$lib/server/firebase';
 import { GoogleGenAI } from '@google/genai';
-import { GEMINI_API_KEY } from '$env/static/private';
+import { GEMINI_API_KEY, MOCK_GEMINI } from '$env/static/private';
 import { FieldValue } from 'firebase-admin/firestore';
 
 const ALWAYS_ON_SPRINKLES = [
@@ -73,7 +73,7 @@ function applySprinkles(promptText: string): { augmented: string; sprinkles: str
 	};
 }
 
-const MOCK_GEMINI = true;
+const mockGemini = MOCK_GEMINI === 'true';
 
 const ai = new GoogleGenAI({
 	apiKey: GEMINI_API_KEY,
@@ -131,9 +131,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	return json({ photoIds });
 };
 
-async function uploadPhotoToStorage(bucket: any, userId: string, imageBuffer: Buffer) {
+async function uploadPhotoToStorage(bucket: any, userEmail: string, imageBuffer: Buffer) {
 	const photoId = adminDb.collection('photos').doc().id;
-	const filePath = `users/${userId}/photos/${photoId}.jpg`;
+	const filePath = `users/${userEmail}/photos/${photoId}.jpg`;
 	const file = bucket.file(filePath);
 
 	await file.save(imageBuffer, {
@@ -179,7 +179,7 @@ async function generateImages(
 
 	try {
 		const t1 = Date.now();
-		const { photoId: inputPhotoId, url: inputPhotoUrl } = await uploadPhotoToStorage(bucket, userId, selfieBuffer);
+		const { photoId: inputPhotoId, url: inputPhotoUrl } = await uploadPhotoToStorage(bucket, userEmail,selfieBuffer);
 		console.log(`[generate] ${ms(t0)} selfie uploaded (${ms(t1)})`);
 
 		await adminDb.collection('photos').doc(inputPhotoId).set({
@@ -262,7 +262,7 @@ async function generateSingleImage(
 ): Promise<string | null> {
 	const t0 = Date.now();
 	try {
-		const imageBuffer = MOCK_GEMINI ? selfieBuffer : await callGeminiAPI(selfieBuffer, promptText, ai, model);
+		const imageBuffer = mockGemini ? selfieBuffer : await callGeminiAPI(selfieBuffer, promptText, ai, model);
 		console.log(`[generate] ${ms(t0global)} image ${idx} gemini done (${ms(t0)})`);
 
 		if (!imageBuffer) {
@@ -270,7 +270,7 @@ async function generateSingleImage(
 		}
 
 		const t1 = Date.now();
-		const { photoId: outputPhotoId, url: outputPhotoUrl } = await uploadPhotoToStorage(bucket, userId, imageBuffer);
+		const { photoId: outputPhotoId, url: outputPhotoUrl } = await uploadPhotoToStorage(bucket, userEmail,imageBuffer);
 		console.log(`[generate] ${ms(t0global)} image ${idx} uploaded (${ms(t1)}) - ${outputPhotoId}`);
 
 		const t2 = Date.now();

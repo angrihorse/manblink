@@ -1,11 +1,12 @@
 import Stripe from 'stripe';
-import { PRICE_ID_30, PRICE_ID_60, PRIVATE_STRIPE_KEY } from '$env/static/private';
+import { PRIVATE_STRIPE_KEY } from '$env/static/private';
+import { PUBLIC_PRICE_ID_30, PUBLIC_PRICE_ID_60 } from '$env/static/public';
 
 export const stripe = new Stripe(PRIVATE_STRIPE_KEY);
 
 const PRICE_CREDITS: Record<string, number> = {
-    [PRICE_ID_30]: 30,
-    [PRICE_ID_60]: 60,
+    [PUBLIC_PRICE_ID_30]: 30,
+    [PUBLIC_PRICE_ID_60]: 60,
 };
 
 export function creditsForPrice(priceId: string): number {

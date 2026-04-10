@@ -8,10 +8,11 @@
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import { PUBLIC_PRICE_ID_30, PUBLIC_PRICE_ID_60 } from '$env/static/public';
 
 	const prices = [
-		{ priceId: 'price_1TF4gpFSeIeyfxy9I0ASQWgJ', credits: 30 },
-		{ priceId: 'price_1TF4hzFSeIeyfxy9UsCXZPZx', credits: 60 }
+		{ priceId: PUBLIC_PRICE_ID_30, credits: 30 },
+		{ priceId: PUBLIC_PRICE_ID_60, credits: 60 }
 	];
 
 	const SPOTS_STEPS = [
@@ -77,7 +78,7 @@
 		]);
 	});
 
-	let selectedIndex = $state(1);
+	let selectedIndex = $state(0);
 
 	const tierMeta: Record<
 		number,

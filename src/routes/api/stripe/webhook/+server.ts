@@ -46,10 +46,14 @@ export const POST: RequestHandler = async ({ request }) => {
                     const continueUrl = new URL(`${origin}/app/loading`);
                     continueUrl.searchParams.set('email', email);
                     continueUrl.searchParams.set('redirectAfterAuth', '/app/loading');
-                    await sendSignInLinkToEmail(auth, email, {
-                        url: continueUrl.toString(),
-                        handleCodeInApp: true,
-                    });
+                    try {
+                        await sendSignInLinkToEmail(auth, email, {
+                            url: continueUrl.toString(),
+                            handleCodeInApp: true,
+                        });
+                    } catch (err: any) {
+                        console.error(`[webhook] failed to send magic link to ${email}: ${err.message}`);
+                    }
                 }
             }
 

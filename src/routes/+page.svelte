@@ -43,7 +43,11 @@
 		</div>
 
 		<div class="flex w-full items-center justify-center">
-			<img src="/pics/selfie-mockup.webp" alt="Your selfie" class="h-60 -rotate-4 rounded-xl bg-stone-100 object-contain" />
+			<img
+				src="/pics/selfie-mockup.webp"
+				alt="Your selfie"
+				class="h-60 -rotate-4 rounded-xl object-contain"
+			/>
 			<div>
 				<Redo strokeWidth={3} class="size-12 -scale-x-100 rotate-170 text-stone-700" />
 			</div>
@@ -51,12 +55,12 @@
 				<img
 					src="/pics/tinder-mockup.webp"
 					alt="Tinder profile"
-					class="h-72 rotate-2 rounded-xl bg-stone-100 object-contain"
+					class="h-72 rotate-2 rounded-xl object-contain"
 				/>
 				<img
 					src="/pics/verified.webp"
 					alt="Verified"
-					class="absolute -top-4 right-0 size-16 rounded-xl bg-stone-100 object-contain"
+					class="absolute -top-4 right-0 size-16 rounded-xl object-contain"
 				/>
 				<div
 					class="absolute right-0 bottom-0 rounded-full bg-linear-to-bl from-yellow-300 to-yellow-400 px-2 py-1 font-bold select-none"
