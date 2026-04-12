@@ -27,6 +27,7 @@
 		sessionId
 	} from '$lib/stores/app';
 	import { fly } from 'svelte/transition';
+	import LandingMenu from '$lib/components/LandingMenu.svelte';
 
 	const BACK_URLS: Record<string, string> = {
 		'/app/select': '/app/quiz',
@@ -48,7 +49,11 @@
 			const label =
 				btn.getAttribute('aria-label') || btn.textContent?.trim().slice(0, 50) || 'unknown';
 			console.log('button_click', { label, page_path: window.location.pathname });
-			logEvent(analytics, 'button_click', { label, page_path: window.location.pathname, session_id: sessionId });
+			logEvent(analytics, 'button_click', {
+				label,
+				page_path: window.location.pathname,
+				session_id: sessionId
+			});
 		}
 		document.addEventListener('click', handleButtonClick);
 		return () => document.removeEventListener('click', handleButtonClick);
@@ -84,54 +89,77 @@
 		<Balls />
 	</div>
 {:else}
-	<div
-		class="relative z-10 flex h-14 w-full items-center justify-center border-b-4 border-stone-200 bg-white select-none"
-	>
-		{#if !(page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/app/loading' || page.url.pathname === '/landing')}
-			<div class="absolute left-0">
-				<button
-					aria-label="Go back"
-					onclick={() => {
-						if ($navBackOverride) {
-							$navBackOverride();
-						} else {
-							navDirection.set('backward');
-							const url = BACK_URLS[page.url.pathname];
-							url ? goto(url) : window.history.back();
-						}
-					}}
-					class="flex size-16 cursor-pointer items-center justify-center"
+	{#if page.url.pathname === '/landing'}
+		<div
+			class="sticky top-0 z-10 flex h-14 w-full items-center justify-between border-b-2 border-stone-200 bg-white px-4 select-none sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
+		>
+			<a href="/" class="font-black tracking-widest">MANBLINK</a>
+			<nav class="hidden items-center md:flex">
+				<a href="#how-it-works" class="px-3 py-4 font-bold hover:text-rose-500">How It Works</a>
+				<a href="#results" class="px-3 py-4 font-bold hover:text-rose-500">Results</a>
+				<a href="#reviews" class="px-3 py-4 font-bold hover:text-rose-500">Reviews</a>
+				<a href="#pricing" class="px-3 py-4 font-bold hover:text-rose-500">Pricing</a>
+				<a href="#faq" class="px-3 py-4 font-bold hover:text-rose-500">FAQ</a>
+				<a
+					href="/app/quiz"
+					class="ml-4 rounded-xl bg-rose-500 px-4 py-2 font-bold text-white hover:bg-rose-600"
+					>Get Started</a
 				>
-					<ArrowLeft class="size-6" strokeWidth={3} />
-				</button>
+			</nav>
+			<div class="md:hidden">
+				<LandingMenu />
 			</div>
-		{/if}
-
-		<div class="flex w-full max-w-md items-center justify-center px-16">
-			{#if page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/landing'}
-				<a href="/" class=" font-black tracking-widest"
-					><span class="">MAN</span><span>BLINK</span></a
-				>
-			{:else if $navStepsTotal !== null && $navCurrentStep !== null}
-				<div class="h-2 w-full overflow-hidden rounded-full bg-stone-200">
-					<div
-						class="h-full bg-rose-500 transition-all duration-300"
-						style="width: {($navCurrentStep / $navStepsTotal) * 100}%"
-					></div>
+		</div>
+	{:else}
+		<div
+			class="relative z-10 flex h-14 w-full items-center justify-center border-b-2 border-stone-200 bg-white select-none"
+		>
+			{#if !(page.url.pathname === '/' || page.url.pathname === '/app' || page.url.pathname === '/app/loading')}
+				<div class="absolute left-0">
+					<button
+						aria-label="Go back"
+						onclick={() => {
+							if ($navBackOverride) {
+								$navBackOverride();
+							} else {
+								navDirection.set('backward');
+								const url = BACK_URLS[page.url.pathname];
+								url ? goto(url) : window.history.back();
+							}
+						}}
+						class="flex size-16 cursor-pointer items-center justify-center"
+					>
+						<ArrowLeft class="size-6" strokeWidth={3} />
+					</button>
 				</div>
-			{:else}
-				<div class=" font-bold">{$screenTitle}</div>
+			{/if}
+
+			<div class="flex w-full max-w-md items-center justify-center px-16">
+				{#if page.url.pathname === '/' || page.url.pathname === '/app'}
+					<a href="/" class=" font-black tracking-widest"
+						><span class="">MAN</span><span>BLINK</span></a
+					>
+				{:else if $navStepsTotal !== null && $navCurrentStep !== null}
+					<div class="h-2 w-full overflow-hidden rounded-full bg-stone-200">
+						<div
+							class="h-full bg-rose-500 transition-all duration-300"
+							style="width: {($navCurrentStep / $navStepsTotal) * 100}%"
+						></div>
+					</div>
+				{:else}
+					<div class=" font-bold">{$screenTitle}</div>
+				{/if}
+			</div>
+
+			{#if page.data.user && $userCredits !== null}
+				<div
+					class="absolute right-0 flex items-center justify-center px-6 font-bold tracking-wide select-none"
+				>
+					<span class="text-rose-500">@</span>{$userCredits}
+				</div>
 			{/if}
 		</div>
-
-		{#if page.data.user && $userCredits !== null}
-			<div
-				class="absolute right-0 flex items-center justify-center px-6 font-bold tracking-wide select-none"
-			>
-				<span class="text-rose-500">@</span>{$userCredits}
-			</div>
-		{/if}
-	</div>
+	{/if}
 	<div
 		class:overflow-hidden={$fullSreen}
 		class:h-dvh={$fullSreen}

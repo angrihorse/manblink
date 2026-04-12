@@ -328,7 +328,9 @@
 						<div class="space-y-6">
 							<div class="text-3xl font-bold">Manblink was made for people like you</div>
 							{#each [{ name: 'James', text: '21 matches the first day. The photos look insane', starsCount: 5 }, { name: 'Marc', text: "My mom didn't believe these weren't real :)", starsCount: 5 }, { name: 'Tom', text: 'I got best results when I mixed AI photos with my own', starsCount: 4 }] as review (review.name)}
-								<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+								<div
+									class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500"
+								>
 									<div class="flex w-full justify-between space-x-2">
 										<div class="font-bold">{review.name}</div>
 										<Stars count={review.starsCount} />
@@ -346,7 +348,7 @@
 
 <!-- Sticky Continue button -->
 <div
-	class="fixed right-0 bottom-0 left-0 flex justify-center border-t-4 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
+	class="fixed right-0 bottom-0 left-0 flex justify-center border-t-2 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
 >
 	<button
 		onclick={screen === 'reviews' ? () => goto('/app/select') : handleContinue}

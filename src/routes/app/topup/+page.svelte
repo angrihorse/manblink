@@ -189,7 +189,7 @@
 		<div class="flex flex-col space-y-4 font-bold">
 			{#each compareRows as row (row.label)}
 				<div
-					class="flex flex-col items-center justify-center space-y-1 rounded-xl border-4 border-stone-200 px-2 py-4 text-center"
+					class="flex flex-col items-center justify-center space-y-1 rounded-xl border-2 border-stone-200 px-2 py-4 text-center"
 				>
 					<div>{row.label}</div>
 					<div class="text-stone-500">{row.value}</div>
@@ -207,7 +207,7 @@
 		<div class="space-y-4">
 			<div class="font-bold">Choose your pack</div>
 			<div
-				class="flex items-center justify-between rounded-xl border-4 border-rose-500 px-4 py-3 font-bold"
+				class="flex items-center justify-between rounded-xl border-2 border-rose-500 px-4 py-3 font-bold"
 			>
 				<span>40% Off Sale</span>
 				<span class="flex items-center gap-1">

@@ -29,7 +29,7 @@
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 		<div class="space-y-2">
 			<div
-				class="inline-flex items-center rounded-full border-4 border-stone-200 px-4 py-1.5 text-sm font-medium"
+				class="inline-flex items-center rounded-full border-2 border-stone-200 px-4 py-1.5 text-sm font-medium"
 			>
 				<span>4.2x increase in matches</span>
 			</div>

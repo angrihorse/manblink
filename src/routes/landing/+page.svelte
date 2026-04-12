@@ -4,6 +4,19 @@
 	import SocialProof from '$lib/components/SocialProof.svelte';
 	import FaqList from '$lib/components/FaqList.svelte';
 	import { Check, X } from '@lucide/svelte';
+	import { onMount } from 'svelte';
+
+	let pastHero = $state(false);
+
+	onMount(() => {
+		const hero = document.getElementById('hero');
+		if (!hero) return;
+		const observer = new IntersectionObserver(([entry]) => {
+			pastHero = !entry.isIntersecting;
+		});
+		observer.observe(hero);
+		return () => observer.disconnect();
+	});
 
 	const sameGuy = [
 		{ src: '/pics/gen1.webp' },
@@ -18,17 +31,13 @@
 	];
 	const oneSelfie = [
 		{ src: '/pics/gen11.webp' },
-		{ src: '/pics/gen10.webp' },
 		{ src: '/pics/gen7.webp' },
-		{ src: '/pics/gen6.webp' }
-	];
-	const stopOverthinking = [
+		{ src: '/pics/gen6.webp' },
 		{ src: '/pics/gen10.webp' },
 		{ src: '/pics/gen8.webp' },
 		{ src: '/pics/gen1.webp' },
 		{ src: '/pics/gen4.webp' }
 	];
-
 	const reviews = [
 		{
 			name: 'Jake, 23',
@@ -117,9 +126,9 @@
 	<title>Manblink — Dating Photos from 1 Selfie</title>
 </svelte:head>
 
-<div class="space-y-8">
+<div class="space-y-8 {pastHero ? 'pb-24 md:pb-0' : ''}">
 	<!-- HERO -->
-	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+	<div id="hero" class="grid grid-cols-1 gap-8 lg:grid-cols-2">
 		<div class="space-y-4">
 			<div class=" space-y-2">
 				<div class="text-5xl font-bold">
@@ -171,7 +180,7 @@
 	/>
 
 	<!-- PHOTO EXAMPLES -->
-	<div class="space-y-4">
+	<div id="results" class="space-y-4">
 		<div class="font-bold text-stone-500 uppercase">Real transformations</div>
 		<div class="space-y-2">
 			<div class="text-3xl font-bold">Same guy. Completely different first impression.</div>
@@ -195,14 +204,14 @@
 			</p>
 		</div>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">📸</div>
 				<div class="font-bold">1. Upload 1 selfie</div>
 				<p>
 					Just one clear photo of your face. No album. No 20 uploads. One selfie and you're done.
 				</p>
 			</div>
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">✨</div>
 				<div class="font-bold">2. Pick your vibe</div>
 				<p>
@@ -210,7 +219,7 @@
 					are.
 				</p>
 			</div>
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">🔥</div>
 				<div class="font-bold">3. Start matching</div>
 				<p>
@@ -228,7 +237,7 @@
 		<PhotoRow generatedPhotos={everythingNeeds} />
 
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">💘</div>
 				<div class="font-bold">Built for dating apps. Not Instagram.</div>
 				<p>
@@ -236,7 +245,7 @@
 					Urban. Nightlife. Photos that get likes.
 				</p>
 			</div>
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">✅</div>
 				<div class="font-bold">Passes Tinder verification</div>
 				<p>
@@ -244,7 +253,7 @@
 					better lighting and settings. You'll still look like you on the date.
 				</p>
 			</div>
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">💸</div>
 				<div class="font-bold">$29 vs $300. Same result.</div>
 				<p>
@@ -266,7 +275,7 @@
 			</p>
 		</div>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">⚡</div>
 				<div class="font-bold">Done in 5 minutes</div>
 				<p>
@@ -275,7 +284,7 @@
 				</p>
 			</div>
 
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">🔒</div>
 				<div class="font-bold">Your photos stay yours</div>
 				<p>
@@ -283,7 +292,7 @@
 					handles it in 10 minutes.
 				</p>
 			</div>
-			<div class="space-y-2 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-2 rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500">
 				<div class="text-3xl">🎯</div>
 				<div class="font-bold">Built for dating apps</div>
 				<p>
@@ -304,14 +313,14 @@
 				minutes.
 			</p>
 		</div>
-		<PhotoRow generatedPhotos={oneSelfie} />
+		<PhotoRow sourceImg="/pics/src1.webp " generatedPhotos={oneSelfie} />
 	</div>
 
 	<!-- REVIEWS -->
-	<div class="space-y-4">
+	<div id="reviews" class="space-y-4">
 		<div class="font-bold text-stone-500 uppercase">What to expect</div>
 		<div class="text-3xl font-bold">Guys who stopped blaming the algorithm.</div>
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{#each reviews as r (r.name)}
 				<ReviewCard name={r.name} avatar={r.avatar} quote={r.quote} />
 			{/each}
@@ -319,16 +328,16 @@
 	</div>
 
 	<!-- PRICING COMPARISON -->
-	<div class="space-y-4">
+	<div id="pricing" class="space-y-4">
 		<div class="font-bold text-stone-500 uppercase">Compare</div>
 		<div class="space-y-2">
 			<div class="text-3xl font-bold">Same result. 1% of the price.</div>
 			<p>A photographer charges $300–800 for 20 photos and a week of waiting.</p>
 		</div>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-			<div class="space-y-4 rounded-xl border-4 border-stone-200 p-4">
+			<div class="space-y-4 rounded-xl border-2 border-stone-200 p-4">
 				<div class="font-bold text-stone-500">Photographer</div>
-				<div class="text-3xl font-bold">$300–800</div>
+				<div class="text-3xl font-bold text-stone-500 line-through">$300–800</div>
 				<ul class="space-y-2">
 					{#each ['$300–800 for 20 edited photos', '1–2 weeks just to get a booking', 'Posing in public like a tourist', 'Wait 5–7 days for delivery', '1 location, 1–2 outfit changes', 'Still looks like you hired a photographer'] as item (item)}
 						<li class="flex items-center gap-2 text-stone-500">
@@ -338,7 +347,7 @@
 					{/each}
 				</ul>
 			</div>
-			<div class="space-y-4 rounded-xl bg-stone-100 p-4">
+			<div class="space-y-4 rounded-xl border-2 border-rose-500 p-4">
 				<div class="font-bold text-rose-500">Manblink</div>
 				<div class="text-3xl font-bold">From $29</div>
 				<ul class="space-y-2">
@@ -363,21 +372,23 @@
 	</div>
 
 	<!-- FAQ -->
-	<div class="space-y-4">
+	<div id="faq" class="space-y-4">
 		<div class="font-bold text-stone-500 uppercase">FAQ</div>
 		<div class="text-3xl font-bold">Questions? We got you.</div>
 		<FaqList {faqs} />
 	</div>
 
 	<!-- FINAL CTA -->
-	<div class="grid grid-cols-1 gap-8 pb-8">
+	<div class="grid grid-cols-1 gap-8">
 		<div class="space-y-4">
 			<div class="flex w-full flex-col justify-center space-y-2">
-				<PhotoRow generatedPhotos={stopOverthinking} />
+				<img
+					src="/pics/gen3.webp"
+					alt=""
+					class="mx-auto block aspect-3/4 h-80 rounded-xl object-cover"
+				/>
 				<div class="text-3xl font-bold">Stop overthinking it. Start matching.</div>
-				<p class="text-stone-500">
-					1 selfie. 30–60 dating photos. From $29. No photographer. No awkward poses.
-				</p>
+				<p class="">1 selfie. 30–60 dating photos. From $29. No photographer. No awkward poses.</p>
 			</div>
 			<a
 				href="/app/quiz"
@@ -387,7 +398,7 @@
 			</a>
 			<p class="text-stone-500">One-time payment. Not a subscription.</p>
 		</div>
-		<!-- <div class="space-y-4">
+		<!-- <div id="contact" class="space-y-4">
 			<div class="space-y-2">
 				<div class="text-3xl font-bold">Still have questions?</div>
 				<p class="text-stone-500">Get a human answer within 12h</p>
@@ -413,3 +424,16 @@
 		</div> -->
 	</div>
 </div>
+
+{#if pastHero}
+	<div
+		class="fixed right-0 bottom-0 left-0 flex justify-center border-t-2 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:hidden"
+	>
+		<a
+			href="/app/quiz"
+			class="flex min-h-16 w-full max-w-md cursor-pointer items-center justify-center rounded-xl bg-rose-500 px-4 py-3 font-bold text-white hover:bg-rose-600"
+		>
+			Upgrade My Profile — $29
+		</a>
+	</div>
+{/if}

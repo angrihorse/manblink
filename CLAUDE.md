@@ -39,8 +39,8 @@ After completing the code, ask the user if they want a playground link. Only cal
 - **Button row**: `flex gap-4`
 
 ### Cards & Containers
-- **Card**: `rounded-xl bg-stone-100 p-4`
-- **Border container**: `rounded-xl border-4 border-stone-200`
+- **Card**: `rounded-xl border-2 border-stone-200 p-4 hover:border-rose-500`
+- **Border container**: `rounded-xl border-2 border-stone-200`
 - **Row item** (inside a container): `flex justify-between px-4 py-3`
 - **Highlighted row** (dark): `bg-stone-800 px-4 py-3 font-bold text-white`
 
@@ -50,8 +50,8 @@ After completing the code, ask the user if they want a playground link. Only cal
 - Disabled state: add `disabled:cursor-default disabled:bg-stone-100 disabled:text-stone-300`
 
 ### Sticky bottom bars
-- All `fixed bottom-0` bars must include `border-t-4 border-stone-200`
-- Standard wrapper: `fixed right-0 bottom-0 left-0 flex justify-center border-t-4 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64`
+- All `fixed bottom-0` bars must include `border-t-2 border-stone-200`
+- Standard wrapper: `fixed right-0 bottom-0 left-0 flex justify-center border-t-2 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64`
 
 ### Icons
 - All icons use `strokeWidth={3}`

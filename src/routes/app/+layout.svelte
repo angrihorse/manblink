@@ -42,7 +42,7 @@
 
 {#if $bottomBar}
 	<div
-		class="fixed right-0 bottom-0 left-0 flex justify-center border-t-4 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
+		class="fixed right-0 bottom-0 left-0 flex justify-center border-t-2 border-stone-200 bg-white px-4 pt-4 pb-4 sm:px-8 md:px-12 lg:px-16 xl:px-32 2xl:px-64"
 	>
 		<div class="flex w-full max-w-md gap-4">
 			{#each $bottomBar as btn}
