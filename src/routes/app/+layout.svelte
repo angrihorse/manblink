@@ -4,7 +4,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import { navDirection, bottomBar, navBackOverride } from '$lib/stores/app';
 	import type { LayoutProps } from './$types';
-	import { handleGoogleRedirectResult, authLoading } from '$lib/client/firebase';
+	import { authLoading } from '$lib/client/firebase';
 	import { onMount } from 'svelte';
 	import { beforeNavigate } from '$app/navigation';
 
@@ -15,8 +15,6 @@
 	let { children }: LayoutProps = $props();
 
 	onMount(() => {
-		handleGoogleRedirectResult();
-
 		function onPageShow(e: PageTransitionEvent) {
 			if (e.persisted) {
 				// Restored from bfcache — clear any stale loading state

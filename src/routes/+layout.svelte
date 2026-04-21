@@ -6,6 +6,7 @@
 	import {
 		authLoading,
 		handleEmailLinkSignIn,
+		handleGoogleRedirectResult,
 		db,
 		customRender,
 		analytics
@@ -42,6 +43,7 @@
 
 	onMount(async () => {
 		await handleEmailLinkSignIn();
+		handleGoogleRedirectResult();
 
 		function handleButtonClick(e: MouseEvent) {
 			const btn = (e.target as Element).closest('button');
