@@ -9,6 +9,12 @@
 	let pastHero = $state(false);
 
 	onMount(() => {
+		if (typeof fbq !== 'undefined') {
+			fbq('track', 'ViewContent');
+		}
+	});
+
+	onMount(() => {
 		const hero = document.getElementById('hero');
 		if (!hero) return;
 		const observer = new IntersectionObserver(([entry]) => {
