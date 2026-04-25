@@ -7,7 +7,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     // SvelteKit rejects them with 405 (no form actions). Redirect to GET so the client
     // can call getRedirectResult() and complete the sign-in normally.
     if (event.request.method === 'POST' && !event.route.id?.includes('api')) {
-        redirect(303, event.url.pathname + event.url.search);
+        throw redirect(303, event.url.pathname + event.url.search);
     }
 
     const sessionCookie = event.cookies.get('__session');
